@@ -1,0 +1,363 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.2 — ACTUATION DYNAMICS
+ * ------------------------------------------------------------------
+ * FILE: actuation_dynamics.jsonc
+ * CONTEXT: 01_FOUNDATION (The Body)
+ *
+ * PURPOSE:
+ *  - Describe how actuators + transmission + joint actually behave
+ *    as dynamic systems (inertia, friction, saturation, torque-speed curves).
+ *  - Provide a canonical source for controllers, simulators and planners
+ *    to reason about effort, acceleration, jerk and safety envelopes.
+ *
+ * HUMAN INTERPRETATION:
+ *  - Think of this file as the "physics sheet" of joints and motors:
+ *    it tells you how much they really can push, how fast, and what breaks first.
+ *
+ * LLM INTERPRETATION:
+ *  - Do NOT invent physical values. If missing, state that they are unknown.
+ *  - When generating controllers/sim code, read:
+ *      * actuator_model_dynamics_map → motor/actuator-level physics
+ *      * joint_dynamics_map         → joint-level, including reflected inertia
+ *      * safety_envelopes_map       → absolute limits you must not exceed
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA & LINKAGE
+  // ==============================================================
+
+  "meta_group": {
+    "dynamics_profile_id_str": "bhl_actuation_dynamics_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T18:40:00Z",
+
+    "domain_id_str": "01_foundation",
+    "file_role_enum": "ACTUATION_DYNAMICS_MODEL",
+
+    "related_files_map": {
+      "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+      "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+      "calibration_ref_str": "01_foundation/calibration.jsonc",
+      "compute_topology_ref_str": "01_foundation/compute_topology.jsonc",
+      "runtime_validation_ref_str": "02_operation/runtime_validation.jsonc"
+    },
+
+    "interpretation_guides": {
+      "for_humans_str": "Use this file to understand the true dynamic capacity of each actuator and joint, beyond catalog torque values.",
+      "for_llms_str": "When planning motion or designing controllers, combine: actuation_library (static specs) + actuation_topology (mounting) + actuation_dynamics (inertia/friction/envelopes) + calibration (deltas)."
+    }
+  },
+
+  // ==============================================================
+  // 1. ACTUATOR MODEL DYNAMICS (Motor-side)
+  //
+  // Key = component_model_id_str from actuation_library.jsonc
+  // These are reusable templates, independent from any specific joint.
+  // ==============================================================
+
+  "actuator_model_dynamics_map": {
+
+    // ------------------------------------------------------------
+    // T-Motor AK80-9 v2 — Quasi-direct drive actuator
+    // ------------------------------------------------------------
+    "tmotor_ak80_9_v2": {
+      "base_component_ref_str": "tmotor_ak80_9_v2",
+
+      // Electrical dynamic model (for current / torque / speed)
+      "electrical_model": {
+        "phase_resistance_ohm_float": 0.125,
+        "phase_inductance_h_float": 0.000036,
+        "back_emf_constant_kev_v_per_rad_s_float": 0.095, // approx from Kv
+        "torque_constant_kt_nm_a_float": 0.095            // Nm per Amp
+      },
+
+      // Rotor-side inertia and friction (before external transmission)
+      "rotor_dynamics": {
+        "rotor_inertia_kgm2_float": 0.00045,
+        "viscous_friction_nm_s_per_rad_float": 0.02,
+        "coulomb_friction_nm_float": 0.05
+      },
+
+      // Torque-speed envelope at nominal voltage (24V base)
+      // Simplified as piecewise-linear segments.
+      "torque_speed_curve_points_list": [
+        { "speed_rad_s_float": 0.0,  "available_torque_nm_float": 48.0 },
+        { "speed_rad_s_float": 10.0, "available_torque_nm_float": 40.0 },
+        { "speed_rad_s_float": 20.0, "available_torque_nm_float": 28.0 },
+        { "speed_rad_s_float": 30.0, "available_torque_nm_float": 0.0 }
+      ],
+
+      // Efficiency approximation (for thermal / power estimates)
+      "efficiency_model": {
+        "peak_efficiency_pct_float": 0.85,
+        "nominal_efficiency_pct_float": 0.78
+      },
+
+      // Saturation & protection behavior at the actuator level
+      "saturation_model": {
+        "max_commandable_torque_nm_float": 48.0,
+        "max_commandable_speed_rad_s_float": 30.0,
+        "thermal_derating_enabled_bool": true
+      }
+    },
+
+    // ------------------------------------------------------------
+    // Dynamixel XM430-W350 — smart servo
+    // ------------------------------------------------------------
+    "dynamixel_xm430_w350": {
+      "base_component_ref_str": "dynamixel_xm430_w350",
+
+      "electrical_model": {
+        "input_voltage_nominal_v_float": 12.0,
+        "back_emf_constant_kev_v_per_rad_s_float": 0.06,
+        "torque_constant_kt_nm_a_float": 0.08
+      },
+
+      "rotor_dynamics": {
+        "rotor_inertia_kgm2_float": 0.00001,
+        "viscous_friction_nm_s_per_rad_float": 0.01,
+        "coulomb_friction_nm_float": 0.02
+      },
+
+      "torque_speed_curve_points_list": [
+        { "speed_rad_s_float": 0.0, "available_torque_nm_float": 4.1 },
+        { "speed_rad_s_float": 3.0, "available_torque_nm_float": 2.5 },
+        { "speed_rad_s_float": 5.0, "available_torque_nm_float": 0.0 }
+      ],
+
+      "efficiency_model": {
+        "peak_efficiency_pct_float": 0.7,
+        "nominal_efficiency_pct_float": 0.6
+      },
+
+      "saturation_model": {
+        "max_commandable_torque_nm_float": 4.1,
+        "max_commandable_speed_rad_s_float": 5.0,
+        "thermal_derating_enabled_bool": true
+      }
+    }
+  },
+
+  // ==============================================================
+  // 2. JOINT-LEVEL DYNAMICS (Actuator + Transmission + Link)
+  //
+  // Key = actuator instance ID from actuation_topology.jsonc
+  // Here we describe the reflected inertia, joint friction,
+  // compliance, limits, jerk constraints etc.
+  // ==============================================================
+
+  "joint_dynamics_map": {
+
+    // ------------------------------------------------------------
+    // RIGHT KNEE — using tmotor_ak80_9_v2 quasi-direct
+    // ------------------------------------------------------------
+    "knee_right_actuator": {
+      "target_joint_ref_str": "knee_joint_right",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+
+      // Effective inertia at joint after gearing and linkage
+      "inertia_model": {
+        "reflected_inertia_kgm2_float": 0.12,     // motor + link
+        "link_inertia_kgm2_float": 0.10,
+        "motor_contrib_kgm2_float": 0.02
+      },
+
+      // Joint friction model (combined structural + transmission)
+      "friction_model": {
+        "viscous_friction_nm_s_per_rad_float": 0.15,
+        "coulomb_friction_nm_float": 0.4,
+        "backlash_hysteresis_rad_float": 0.005
+      },
+
+      // Joint stiffness and compliance
+      "compliance_model": {
+        "joint_stiffness_nm_rad_float": 1200.0,   // virtual spring
+        "joint_damping_nm_s_per_rad_float": 40.0,
+        "series_elastic_element_bool": false
+      },
+
+      // Kinematic limits and safe margins (mirrors description + safety)
+      "joint_limits": {
+        "soft_min_position_rad_float": -1.4,
+        "soft_max_position_rad_float":  1.4,
+        "hard_stop_margin_rad_float":   0.1,
+        "max_velocity_rad_s_float":     12.0,
+        "max_acceleration_rad_s2_float": 80.0,
+        "max_jerk_rad_s3_float":        600.0
+      },
+
+      // How the controller should "feel" at different regimes
+      "behavior_presets": {
+        "walking_mode": {
+          "preferred_impedance_stiffness_nm_rad_float": 900.0,
+          "preferred_impedance_damping_nm_s_per_rad_float": 35.0
+        },
+        "balancing_mode": {
+          "preferred_impedance_stiffness_nm_rad_float": 1400.0,
+          "preferred_impedance_damping_nm_s_per_rad_float": 50.0
+        }
+      }
+    },
+
+    // ------------------------------------------------------------
+    // RIGHT HIP PITCH — heavily geared version of AK80-9
+    // ------------------------------------------------------------
+    "hip_pitch_right_actuator": {
+      "target_joint_ref_str": "hip_pitch_right",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+
+      "inertia_model": {
+        // Bigger reflected inertia due to higher gear ratio
+        "reflected_inertia_kgm2_float": 0.32,
+        "link_inertia_kgm2_float": 0.25,
+        "motor_contrib_kgm2_float": 0.07
+      },
+
+      "friction_model": {
+        "viscous_friction_nm_s_per_rad_float": 0.25,
+        "coulomb_friction_nm_float": 0.7,
+        "backlash_hysteresis_rad_float": 0.008
+      },
+
+      "compliance_model": {
+        "joint_stiffness_nm_rad_float": 1500.0,
+        "joint_damping_nm_s_per_rad_float": 60.0,
+        "series_elastic_element_bool": false
+      },
+
+      "joint_limits": {
+        "soft_min_position_rad_float": -1.2,
+        "soft_max_position_rad_float":  1.2,
+        "hard_stop_margin_rad_float":   0.08,
+        "max_velocity_rad_s_float":     3.3,
+        "max_acceleration_rad_s2_float": 40.0,
+        "max_jerk_rad_s3_float":        200.0
+      },
+
+      "behavior_presets": {
+        "walking_mode": {
+          "preferred_impedance_stiffness_nm_rad_float": 1200.0,
+          "preferred_impedance_damping_nm_s_per_rad_float": 50.0
+        },
+        "lift_mode": {
+          "preferred_impedance_stiffness_nm_rad_float": 1600.0,
+          "preferred_impedance_damping_nm_s_per_rad_float": 65.0
+        }
+      }
+    },
+
+    // ------------------------------------------------------------
+    // RIGHT ANKLE PITCH — smaller actuator (AK60-6, for example)
+    // ------------------------------------------------------------
+    "ankle_pitch_right_actuator": {
+      "target_joint_ref_str": "ankle_pitch_right",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+
+      "inertia_model": {
+        "reflected_inertia_kgm2_float": 0.06,
+        "link_inertia_kgm2_float": 0.045,
+        "motor_contrib_kgm2_float": 0.015
+      },
+
+      "friction_model": {
+        "viscous_friction_nm_s_per_rad_float": 0.08,
+        "coulomb_friction_nm_float": 0.25,
+        "backlash_hysteresis_rad_float": 0.004
+      },
+
+      "compliance_model": {
+        "joint_stiffness_nm_rad_float": 900.0,
+        "joint_damping_nm_s_per_rad_float": 30.0,
+        "series_elastic_element_bool": false
+      },
+
+      "joint_limits": {
+        "soft_min_position_rad_float": -0.8,
+        "soft_max_position_rad_float":  0.8,
+        "hard_stop_margin_rad_float":   0.06,
+        "max_velocity_rad_s_float":     8.0,
+        "max_acceleration_rad_s2_float": 60.0,
+        "max_jerk_rad_s3_float":        400.0
+      },
+
+      "behavior_presets": {
+        "walking_mode": {
+          "preferred_impedance_stiffness_nm_rad_float": 800.0,
+          "preferred_impedance_damping_nm_s_per_rad_float": 28.0
+        },
+        "terrain_adaptation_mode": {
+          "preferred_impedance_stiffness_nm_rad_float": 650.0,
+          "preferred_impedance_damping_nm_s_per_rad_float": 22.0
+        }
+      }
+    }
+  },
+
+  // ==============================================================
+  // 3. SAFETY ENVELOPES (Global Effort Constraints)
+  //
+  // Here definiamo i limiti assoluti "non negoziabili" a livello
+  // attuazione, da usare insieme a runtime_validation.
+  // ==============================================================
+
+  "safety_envelopes_map": {
+
+    "default_leg_envelope": {
+      "applies_to_actuators_list_str": [
+        "knee_right_actuator",
+        "hip_pitch_right_actuator",
+        "ankle_pitch_right_actuator"
+      ],
+
+      // Envelope as scalar caps
+      "max_torque_nm_float": 120.0,
+      "max_power_w_float": 800.0,
+      "max_mechanical_work_j_float": 2500.0,
+
+      // Derating based on joint temperature ratio (0–1 of max)
+      "thermal_derating_curve": {
+        "start_derate_ratio_float": 0.8,   // at 80% of max temp
+        "full_derate_ratio_float": 0.95,   // at 95% → torque minimal
+        "min_derated_torque_fraction_float": 0.2
+      }
+    }
+  },
+
+  // ==============================================================
+  // 4. SIMULATION BACKEND MAPPINGS
+  //
+  // Hint parameters for various physics engines to match real hardware.
+  // ==============================================================
+
+  "simulation_backend_overrides_map": {
+    "isaac_sim": {
+      "use_implicit_timestep_bool": true,
+      "default_timestep_s_float": 0.002,
+      "solver_iterations_int": 8
+    },
+    "mujoco": {
+      "default_timestep_s_float": 0.002,
+      "solver_iterations_int": 10,
+      "constraint_softness_float": 0.001
+    }
+  },
+
+  // ==============================================================
+  // 5. LLM GUIDANCE
+  // ==============================================================
+
+  "llm_guidance": {
+    "when_generating_controllers": {
+      "prefer_impedance_control_bool": true,
+      "avoid_exceeding_joint_limits_bool": true,
+      "must_respect_safety_envelopes_bool": true,
+      "hint_str": "Use impedance-like control with stiffness/damping from behavior_presets when in doubt."
+    },
+    "when_generating_simulation_configs": {
+      "do_not_increase_torque_beyond_envelope_bool": true,
+      "align_mass_inertia_with_description_and_calibration_bool": true
+    }
+  }
+}
