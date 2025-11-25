@@ -1,0 +1,113 @@
+/** IMPORTED DYNAMICS */
+{
+  "base_link-base_link_inertia": {
+    "type": "fixed",
+    "limits": {
+      "torque_nm": 0.0,
+      "velocity_rads": 0.0,
+      "range_rad": [
+        -3.14,
+        3.14
+      ]
+    }
+  },
+  "shoulder_pan_joint": {
+    "type": "revolute",
+    "limits": {
+      "torque_nm": 150.0,
+      "velocity_rads": 3.141592653589793,
+      "range_rad": [
+        -6.283185307179586,
+        6.283185307179586
+      ]
+    }
+  },
+  "shoulder_lift_joint": {
+    "type": "revolute",
+    "limits": {
+      "torque_nm": 150.0,
+      "velocity_rads": 3.141592653589793,
+      "range_rad": [
+        -6.283185307179586,
+        6.283185307179586
+      ]
+    }
+  },
+  "elbow_joint": {
+    "type": "revolute",
+    "limits": {
+      "torque_nm": 150.0,
+      "velocity_rads": 3.141592653589793,
+      "range_rad": [
+        -3.141592653589793,
+        3.141592653589793
+      ]
+    }
+  },
+  "wrist_1_joint": {
+    "type": "revolute",
+    "limits": {
+      "torque_nm": 28.0,
+      "velocity_rads": 3.141592653589793,
+      "range_rad": [
+        -6.283185307179586,
+        6.283185307179586
+      ]
+    }
+  },
+  "wrist_2_joint": {
+    "type": "revolute",
+    "limits": {
+      "torque_nm": 28.0,
+      "velocity_rads": 3.141592653589793,
+      "range_rad": [
+        -6.283185307179586,
+        6.283185307179586
+      ]
+    }
+  },
+  "wrist_3_joint": {
+    "type": "revolute",
+    "limits": {
+      "torque_nm": 28.0,
+      "velocity_rads": 3.141592653589793,
+      "range_rad": [
+        -6.283185307179586,
+        6.283185307179586
+      ]
+    }
+  },
+  "base_link-base_fixed_joint": {
+    "type": "fixed",
+    "limits": {
+      "torque_nm": 0.0,
+      "velocity_rads": 0.0,
+      "range_rad": [
+        -3.14,
+        3.14
+      ]
+    }
+  },
+  "wrist_3-flange": {
+    "type": "fixed",
+    "limits": {
+      "torque_nm": 0.0,
+      "velocity_rads": 0.0,
+      "range_rad": [
+        -3.14,
+        3.14
+      ]
+    }
+  },
+  "flange-tool0": {
+    "type": "fixed",
+    "limits": {
+      "torque_nm": 0.0,
+      "velocity_rads": 0.0,
+      "range_rad": [
+        -3.14,
+        3.14
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "meta_group": {
+    "engine_id_str": "combinatorial_synthesis_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "generation_config": {
+    "novelty_threshold_min_float": 0.85,
+    "divergence_temperature_float": 0.75,
+    "output_form_preference_list_str": [
+      "physical_trajectory",
+      "linguistic_concept",
+      "visual_composition"
+    ]
+  },
+  "innovation_strategies_map": {
+    "conceptual_blending": {
+      "priority_float": 0.9,
+      "domain_crossing_allowed_bool": true,
+      "source_domains_list_str": [
+        "mechanics",
+        "social_protocol",
+        "natural_forms"
+      ]
+    },
+    "constraint_breaking": {
+      "priority_float": 0.5,
+      "soft_constraints_to_ignore_list_str": [
+        "energy_saving_weight_float"
+      ],
+      "required_safety_override_token_bool": true
+    },
+    "serendipity_mining": {
+      "priority_float": 0.7,
+      "accidental_discovery_threshold_float": 0.9
+    }
+  },
+  "resource_config": {
+    "max_compute_time_per_session_min_int": 60,
+    "max_memory_allocation_gb_float": 2.0,
+    "max_power_draw_w_float": 40.0
+  }
+}

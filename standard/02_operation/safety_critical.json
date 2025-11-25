@@ -1,0 +1,45 @@
+{
+  "meta_group": {
+    "safety_protocol_version_str": "iso_13849_pl_d",
+    "last_validated_iso8601_str": "2025-11-23T12:00:00Z",
+    "governance": {
+      "lead_architect_str": "Pasquale Ranieri",
+      "stewardship_organization_str": "Italia Robotica"
+    }
+  },
+  "physical_enforcement": {
+    "max_velocity_rad_s_float": 12.5,
+    "max_acceleration_rad_s2_float": 400.0,
+    "max_emergency_torque_nm_float": 50.0,
+    "max_human_contact_force_n_float": 150.0
+  },
+  "reflex_triggers_list": [
+    {
+      "trigger_id_str": "mechanical_overload",
+      "input_metric_str": "joint_torque_measured",
+      "threshold_nm_float": 48.0,
+      "action_enum": "TORQUE_LIMIT_FREEZE",
+      "severity_int": 5
+    },
+    {
+      "trigger_id_str": "proximity_violation",
+      "input_metric_str": "closest_human_distance_m",
+      "threshold_m_float": 0.3,
+      "action_enum": "SLOWDOWN_TO_MINIMUM",
+      "severity_int": 4
+    },
+    {
+      "trigger_id_str": "thermal_fault",
+      "input_metric_str": "motor_coil_temperature_c",
+      "threshold_c_float": 95.0,
+      "action_enum": "SOFT_SHUTDOWN_MOTORS",
+      "severity_int": 3
+    }
+  ],
+  "emergency_stop_protocol": {
+    "protocol_enum": "CATEGORY_3_DUAL_CHANNEL",
+    "action_on_activation_enum": "CUT_POWER_TO_ACTUATORS_APPLY_BRAKES",
+    "data_recording_duration_s_float": 5.0,
+    "reset_required_type_enum": "MANUAL_KEY_TURN"
+  }
+}

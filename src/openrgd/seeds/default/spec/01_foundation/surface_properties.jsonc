@@ -1,0 +1,83 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: surface_properties.jsonc
+ * CONTEXT: 01_FOUNDATION (The Body)
+ *
+ * PURPOSE:
+ * Defines the static material properties of the robot's exterior surfaces.
+ * This data is used by:
+ *  - 'world_model.json' for contact physics,
+ *  - 'skills_library' for grasping strategies,
+ *  - 'safety_critical.json' for interaction and safety checks.
+ *
+ * NOTE:
+ * This file describes the material itself, not the temperature.
+ * Thermal state is dynamic and handled elsewhere.
+ */
+
+{
+  "meta_group": {
+    "profile_id_str": "external_materials_v1",
+    "version_semver_str": "1.0.0",
+    "license_enum": "CC_BY_SA_4.0"
+  },
+
+  "surface_map": {
+
+    // ==============================================================
+    // 1. FINGERTIPS (High Sensitivity / Manipulation)
+    // ==============================================================
+    "fingertip_right_pad": {
+      "material_str": "silicone_rubber_shore_a40",
+
+      // FRICTION COEFFICIENTS (Crucial for grasp stability)
+      "friction_static_coeff_float": 0.9,
+      "friction_kinetic_coeff_float": 0.7,
+
+      // HARDNESS & COMPLIANCE
+      // Shore A 40: very soft, typical of compliant rubber pads
+      "shore_hardness_a_int": 40,
+      "compliance_model_enum": "ELASTOMER",
+
+      // THERMAL PROPERTIES (Used for safety checks)
+      // Low thermal conductivity: surface does not feel "burning hot"
+      "thermal_conductivity_w_mk_float": 0.18
+    },
+
+    // ==============================================================
+    // 2. CHASSIS (Rigidity & Safety Bumper)
+    // ==============================================================
+    "torso_shell_front": {
+      "material_str": "carbon_fiber_reinforced_polymer",
+
+      // Moderate friction; objects can slide if pushed
+      "friction_static_coeff_float": 0.35,
+
+      // Very rigid outer shell
+      "shore_hardness_a_int": 95,
+
+      // VULNERABILITY & HAZARD
+      // Very low elastic deformation under load
+      "max_deformation_m_float": 0.001,
+      // Not sharp, not inherently dangerous on contact
+      "hazard_level_enum": "LOW"
+    },
+
+    // ==============================================================
+    // 3. LIMB EDGES (Collision Warning)
+    // ==============================================================
+    "right_arm_edge": {
+      "material_str": "polycarbonate_casing",
+
+      "friction_static_coeff_float": 0.45,
+      "fragility_enum": "MEDIUM",
+
+      // SOCIAL / SAFETY HAZARD (Used by 'empathy_model.json')
+      // Can cause pain or discomfort in case of strong blunt impact
+      "hazard_level_enum": "CAUTION_BLUNT_IMPACT",
+
+      // Maximum impact energy before structural failure
+      "max_impact_energy_j_float": 50.0
+    }
+  }
+}

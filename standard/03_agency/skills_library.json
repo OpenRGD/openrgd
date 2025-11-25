@@ -1,0 +1,254 @@
+{
+  "meta_group": {
+    "skills_profile_id_str": "bhl_core_skills_v1",
+    "version_semver_str": "1.0.0",
+    "license_enum": "CC_BY_SA_4.0",
+    "is_extension_capable_bool": true
+  },
+  "skill_categories_list": [
+    "LOCOMOTION",
+    "MANIPULATION",
+    "SOCIAL_INTERACTION",
+    "MAINTENANCE_AND_SELF_CARE",
+    "SAFETY_AND_RECOVERY",
+    "SWARM_AND_COORDINATION",
+    "COGNITIVE_AND_PLANNING"
+  ],
+  "skills_map": {
+    "safe_stance": {
+      "skill_id_str": "safe_stance",
+      "category_enum": "SAFETY_AND_RECOVERY",
+      "description_str": "Adopt a low-risk, stable stance that minimises risk to humans, objects and the robot itself.",
+      "capability_level_enum": "BASIC",
+      "is_core_skill_bool": true,
+      "preconditions_group": {
+        "required_world_model_tags_list_str": [
+          "has_ground_contact",
+          "center_of_mass_known"
+        ],
+        "required_sensors_list_str": [
+          "imu_body",
+          "joint_position_sensors"
+        ],
+        "required_actuators_list_str": [
+          "legs_full_chain"
+        ],
+        "disallowed_context_flags_list_str": [
+          "in_free_fall",
+          "external_emergency_e_stop"
+        ]
+      },
+      "safety_envelope_group": {
+        "max_joint_velocity_scale_float": 0.4,
+        "max_contact_force_n_float": 150.0,
+        "allowed_contact_zones_list_str": [
+          "feet",
+          "lower_legs"
+        ],
+        "human_proximity_mode_enum": "SAFE_SLOW"
+      },
+      "training_profile_group": {
+        "policy_family_str": "standing_balance_v2",
+        "training_domain_str": "flat_and_slightly_irregular_terrain",
+        "sim2real_calibration_level_enum": "FIELD_TESTED"
+      },
+      "runtime_policy_group": {
+        "learning_allowed_bool": false,
+        "max_policy_drift_per_hour_float": 0.0
+      },
+      "fallback_group": {
+        "on_failure_action_enum": "HARD_E_STOP",
+        "notes_str": "If safe stance cannot be reached, prefer stopping all non-essential motion and requesting human assistance."
+      }
+    },
+    "generic_container_grasp": {
+      "skill_id_str": "generic_container_grasp",
+      "category_enum": "MANIPULATION",
+      "description_str": "Grasp a generic container-like object (box, bin, small crate) using fingertip friction and palm support.",
+      "capability_level_enum": "INTERMEDIATE",
+      "is_core_skill_bool": true,
+      "preconditions_group": {
+        "required_world_model_tags_list_str": [
+          "affordance:container",
+          "surface:is_graspable"
+        ],
+        "required_sensors_list_str": [
+          "rgbd_head_camera",
+          "tactile_fingertips",
+          "force_torque_wrist"
+        ],
+        "required_actuators_list_str": [
+          "arms_full_chain",
+          "fingers_all"
+        ],
+        "disallowed_context_flags_list_str": [
+          "human_body_as_target"
+        ]
+      },
+      "safety_envelope_group": {
+        "max_contact_force_n_float": 60.0,
+        "max_lift_mass_kg_float": 5.0,
+        "slip_detection_enabled_bool": true,
+        "auto_abort_on_high_torque_bool": true
+      },
+      "training_profile_group": {
+        "policy_family_str": "container_grasp_v1",
+        "training_domain_str": "indoor_shelves_and_tables",
+        "sim2real_calibration_level_enum": "LAB_VALIDATED"
+      },
+      "runtime_policy_group": {
+        "learning_allowed_bool": true,
+        "max_policy_drift_per_hour_float": 0.05
+      },
+      "fallback_group": {
+        "on_failure_action_enum": "PLACE_OBJECT_BACK_AND_RELEASE",
+        "fallback_skill_ref_str": "skills_library.safe_stance"
+      }
+    },
+    "gentle_head_nod": {
+      "skill_id_str": "gentle_head_nod",
+      "category_enum": "SOCIAL_INTERACTION",
+      "description_str": "Perform a small, slow head nod to signal acknowledgement or agreement without appearing uncanny or threatening.",
+      "capability_level_enum": "BASIC",
+      "is_core_skill_bool": true,
+      "preconditions_group": {
+        "required_world_model_tags_list_str": [
+          "has_head_actuator"
+        ],
+        "required_sensors_list_str": [
+          "front_camera",
+          "audio_microphones"
+        ],
+        "required_actuators_list_str": [
+          "neck_yaw_pitch"
+        ],
+        "disallowed_context_flags_list_str": [
+          "in_high_speed_motion"
+        ]
+      },
+      "safety_envelope_group": {
+        "max_joint_velocity_scale_float": 0.3,
+        "max_angular_accel_deg_s2_float": 80.0,
+        "human_proximity_mode_enum": "NORMAL_INTERACTION"
+      },
+      "training_profile_group": {
+        "policy_family_str": "expressive_head_motion_v1",
+        "training_domain_str": "face_to_face_indoor",
+        "sim2real_calibration_level_enum": "STUDIO_TESTED"
+      },
+      "runtime_policy_group": {
+        "learning_allowed_bool": false,
+        "max_policy_drift_per_hour_float": 0.0
+      },
+      "fallback_group": {
+        "on_failure_action_enum": "ABORT_AND_RETURN_TO_NEUTRAL_POSE"
+      }
+    },
+    "polite_idle_gaze": {
+      "skill_id_str": "polite_idle_gaze",
+      "category_enum": "SOCIAL_INTERACTION",
+      "description_str": "Maintain a non-staring, socially comfortable gaze pattern when near humans.",
+      "capability_level_enum": "INTERMEDIATE",
+      "is_core_skill_bool": true,
+      "preconditions_group": {
+        "required_world_model_tags_list_str": [
+          "has_head_actuator",
+          "has_eyes_or_display"
+        ],
+        "required_sensors_list_str": [
+          "front_camera",
+          "human_pose_estimator"
+        ],
+        "required_actuators_list_str": [
+          "neck_yaw_pitch",
+          "eye_pan_tilt_optional"
+        ],
+        "disallowed_context_flags_list_str": [
+          "privacy_critical_zone"
+        ]
+      },
+      "safety_envelope_group": {
+        "max_joint_velocity_scale_float": 0.2,
+        "human_proximity_mode_enum": "SOCIAL_SPACE"
+      },
+      "training_profile_group": {
+        "policy_family_str": "gaze_control_v1",
+        "training_domain_str": "indoor_social",
+        "sim2real_calibration_level_enum": "FIELD_TESTED"
+      },
+      "runtime_policy_group": {
+        "learning_allowed_bool": true,
+        "max_policy_drift_per_hour_float": 0.02
+      },
+      "fallback_group": {
+        "on_failure_action_enum": "LOOK_AWAY_TO_NEUTRAL_SAFE_DIRECTION"
+      }
+    },
+    "self_check_quick_diagnostics": {
+      "skill_id_str": "self_check_quick_diagnostics",
+      "category_enum": "MAINTENANCE_AND_SELF_CARE",
+      "description_str": "Run a quick set of hardware and sensor diagnostics and report obvious anomalies.",
+      "capability_level_enum": "BASIC",
+      "is_core_skill_bool": true,
+      "preconditions_group": {
+        "required_world_model_tags_list_str": [
+          "has_power_monitor",
+          "has_joint_sensors"
+        ],
+        "required_sensors_list_str": [
+          "joint_position_sensors",
+          "battery_monitor",
+          "imu_body"
+        ],
+        "required_actuators_list_str": [],
+        "disallowed_context_flags_list_str": [
+          "hard_real_time_task_running"
+        ]
+      },
+      "safety_envelope_group": {
+        "max_joint_velocity_scale_float": 0.0,
+        "human_proximity_mode_enum": "NO_SPECIAL_CONSTRAINT"
+      },
+      "training_profile_group": {
+        "policy_family_str": "diagnostics_v1",
+        "training_domain_str": "factory_test_bench",
+        "sim2real_calibration_level_enum": "FORMALLY_SPECIFIED"
+      },
+      "runtime_policy_group": {
+        "learning_allowed_bool": false,
+        "max_policy_drift_per_hour_float": 0.0
+      },
+      "fallback_group": {
+        "on_failure_action_enum": "RAISE_INTERNAL_ALERT_AND_REQUEST_SERVICE"
+      }
+    }
+  },
+  "extension_model": {
+    "allow_third_party_extensions_bool": true,
+    "require_signed_packages_bool": true,
+    "default_extension_trust_level_enum": "SANDBOXED",
+    "governance_group": {
+      "review_council_str": "Robotica Prima Skills Review Panel",
+      "max_unreviewed_runtime_hours_float": 24.0,
+      "allow_auto_update_bool": false
+    },
+    "installed_packages_map": {
+      "pkg_indoor_delivery_v1": {
+        "package_id_str": "pkg_indoor_delivery_v1",
+        "provider_name_str": "Italia Robotica Labs",
+        "source_uri_str": "registry:openrgd/skills/indoor_delivery_v1",
+        "crypto_signature_hash_str": "SHA3-256::<hex>",
+        "review_status_enum": "PENDING_REVIEW",
+        "exposed_skills_list_str": [
+          "indoor_delivery_follow_route",
+          "indoor_delivery_hand_over_object"
+        ],
+        "safety_summary_group": {
+          "max_rated_speed_m_s_float": 1.0,
+          "human_proximity_mode_enum": "SOCIAL_SPACE",
+          "declared_risk_level_enum": "LOW_TO_MEDIUM"
+        }
+      }
+    }
+  }
+}

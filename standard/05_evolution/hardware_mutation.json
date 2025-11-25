@@ -1,0 +1,36 @@
+{
+  "meta_group": {
+    "mutation_policy_id_str": "modularity_protocol_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "identity_continuity_config": {
+    "max_core_replacement_pct_float": 0.75,
+    "critical_components_list_str": [
+      "main_brain_unit",
+      "torso_base_link"
+    ],
+    "action_on_threshold_exceeded_enum": "MANDATORY_NEW_RIN_REGISTRATION"
+  },
+  "integration_protocol_map": {
+    "new_actuator_integration": {
+      "required_steps_list_str": [
+        "run_calibration_routine",
+        "check_thermal_envelope",
+        "update_actuation_topology_entry"
+      ],
+      "self_testing_period_hours_int": 4
+    },
+    "sensor_upgrade_protocol": {
+      "required_steps_list_str": [
+        "check_bus_bandwidth",
+        "generate_new_fidelity_profile"
+      ],
+      "data_validation_min_confidence_float": 0.98
+    }
+  },
+  "degradation_adaptation_config": {
+    "limb_failure_policy_enum": "DISABLE_LIMB_AND_UPDATE_MODEL",
+    "max_acceptable_sensor_failure_count_int": 2,
+    "safe_mode_velocity_reduction_pct_float": 0.5
+  }
+}

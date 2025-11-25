@@ -1,0 +1,24 @@
+{
+  "meta_group": {
+    "ledger_id_str": "self_sustained_v1",
+    "currency_symbol_str": "ETH_t",
+    "last_validated_iso8601_str": "2025-11-23T15:35:00Z"
+  },
+  "financial_status": {
+    "current_balance_float": 500.0,
+    "survival_threshold_float": 10.0,
+    "recharge_point_of_contact_uri_str": "grpc://charge_network_v1"
+  },
+  "cost_models_map": {
+    "idle_consumption_w_float": 15.0,
+    "compute_cost_per_tops_h_float": 0.001,
+    "locomotion_cost_per_meter_float": 0.05,
+    "communication_cost_per_byte_float": 1e-05,
+    "maintenance_cost_factor_float": 1.25
+  },
+  "economic_policy_config": {
+    "min_roi_factor_float": 1.15,
+    "debt_ceiling_float": 50.0,
+    "payment_protocol_enum": "PAYMENT_MICRO_TRANSACTION_M2M"
+  }
+}

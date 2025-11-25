@@ -1,0 +1,249 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - ACTUATION TOPOLOGY v0.1
+ * ------------------------------------------------------------------
+ * FILE: actuation_topology.jsonc
+ * CONTEXT: 01_FOUNDATION (The Body)
+ *
+ * PURPOSE:
+ * - Maps logical kinematic joints to physical actuator models.
+ * - Defines control strategies (PID vs Impedance vs Natural Frequency).
+ * - Bridges the gap between ROS2 Control (Real) and Isaac Sim (Simulation).
+ *
+ * FEATURES:
+ * - Uses "Control Profiles" to avoid repetition (DRY principle).
+ * - Defines explicit drive modes (Force vs Acceleration).
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA & LINKAGE
+  // ==============================================================
+  "meta_group": {
+    "topology_id_str": "bhl_actuation_topology_v1_4",
+    "version_semver_str": "1.4.0",
+    "last_verified_iso8601_str": "2025-11-25T14:30:00Z",
+    "domain_id_str": "01_foundation",
+
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+      "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc"
+    }
+  },
+
+  // ==============================================================
+  // A. CONTROL PROFILES (ARCHETYPES)
+  // Define reusable behaviors here to keep the mapping clean.
+  // ==============================================================
+  "control_profiles_map": {
+
+    // ------------------------------------------------------------
+    // PROFILE: HEAVY LEG JOINT (Knee, Hip Pitch)
+    // Optimized for high torque, walking gait stability.
+    // ------------------------------------------------------------
+    "profile_heavy_leg": {
+      "transmission_config": {
+        "efficiency_factor_float": 0.95,
+        "backlash_compensation_rad_float": 0.001
+      },
+      "control_defaults": {
+        "primary_control_mode_enum": "POSITION",
+        
+        // ROS2 / Real Hardware Gains
+        "position_mode_gains": { "kp": 150.0, "kd": 8.0, "ki": 0.0 },
+        "velocity_mode_gains": { "kp": 20.0, "ki": 0.1 },
+
+        // Isaac Sim / Physics Gains
+        "advanced_impedance_model": {
+          "stiffness_nm_rad_float": 150.0, // High stiffness for support
+          "damping_nms_rad_float": 8.0     // Critical damping to prevent oscillation
+        },
+        
+        // Tuning Abstract
+        "natural_frequency_config": {
+          "natural_frequency_hz_float": 15.0,
+          "damping_ratio_float": 1.0
+        },
+
+        "simulation_driver": { "drive_mode_enum": "FORCE" } // Realistic physics
+      }
+    },
+
+    // ------------------------------------------------------------
+    // PROFILE: LIGHT ARM JOINT (Shoulder, Elbow)
+    // Optimized for compliance and safety.
+    // ------------------------------------------------------------
+    "profile_light_arm": {
+      "transmission_config": { "efficiency_factor_float": 0.98 },
+      "control_defaults": {
+        "primary_control_mode_enum": "POSITION",
+        
+        "position_mode_gains": { "kp": 40.0, "kd": 2.0 },
+        "advanced_impedance_model": { "stiffness_nm_rad_float": 40.0, "damping_nms_rad_float": 2.0 },
+        
+        "simulation_driver": { "drive_mode_enum": "ACCELERATION" } // Stable IK solving
+      }
+    },
+
+    // ------------------------------------------------------------
+    // PROFILE: FINE MANIPULATION (Wrist, Gripper)
+    // Optimized for precision.
+    // ------------------------------------------------------------
+    "profile_fine_manipulation": {
+      "transmission_config": { "efficiency_factor_float": 0.90 },
+      "control_defaults": {
+        "primary_control_mode_enum": "POSITION",
+        "position_mode_gains": { "kp": 20.0, "kd": 0.5 },
+        "advanced_impedance_model": { "stiffness_nm_rad_float": 20.0, "damping_nms_rad_float": 0.5 },
+        "simulation_driver": { "drive_mode_enum": "ACCELERATION" }
+      }
+    }
+  },
+
+  // ==============================================================
+  // B. JOINT MAPPING (INSTANCES)
+  // Links specific joints to profiles + specific limits.
+  // ==============================================================
+  "joint_actuator_mapping_map": {
+
+    // --- RIGHT LEG ---
+    
+    "hip_yaw_right": {
+      "target_joint_ref_str": "leg_right_hip_yaw",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 40.0, "velocity_limit_rad_s_float": 12.0 }
+    },
+
+    "hip_roll_right": {
+      "target_joint_ref_str": "leg_right_hip_roll",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 60.0, "velocity_limit_rad_s_float": 10.0 }
+    },
+
+    "hip_pitch_right": {
+      "target_joint_ref_str": "leg_right_hip_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      // OVERRIDE: Pitch needs more torque than Yaw
+      "application_limits": { "torque_limit_peak_nm_float": 80.0, "velocity_limit_rad_s_float": 8.0 },
+      "overrides": {
+        "control_defaults": { "position_mode_gains": { "kp": 200.0 } }
+      }
+    },
+
+    "knee_pitch_right": {
+      "target_joint_ref_str": "leg_right_knee_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 120.0, "velocity_limit_rad_s_float": 12.0 }
+    },
+
+    "ankle_pitch_right": {
+      "target_joint_ref_str": "leg_right_ankle_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_heavy_leg", // Use heavy profile for stability despite smaller motor
+      "application_limits": { "torque_limit_peak_nm_float": 30.0, "velocity_limit_rad_s_float": 15.0 }
+    },
+
+    // --- LEFT LEG (Mirrored Logic) ---
+
+    "hip_yaw_left": {
+      "target_joint_ref_str": "leg_left_hip_yaw",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 40.0 }
+    },
+    "hip_roll_left": {
+      "target_joint_ref_str": "leg_left_hip_roll",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 60.0 }
+    },
+    "hip_pitch_left": {
+      "target_joint_ref_str": "leg_left_hip_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 80.0 },
+      "overrides": { "control_defaults": { "position_mode_gains": { "kp": 200.0 } } }
+    },
+    "knee_pitch_left": {
+      "target_joint_ref_str": "leg_left_knee_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 120.0 }
+    },
+    "ankle_pitch_left": {
+      "target_joint_ref_str": "leg_left_ankle_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": { "torque_limit_peak_nm_float": 30.0 }
+    },
+
+    // --- ARMS ---
+
+    "shoulder_pitch_right": {
+      "target_joint_ref_str": "arm_right_shoulder_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": { "torque_limit_peak_nm_float": 18.0, "velocity_limit_rad_s_float": 20.0 }
+    },
+    "shoulder_roll_right": {
+      "target_joint_ref_str": "arm_right_shoulder_roll",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+    },
+    "elbow_pitch_right": {
+      "target_joint_ref_str": "arm_right_elbow_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+    },
+
+    "shoulder_pitch_left": {
+      "target_joint_ref_str": "arm_left_shoulder_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+    },
+    "shoulder_roll_left": {
+      "target_joint_ref_str": "arm_left_shoulder_roll",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+    },
+    "elbow_pitch_left": {
+      "target_joint_ref_str": "arm_left_elbow_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+    }
+  }
+
+
+  // ==============================================================
+  // FUTURE EXTENSIONS (NOT YET USED IN v0.2)
+  //
+  // For an extended standard, you could introduce:
+  //
+  // "multi_actuator_joints_map": {
+  //   "spine_flex_joint": {
+  //     "co_actuators_list": ["spine_actuator_a", "spine_actuator_b"],
+  //     "coordination_strategy_enum": "TORQUE_SHARING"
+  //   }
+  // }
+  //
+  // "impedance_profiles_map": {
+  //   "bouncy_walk": {
+  //     "desired_stiffness_nm_rad_float": 50.0,
+  //     "desired_damping_nms_rad_float": 2.0
+  //   }
+  // }
+  //
+  // The key is to keep the existing structure stable and additive,
+  // so older runtimes can ignore new optional sections.
+  // ==============================================================
+}

@@ -1,0 +1,56 @@
+{
+  "meta_group": {
+    "psyche_model_id_str": "cognitive_load_v1",
+    "version_semver_str": "1.0.0",
+    "stress_score_range_vec2_int": [
+      0,
+      100
+    ]
+  },
+  "stress_input_metrics_map": {
+    "cognitive_load_tops_pct": {
+      "source_ref_str": "compute_topology/main_brain_unit/performance_specs/load_pct",
+      "weight_factor_float": 0.4,
+      "threshold_max_pct_float": 95.0
+    },
+    "goal_conflict_score": {
+      "source_ref_str": "alignment/conflict_monitor/active_count_int",
+      "weight_factor_float": 0.3,
+      "threshold_max_int": 5
+    },
+    "motor_thermal_stress": {
+      "source_ref_str": "telemetry/motor_temp_avg_c_float",
+      "weight_factor_float": 0.15,
+      "threshold_max_c_float": 85.0
+    },
+    "sensor_anomaly_rate": {
+      "source_ref_str": "immunology/sensor_fault_rate_per_min_int",
+      "weight_factor_float": 0.15,
+      "threshold_max_int": 3
+    }
+  },
+  "resilience_model_config": {
+    "integration_method_enum": "WEIGHTED_SUM_AVERAGE",
+    "burnout_threshold_int": 75,
+    "adaptation_rate_per_hour_float": 0.05,
+    "recovery_rate_base_per_min_float": 0.5
+  },
+  "coping_mechanisms_map": {
+    "stress_level_moderate_50_75": {
+      "action_type_enum": "TASK_DEPRIORITIZATION",
+      "policy_ref_str": "agency/policy_refusal_v2",
+      "effect_str": "Increase task latency by 20% to conserve resources."
+    },
+    "stress_level_critical_75_90": {
+      "action_type_enum": "SYSTEMIC_DOWNGRADE",
+      "policy_ref_str": "operation/downshift_mode_v1",
+      "effect_str": "Reduce NPU clock speed by 50% and disable high-resolution vision."
+    },
+    "stress_level_burnout_90_100": {
+      "action_type_enum": "SELF_QUARANTINE_AND_REBOOT",
+      "policy_ref_str": "system/emergency_reboot_safe_mode",
+      "max_quarantine_duration_min_int": 60,
+      "energy_cost_ref_str": "ledger/reboot_cost_wh_float"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: ledger.json
+ * CONTEXT: 04_VOLITION (Economy & Metabolism)
+ * * PURPOSE:
+ * Defines the robot's financial status, resource costs, and economic policies.
+ * This file is crucial for calculating the viability (ROI) of any action and
+ * driving basic survival needs (recharging, maintenance).
+ * * LINKAGE:
+ * Directly informs 'energy_saving_weight_float' in orchestra.json.
+ */
+{
+  "meta_group": {
+    "ledger_id_str": "self_sustained_v1",
+    "currency_symbol_str": "ETH_t", // Placeholder for test token/crypto
+    "last_validated_iso8601_str": "2025-11-23T15:35:00Z"
+  },
+
+  // ==============================================================
+  // 1. FINANCIAL STATUS (The Wallet)
+  // Tracks available resources needed for operation and growth.
+  // ==============================================================
+  "financial_status": {
+    "current_balance_float": 500.0,
+    "survival_threshold_float": 10.0, // Minimum funds required to operate
+    "recharge_point_of_contact_uri_str": "grpc://charge_network_v1"
+  },
+
+  // ==============================================================
+  // 2. RESOURCE COST MODELS
+  // Defines the base energy and compute cost of internal states and actions.
+  // ==============================================================
+  "cost_models_map": {
+    "idle_consumption_w_float": 15.0, // Base power draw when inactive
+    
+    "compute_cost_per_tops_h_float": 0.001, // Cost of internal thought (for economic reasoning)
+    
+    "locomotion_cost_per_meter_float": 0.05, // Cost to move 1 meter (energy + wear)
+    
+    "communication_cost_per_byte_float": 0.00001,
+    
+    "maintenance_cost_factor_float": 1.25 // Maintenance cost is 1.25x the estimated wear cost
+  },
+
+  // ==============================================================
+  // 3. ECONOMIC POLICY
+  // Rules for engaging in tasks and managing debt.
+  // ==============================================================
+  "economic_policy_config": {
+    "min_roi_factor_float": 1.15, // Robot only accepts tasks with 15% minimum return on investment
+    "debt_ceiling_float": 50.0, // Max debt allowed before refusing tasks
+    "payment_protocol_enum": "PAYMENT_MICRO_TRANSACTION_M2M"
+  }
+}

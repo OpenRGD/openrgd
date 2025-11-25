@@ -1,0 +1,206 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.2 — REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: power_distribution.jsonc
+ * CONTEXT: 01_FOUNDATION (THE BODY)
+ *
+ * PURPOSE:
+ *   Defines the robot’s full electrical physiology: energy sources,
+ *   voltage rails, distribution logic, protection layers, and
+ *   regenerative/charging mechanisms.
+ *
+ * HUMAN INTERPRETATION:
+ *   Think of this as the "circulatory system": heart (battery),
+ *   arteries (power rails), immune system (protection), metabolism
+ *   (regeneration & charging).
+ *
+ * LLM INTERPRETATION:
+ *   - DO NOT invent new voltage rails unless explicitly added here.
+ *   - ALWAYS refer to rails via `*_rail_ref_str` when used in other
+ *     files (e.g., actuation_topology, compute_topology).
+ *   - Treat this file as the canonical source for electrical limits.
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA
+  // ==============================================================
+
+  "meta_group": {
+    "power_architecture_id_str": "bhl_power_stack_v2",
+    "version_semver_str": "1.2.0",
+    "last_updated_iso8601_str": "2025-11-23T18:20:00Z",
+
+    "related_files_map": {
+      "compute_topology_ref_str": "01_foundation/compute_topology.jsonc",
+      "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+      "safety_critical_ref_str": "04_volition/safety_critical.jsonc",
+      "ledger_ref_str": "04_volition/ledger.jsonc"
+    }
+  },
+
+  // ==============================================================
+  // 1. ENERGY SOURCE (Primary Battery Pack - The Heart)
+  // ==============================================================
+
+  "primary_energy_source": {
+    "battery_model_str": "Custom_LiPo_12S",
+    "chemistry_enum": "LITHIUM_POLYMER",
+
+    // Energy Capacity
+    "capacity_wh_float": 500.0,
+    "nominal_voltage_v_float": 44.4,
+    "max_discharge_current_a_float": 100.0,
+
+    // Electrical properties
+    "internal_resistance_ohm_float": 0.005,
+    "temp_limit_c_float": 55.0,
+
+    // Smart BMS
+    "bms_spec": {
+      "supports_cell_balancing_bool": true,
+      "balancing_algorithm_enum": "DELTA_V_ACTIVE",
+      "cell_count_int": 12,
+      "telemetry_update_rate_hz_float": 5.0,
+      "communication_protocol_enum": "CAN_BUS_FD"
+    }
+  },
+
+  // ==============================================================
+  // 2. VOLTAGE RAILS (Distribution Network)
+  // ==============================================================
+
+  "voltage_rails_map": {
+
+    // --- Motor Power ---
+    "motor_actuation_rail": {
+      "voltage_v_float": 48.0,
+      "priority_enum": "HIGH",
+      "max_current_a_float": 120.0,
+
+      "powered_components_list_str": [
+        "leg_actuator_group",
+        "arm_actuator_group"
+      ]
+    },
+
+    // --- High Priority Logic ---
+    "logic_sensor_rail": {
+      "voltage_v_float": 12.0,
+      "priority_enum": "CRITICAL",
+      "max_current_a_float": 20.0,
+
+      "powered_components_list_str": [
+        "main_brain_unit",
+        "spinal_cord_mcu",
+        "perception_sensors"
+      ]
+    },
+
+    // --- Low-Power Microcontrollers & HMI ---
+    "low_power_logic_rail": {
+      "voltage_v_float": 5.0,
+      "priority_enum": "CRITICAL",
+      "powered_components_list_str": [
+        "tts_driver",
+        "status_led_array",
+        "rf_modems"
+      ]
+    }
+  },
+
+  // ==============================================================
+  // 3. RAIL ROUTING LOGIC (Current Budgeting & Prioritization)
+  // ==============================================================
+
+  "rail_routing_policy": {
+    "brownout_priority_order_list_enum": [
+      "low_power_logic_rail",
+      "logic_sensor_rail",
+      "motor_actuation_rail"
+    ],
+
+    // Prevents Agency layer from exceeding electrical limits
+    "load_shedding_rules": {
+      "max_total_current_a_float": 140.0,
+      "shed_strategy_enum": "DISABLE_NONESSENTIAL_ACTUATORS",
+      "shutdown_threshold_voltage_v_float": 40.0
+    }
+  },
+
+  // ==============================================================
+  // 4. PROTECTION SYSTEM (Fuses, Cutoffs, Thermal & Overload Safety)
+  // ==============================================================
+
+  "protection_config": {
+    "system_fuse_rating_a_float": 120.0,
+
+    // System-level cutoff
+    "software_shutdown_voltage_v_float": 40.0,
+
+    "thermal_monitoring_map": {
+      "sensors_list_str": [
+        "battery_pack_center",
+        "power_bus_main",
+        "motor_controller_group"
+      ],
+      "update_rate_hz_float": 10.0
+    },
+
+    "fault_response_policies": {
+      "overcurrent_response_enum": "GRACEFUL_SHUTDOWN",
+      "overtemp_response_enum": "THROTTLE_AND_COOL",
+      "bms_fault_enum": "IMMEDIATE_CUTOFF"
+    }
+  },
+
+  // ==============================================================
+  // 5. REGENERATION & CHARGING SYSTEM
+  // ==============================================================
+
+  "regeneration_spec": {
+    "regenerative_braking_efficiency_pct_float": 0.15,
+    "regen_enabled_bool": true,
+
+    "regen_safety_limits": {
+      "max_regen_current_a_float": 20.0,
+      "min_battery_temperature_c_float": 5.0,
+      "max_battery_voltage_v_float": 50.4 // 12S fully charged
+    }
+  },
+
+  "charging_spec": {
+    "charging_protocol_enum": "SMART_BMS",
+    "max_charge_rate_w_float": 500.0,
+
+    "supported_charging_methods_map": {
+      "direct_dc_fast_charge": {
+        "supported_bool": true,
+        "max_voltage_v_float": 50.4,
+        "max_current_a_float": 12.0
+      },
+      "wireless_inductive_charge": {
+        "supported_bool": true,
+        "max_power_w_float": 100.0,
+        "alignment_tolerance_cm_float": 5.0
+      }
+    }
+  },
+
+  // ==============================================================
+  // 6. POWER-INTROSPECTION & TELEMETRY (For LLM + Kernel)
+  // ==============================================================
+
+  "power_introspection": {
+    "telemetry_stream_uri_str": "/rgd/power/telemetry",
+    "telemetry_update_rate_hz_float": 10.0,
+    "exposed_metrics_list_str": [
+      "battery_soc_pct",
+      "battery_voltage_v",
+      "rail_currents_a",
+      "rail_status_flags",
+      "thermal_warnings"
+    ]
+  }
+}

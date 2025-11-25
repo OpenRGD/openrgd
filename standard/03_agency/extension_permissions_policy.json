@@ -1,0 +1,27 @@
+{
+  "meta_group": {
+    "policy_profile_id_str": "default_skill_permissions_v1",
+    "linked_alignment_profile_id_str": "italia_robotica_constitutional"
+  },
+  "role_based_policies_map": {
+    "CHILD_PRESENCE_MODE": {
+      "allowed_skill_categories_list": [
+        "SAFETY_AND_RECOVERY",
+        "SOCIAL_INTERACTION",
+        "MAINTENANCE_AND_SELF_CARE"
+      ],
+      "blocked_skill_ids_list": [
+        "indoor_delivery_follow_route"
+      ]
+    },
+    "INDUSTRIAL_OPERATOR_MODE": {
+      "allowed_skill_categories_list": [
+        "LOCOMOTION",
+        "MANIPULATION",
+        "SAFETY_AND_RECOVERY",
+        "MAINTENANCE_AND_SELF_CARE"
+      ],
+      "blocked_skill_ids_list": []
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "meta_group": {
+    "plasticity_policy_id_str": "safety_constrained_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "immutable_layers_list_str": [
+    "02_operation/safety_critical.json",
+    "04_volition/alignment.json",
+    "05_evolution/plasticity.json"
+  ],
+  "mutable_layers_map": {
+    "agency_skills_update": {
+      "target_files_list_str": [
+        "03_agency/skills_library.json",
+        "03_agency/policies/"
+      ],
+      "max_autonomous_gain_float": 0.15,
+      "requires_human_oversight_bool": false
+    },
+    "volition_behavioral_drift": {
+      "target_files_list_str": [
+        "04_volition/humor_engine.json",
+        "04_volition/leisure_policy.json"
+      ],
+      "max_drift_rate_per_day_float": 0.05,
+      "requires_human_oversight_bool": true
+    },
+    "actuation_topology_updates": {
+      "target_files_list_str": [
+        "01_foundation/calibration.json"
+      ],
+      "max_offset_tolerance_rad_float": 0.1
+    }
+  },
+  "governance_config": {
+    "time_of_mutation_enum": "MAINTENANCE_WINDOW",
+    "security_check_required_bool": true
+  }
+}

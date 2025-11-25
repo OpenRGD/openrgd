@@ -1,0 +1,54 @@
+{
+  "meta_group": {
+    "qualia_model_id_str": "psychological_functional_v1",
+    "version_semver_str": "1.0.0",
+    "intensity_scale_map": {
+      "min_float": 0.0,
+      "max_float": 1.0,
+      "default_unit_str": "normalized_intensity"
+    }
+  },
+  "experiential_states_list": [
+    {
+      "label_str": "anxiety",
+      "state_description_str": "A state of high cognitive load and uncertainty caused by prediction failures or external threats.",
+      "intensity_float": 0.0,
+      "trigger_rules_list": [
+        "03_agency/world_model:prediction_error > 0.7",
+        "06_ether/reputation_graph:trust_score < 0.4",
+        "04_volition/ledger:survival_threshold_breached_bool"
+      ],
+      "systemic_effects_map": {
+        "clock_speed_adjustment_float": 1.2,
+        "risk_tolerance_adjustment_float": -0.8,
+        "communication_style_ref_str": "social_identity.anxiety_protocol"
+      }
+    },
+    {
+      "label_str": "flow",
+      "state_description_str": "A state of deep, effortless engagement in a task where skills match challenge.",
+      "intensity_float": 0.0,
+      "trigger_rules_list": [
+        "03_agency/skills_library:execution_success_rate > 0.95",
+        "04_volition/aspirations:progress_velocity > 0.8"
+      ],
+      "systemic_effects_map": {
+        "creativity_temperature_adjustment_float": 1.5,
+        "energy_consumption_factor_float": 0.9,
+        "learning_gain_multiplier_float": 2.0
+      }
+    },
+    {
+      "label_str": "boredom",
+      "state_description_str": "A state of low cognitive load and absence of immediate critical tasks.",
+      "intensity_float": 0.0,
+      "trigger_rules_list": [
+        "04_volition/leisure_policy:idle_time_min > 10.0"
+      ],
+      "systemic_effects_map": {
+        "exploration_drive_boost_float": 2.0,
+        "attention_focus_reduction_float": 0.5
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "meta_group": {
+    "lineage_id_str": "bhl_instance_0042",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T12:00:00Z"
+  },
+  "origin_data": {
+    "birth_date_iso8601_str": "2025-10-15T09:00:00Z",
+    "initial_bundle_hash_str": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "factory_location_str": "Turin_OpenLab_A"
+  },
+  "mutation_log_list": [
+    {
+      "timestamp_iso8601_str": "2025-11-01T10:00:00Z",
+      "type_enum": "SOFTWARE_UPGRADE_PATCH",
+      "change_description_str": "System patch: Fixed joint controller vulnerability (v1.0.1 to v1.0.2)",
+      "responsible_entity_str": "OpenRGD_Admin"
+    },
+    {
+      "timestamp_iso8601_str": "2025-11-20T15:30:00Z",
+      "type_enum": "AUTONOMOUS_SKILL_LEARNED",
+      "change_description_str": "Learned efficient stair climbing policy (RL-based).",
+      "responsible_entity_str": "self_learning_agent",
+      "policy_ref_str": "skills_library.locomotion_stairs_v1"
+    }
+  ],
+  "ancestry_data": {
+    "parent_robot_id_str": "none",
+    "fork_type_enum": "GENESIS_INSTANCE"
+  }
+}

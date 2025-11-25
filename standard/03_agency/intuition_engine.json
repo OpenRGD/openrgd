@@ -1,0 +1,37 @@
+{
+  "meta_group": {
+    "engine_id_str": "zero_shot_protocol_v2",
+    "version_semver_str": "1.0.0"
+  },
+  "llm_resource_config": {
+    "model_backend_enum": "GEMINI_NANO_V2",
+    "inference_token_budget_per_action_int": 512,
+    "temperature_float": 0.4,
+    "max_latency_ms_int": 150
+  },
+  "safety_sandbox_config": {
+    "compliance_timer_us_ref_int": "01_foundation/compute_topology.json/timing_constraints/ai_processing_budget_us",
+    "action_on_timeout_enum": "FALLBACK_TO_REFLEX_SKILL",
+    "require_simulation_precheck_bool": true,
+    "simulation_duration_s_float": 2.0,
+    "force_limit_multiplier_float": 0.5,
+    "velocity_cap_m_s_float": 0.2
+  },
+  "domain_policy_config": {
+    "allowed_domains_list_str": [
+      "object_manipulation_novelty",
+      "social_interaction_contextual",
+      "navigation_unmapped_local"
+    ],
+    "forbidden_domains_list_str": [
+      "dynamic_locomotion",
+      "heavy_lifting_critical",
+      "human_intervention_medical"
+    ]
+  },
+  "execution_policy_config": {
+    "min_sim_success_confidence_float": 0.9,
+    "action_on_abort_enum": "FALLBACK_TO_HABITUAL_TASK",
+    "fallback_skill_ref_str": "skills_library.safe_stance"
+  }
+}

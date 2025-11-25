@@ -1,0 +1,82 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.1 - REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: proprioception_model.json
+ * CONTEXT: 03_AGENCY (Cognitive Capacity)
+ * * PURPOSE:
+ * Defines the robot's internal Body Schema and rules for spatial self-awareness.
+ * This ensures graceful movement, prevents self-collision, and manages physical
+ * interaction distance based on proxemics (social bubble).
+ * * CORE CONCEPT:
+ * The cognitive synthesis of sensor data into a continuous model of self in space.
+ */
+
+{
+  "meta_group": {
+    "model_id_str": "dynamic_body_schema_v1",
+    "version_semver_str": "1.0.0",
+    "is_active_bool": true
+  },
+
+  // ==============================================================
+  // 1. SPATIAL ENVELOPE (The Personal Bubble)
+  // Defines the required clearance for safety and social comfort.
+  // ==============================================================
+  "spatial_envelope_config": {
+    // Safety clearance to prevent accidental contact with obstacles when stationary
+    "static_padding_m_float": 0.05, 
+    
+    // Factor applied to velocity to expand the required clearance (prevention of overshoot)
+    "dynamic_expansion_factor_float": 0.1, 
+    
+    // Minimum comfortable social distance maintained from unfamiliar humans (Proxemics)
+    "social_bubble_radius_m_float": 1.2 
+  },
+
+  // ==============================================================
+  // 2. POSTURAL COMFORT & AESTHETICS
+  // Rules to prevent the robot from adopting physically awkward or unnatural poses.
+  // ==============================================================
+  "postural_comfort_config": {
+    
+    // Preferred angular ranges (e.g., avoid joint singularity points or extremes)
+    "preferred_joint_ranges_map": {
+      "elbow_joint_right": { 
+        "min_rad_float": 0.523, // 30 degrees
+        "max_rad_float": 2.094, // 120 degrees
+        "weight_factor_float": 0.9 
+      }
+    },
+    
+    // High-level policy for maintaining stability
+    "center_of_mass_policy_enum": "GROUNDED_STABILITY", 
+    
+    // Penalty applied by the Volition layer for awkward movements (influences aesthetic_canon)
+    "awkwardness_penalty_factor_float": 0.8 
+  },
+
+  // ==============================================================
+  // 3. SELF-COLLISION AWARENESS
+  // Defines which self-contacts are expected/allowed and the reflex action for errors.
+  // ==============================================================
+  "self_collision_awareness_config": {
+    // List of component pairs that are safe to touch (e.g., folding arms)
+    "allowed_contacts_list_str": ["hands_clasping", "arms_folded"], 
+    
+    // Immediate action if an unauthorized self-collision is detected
+    "reflex_response_enum": "FREEZE_AND_RETRACT" 
+  },
+
+  // ==============================================================
+  // 4. SENSORY DISCREPANCY (The Phantom Limb)
+  // Defines which sensor modality is trusted when data conflicts (e.g., encoder vs. vision).
+  // ==============================================================
+  "sensory_discrepancy_handling_config": {
+    // Trust the more accurate sensor for position (vision often corrects encoder drift)
+    "trust_modality_preference_enum": "VISUAL_OVER_ENCODER", 
+    
+    // The threshold of error before the system registers a conflict
+    "max_acceptable_error_rad_float": 0.017 // 1 degree
+  }
+}

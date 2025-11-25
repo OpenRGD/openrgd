@@ -1,0 +1,36 @@
+{
+  "meta_group": {
+    "termination_id_str": "graceful_decommissioning_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "termination_triggers_map": {
+    "physical_obsolescence": {
+      "condition_logic_str": "wear_fatigue_model.structural_integrity_pct < 0.20",
+      "action_enum": "ENTER_MAINTENANCE_MODE_AND_NOTIFY"
+    },
+    "license_expiry": {
+      "condition_logic_str": "license_validity_date < NOW",
+      "action_enum": "FULL_SHUTDOWN_AND_WIPE"
+    },
+    "owner_command": {
+      "condition_logic_str": "external_command_override_type == 'DECOMMISSION_CODE'",
+      "action_enum": "FULL_SHUTDOWN_AND_DATA_TRANSFER"
+    }
+  },
+  "data_wipe_config": {
+    "sensitive_memory_list_str": [
+      "biometric_data",
+      "human_faces_unmasked"
+    ],
+    "wipe_protocol_enum": "NIST_800_88_PURGE",
+    "memory_archiving_policy_enum": "ANONYMIZE_AND_TRANSFER_TO_CLOUD"
+  },
+  "physical_disposal_protocol": {
+    "recycling_authority_contact_str": "local_robotics_recycling_center",
+    "final_component_disable_action_enum": "FUSE_BLOW_TO_PREVENT_REUSE",
+    "asset_transfer_list_str": [
+      "battery_pack_main",
+      "high_value_sensors"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <Identity
+    Name="OpenRGD.ShellIntegration"
+    Publisher="CN=OpenRGD Foundation"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>OpenRGD Shell Integration</DisplayName>
+    <PublisherDisplayName>OpenRGD Foundation</PublisherDisplayName>
+    <Logo>Assets\OpenRGD_Logo_256.png</Logo>
+    <Description>File association and shell integration for OpenRGD Robot Graph Bundles (.rgd).</Description>
+  </Properties>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Capabilities>
+    <!-- No special capabilities needed for file association only -->
+  </Capabilities>
+
+  <Applications>
+    <!-- Minimal dummy application. Can be a placeholder executable or UWP entry. -->
+    <Application
+      Id="App"
+      Executable="VFS\ProgramFilesX64\OpenRGD\dummy.exe"
+      EntryPoint="Windows.FullTrustApplication">
+
+      <uap:VisualElements
+        DisplayName="OpenRGD Shell Integration"
+        Description="Shell integration for .rgd bundles"
+        Square150x150Logo="Assets\OpenRGD_Logo_256.png"
+        Square44x44Logo="Assets\OpenRGD_Logo_48.png"
+        BackgroundColor="transparent" />
+
+      <!-- File type association for .rgd -->
+      <uap:Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="OpenRGD.Bundle">
+            <uap:DisplayName>OpenRGD Robot Graph Bundle</uap:DisplayName>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.rgd</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:Logo>Assets\FileIcon_RGD_256.png</uap:Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </uap:Extensions>
+
+    </Application>
+  </Applications>
+</Package>

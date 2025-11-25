@@ -1,0 +1,49 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: oversight_interface.json
+ * CONTEXT: 02_OPERATION (Control & Governance)
+ * * PURPOSE:
+ * Defines the roles, permissions, and intervention channels for human operators and auditors.
+ * This is crucial for regulatory compliance and safe teleoperation.
+ */
+{
+  "meta_group": {
+    "protocol_version_str": "1.0.0",
+    "required_authentication_method_enum": "CRYPTOGRAPHIC_TOKEN"
+  },
+  
+  "governance_roles_map": {
+    "admin_architect": {
+      "level_int": 3,
+      "permissions_list_str": ["full_read", "override_mission", "modify_plasticity_rules"]
+    },
+    "certified_operator": {
+      "level_int": 2,
+      "permissions_list_str": ["full_teleop", "pause_robot", "read_diagnostics"]
+    },
+    "auditor": {
+      "level_int": 1,
+      "permissions_list_str": ["read_compliance", "read_audit_logs"]
+    }
+  },
+
+  "operational_modes_config": {
+    "teleoperation_enabled_bool": true,
+    "autonomous_enabled_bool": true,
+    "maintenance_mode_authorized_roles_list_str": ["admin_architect"]
+  },
+  
+  "intervention_channels_map": {
+    "emergency_physical_interrupt": {
+      "type_enum": "HARDWARE_GPIO",
+      "channel_id_int": 17, // GPIO pin number
+      "max_latency_ms_int": 5,
+      "override_logic_enum": "ABSOLUTE_SHUTDOWN"
+    },
+    "remote_api_override": {
+      "type_enum": "ENCRYPTED_ROS2_SERVICE",
+      "service_name_str": "/rgd/oversight/mission_override",
+      "auth_level_required_int": 2
+    }
+  }
+}

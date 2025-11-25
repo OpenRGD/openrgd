@@ -1,0 +1,130 @@
+{
+  "meta_group": {
+    "profile_id_str": "bio_synthetic_v2",
+    "version_semver_str": "1.1.0",
+    "last_updated_iso8601_str": "2025-11-23T19:30:00Z",
+    "solver_requirements_map": {
+      "requires_soft_body_bool": true,
+      "requires_fluid_sim_bool": true,
+      "recommended_timestep_s_float": 0.0001,
+      "recommended_substeps_int": 4,
+      "target_solvers_list_enum": [
+        "PHYSX_5_X",
+        "ISAAC_SIM_4_X",
+        "ISAAC_SIM_5_X",
+        "MUJOCO_3_X_FEM"
+      ]
+    },
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "soft_materials_library_ref_str": "01_foundation/soft_materials_library.jsonc",
+      "power_distribution_ref_str": "01_foundation/power_distribution.jsonc",
+      "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc"
+    }
+  },
+  "deformable_components_map": {
+    "hand_gripper_pads_array": {
+      "type_enum": "ACTIVE_RIGIDITY_PAD",
+      "material_ref_str": "electro_jamming_polymer",
+      "attachment_config": {
+        "parent_link_ref_str": "hand_right_link",
+        "contact_surface_tag_str": "fingerpads_array",
+        "coverage_area_cm2_float": 25.0
+      },
+      "passive_response_model": {
+        "youngs_modulus_soft_pa_float": 50000.0,
+        "poisson_ratio_float": 0.49,
+        "max_strain_pct_float": 80.0,
+        "damping_coefficient_ns_m_float": 150.0
+      },
+      "active_control_model": {
+        "rigidity_control_range_pa_vec2_float": [
+          50000.0,
+          5000000.0
+        ],
+        "control_signal_ref_str": "hand_pad_rigidity_command",
+        "transition_time_ms_int": 20,
+        "energy_cost_w_float": 8.0
+      },
+      "simulation_overrides": {
+        "solver_hint_enum": "SOFT_BODY_PBD",
+        "mesh_resolution_hint_enum": "MEDIUM",
+        "enable_self_collision_bool": false,
+        "contact_friction_multiplier_float": 1.5
+      }
+    },
+    "chassis_protective_skin": {
+      "type_enum": "SELF_HEALING_POLYMER",
+      "material_ref_str": "self_healing_polymer",
+      "coverage_config": {
+        "covered_links_list_str": [
+          "torso_base_link",
+          "thigh_right_link",
+          "thigh_left_link"
+        ],
+        "average_thickness_m_float": 0.003
+      },
+      "damage_model": {
+        "damage_threshold_j_float": 5.0,
+        "abrasion_sensitivity_enum": "MEDIUM",
+        "max_cumulative_damage_j_float": 50.0
+      },
+      "healing_model": {
+        "healing_rate_per_s_float": 0.0001,
+        "requires_energy_input_w_float": 10.0,
+        "repair_factor_thermal_dep_float": 1.5,
+        "healing_activation_policy_enum": "TRIGGER_ON_DAMAGE_AND_IDLE"
+      },
+      "ledger_integration": {
+        "energy_cost_credit_per_joule_float": 1.0,
+        "log_healing_events_bool": true
+      },
+      "simulation_overrides": {
+        "solver_hint_enum": "SURFACE_DEFORMATION_ONLY",
+        "max_substeps_int": 2
+      }
+    },
+    "bicep_hydro_actuator": {
+      "type_enum": "PNEUMATIC_FLUIDIC_MUSCLE",
+      "material_ref_str": "kevlar_reinforced_silicone",
+      "simulation_method_enum": "FINITE_ELEMENT_METHOD",
+      "mounting_config": {
+        "parent_link_ref_str": "upper_arm_right_link",
+        "child_link_ref_str": "forearm_right_link",
+        "anchor_points_local_vec3_list": [
+          [
+            0.0,
+            0.03,
+            0.0
+          ],
+          [
+            0.0,
+            0.02,
+            -0.18
+          ]
+        ],
+        "rest_length_m_float": 0.22
+      },
+      "fluidic_params": {
+        "fluid_pressure_limits_kpa_vec2_float": [
+          0.0,
+          300.0
+        ],
+        "volume_change_max_pct_float": 40.0,
+        "nominal_response_time_ms_int": 50
+      },
+      "pressure_source_ref_str": "pump_unit_01",
+      "control_channel_ref_str": "bicep_hydro_command",
+      "safety_limits": {
+        "max_safe_pressure_kpa_float": 280.0,
+        "burst_risk_threshold_pct_float": 90.0,
+        "max_duty_cycle_pct_float": 70.0
+      },
+      "simulation_overrides": {
+        "solver_hint_enum": "FEM_COUPLED_WITH_RIGID",
+        "max_solver_iterations_int": 25,
+        "enable_internal_pressure_visualization_bool": true
+      }
+    }
+  }
+}

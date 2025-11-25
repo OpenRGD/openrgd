@@ -1,0 +1,67 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: skills/core/polite_idle_gaze.jsonc
+ *
+ * SKILL:
+ *  - Name: polite_idle_gaze
+ *  - Purpose: Maintain a non-staring, socially comfortable gaze
+ *    pattern when around humans.
+ */
+
+{
+  "meta_group": {
+    "skill_id_str": "polite_idle_gaze",
+    "version_semver_str": "1.0.0",
+    "category_enum": "SOCIAL_INTERACTION",
+    "capability_level_enum": "INTERMEDIATE",
+    "is_core_skill_bool": true
+  },
+
+  "description_group": {
+    "summary_str": "Maintain a soft, non-intrusive gaze pattern when idle near humans.",
+    "intended_use_cases_list_str": [
+      "waiting_in_lobby",
+      "customer_service_presence",
+      "co-working_environment_companion"
+    ]
+  },
+
+  "preconditions_group": {
+    "required_world_model_tags_list_str": [
+      "has_head_actuator",
+      "has_eyes_or_display"
+    ],
+    "required_sensors_list_str": [
+      "front_camera",
+      "human_pose_estimator"
+    ],
+    "required_actuators_list_str": [
+      "neck_yaw_pitch",
+      "eye_pan_tilt_optional"
+    ],
+    "disallowed_context_flags_list_str": [
+      "privacy_critical_zone"
+    ]
+  },
+
+  "safety_envelope_group": {
+    "max_joint_velocity_scale_float": 0.2,
+    "human_proximity_mode_enum": "SOCIAL_SPACE"
+  },
+
+  "control_profile_group": {
+    "policy_family_str": "gaze_control_v1",
+    "control_mode_enum": "TRAJECTORY_PRIMITIVE",
+    "training_domain_str": "indoor_social",
+    "sim2real_calibration_level_enum": "FIELD_TESTED"
+  },
+
+  "runtime_policy_group": {
+    "learning_allowed_bool": true,
+    "max_policy_drift_per_hour_float": 0.02
+  },
+
+  "fallback_group": {
+    "on_failure_action_enum": "LOOK_AWAY_TO_NEUTRAL_SAFE_DIRECTION"
+  }
+}

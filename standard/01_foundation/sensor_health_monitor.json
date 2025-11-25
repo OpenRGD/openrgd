@@ -1,0 +1,154 @@
+{
+  "meta_group": {
+    "health_profile_id_str": "default_sensor_health_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T19:00:00Z",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "sensor_fidelity_ref_str": "01_foundation/sensor_fidelity.jsonc",
+      "runtime_validation_ref_str": "01_foundation/runtime_validation.jsonc",
+      "safety_critical_ref_str": "04_volition/safety_critical.jsonc"
+    }
+  },
+  "health_state_definitions": {
+    "HEALTHY": {
+      "description_str": "Sensor operating within expected noise and bias bounds.",
+      "allowed_for_control_bool": true,
+      "allowed_for_mapping_bool": true
+    },
+    "DEGRADED": {
+      "description_str": "Sensor data is noisy or biased but still usable with caution.",
+      "allowed_for_control_bool": false,
+      "allowed_for_mapping_bool": true
+    },
+    "FAILED": {
+      "description_str": "Sensor is considered unreliable; its data MUST NOT be used.",
+      "allowed_for_control_bool": false,
+      "allowed_for_mapping_bool": false
+    }
+  },
+  "sensor_health_policies_map": {
+    "head_camera_main": {
+      "sensor_type_enum": "CAMERA_RGBD",
+      "basic_checks": {
+        "no_data_timeout_s_float": 0.5,
+        "max_nan_ratio_pct_float": 10.0,
+        "hard_fault_nan_ratio_pct_float": 40.0
+      },
+      "consistency_checks": {
+        "max_frame_drop_rate_pct_float": 20.0,
+        "max_timestamp_jitter_ms_float": 30.0
+      },
+      "drift_checks": {
+        "max_pose_drift_m_float": 0.01,
+        "max_pose_drift_rad_float": 0.01,
+        "max_brightness_shift_pct_float": 25.0
+      },
+      "health_transition_rules": {
+        "to_degraded_conditions": [
+          "no_data_timeout_s > 0.5",
+          "nan_ratio_pct > max_nan_ratio_pct_float",
+          "frame_drop_rate_pct > max_frame_drop_rate_pct_float"
+        ],
+        "to_failed_conditions": [
+          "nan_ratio_pct > hard_fault_nan_ratio_pct_float",
+          "camera_link_lost_bool == true"
+        ]
+      },
+      "failover_policy": {
+        "on_degraded_enum": "USE_SENSOR_WITH_WEIGHTED_CONFIDENCE",
+        "on_failed_enum": "DISABLE_VISION_FOR_CONTROL_USE_FUSION_ONLY",
+        "notify_channels_list_str": [
+          "04_volition/ledger.jsonc",
+          "06_ether/consensus_reality.jsonc"
+        ]
+      }
+    },
+    "torso_imu": {
+      "sensor_type_enum": "IMU_6DOF",
+      "basic_checks": {
+        "no_data_timeout_s_float": 0.1,
+        "max_nan_ratio_pct_float": 1.0
+      },
+      "consistency_checks": {
+        "max_gyro_bias_rad_s_float": 0.05,
+        "max_accel_bias_m_s2_float": 0.3,
+        "max_variance_deviation_factor_float": 3.0
+      },
+      "health_transition_rules": {
+        "to_degraded_conditions": [
+          "variance_factor > max_variance_deviation_factor_float",
+          "gyro_bias_rad_s > max_gyro_bias_rad_s_float"
+        ],
+        "to_failed_conditions": [
+          "no_data_timeout_s > 0.1",
+          "nan_ratio_pct > max_nan_ratio_pct_float * 5.0"
+        ]
+      },
+      "failover_policy": {
+        "on_degraded_enum": "FALLBACK_TO_FUSED_STATE_ESTIMATOR",
+        "on_failed_enum": "ENTER_SAFE_BALANCE_MODE",
+        "notify_channels_list_str": [
+          "04_volition/safety_critical.jsonc"
+        ]
+      }
+    },
+    "right_wrist_ft": {
+      "sensor_type_enum": "FORCE_TORQUE_6DOF",
+      "basic_checks": {
+        "no_data_timeout_s_float": 0.2,
+        "max_nan_ratio_pct_float": 1.0
+      },
+      "consistency_checks": {
+        "max_preload_offset_n_float": 10.0,
+        "max_noise_std_dev_n_float": 5.0
+      },
+      "health_transition_rules": {
+        "to_degraded_conditions": [
+          "preload_offset_n > max_preload_offset_n_float",
+          "noise_std_dev_n > max_noise_std_dev_n_float"
+        ],
+        "to_failed_conditions": [
+          "no_data_timeout_s > 0.2",
+          "nan_ratio_pct > max_nan_ratio_pct_float * 3.0"
+        ]
+      },
+      "failover_policy": {
+        "on_degraded_enum": "LIMIT_CONTACT_FORCE_AND_SLOW_MOTION",
+        "on_failed_enum": "DISABLE_FORCE_CONTROL_USE_POSITION_ONLY",
+        "notify_channels_list_str": [
+          "04_volition/safety_critical.jsonc",
+          "04_volition/ledger.jsonc"
+        ]
+      }
+    },
+    "chest_lidar": {
+      "sensor_type_enum": "LIDAR_2D_SOLID_STATE",
+      "basic_checks": {
+        "no_data_timeout_s_float": 0.2,
+        "max_nan_ratio_pct_float": 5.0
+      },
+      "consistency_checks": {
+        "max_range_noise_m_float": 0.03,
+        "min_effective_points_ratio_pct_float": 40.0
+      },
+      "health_transition_rules": {
+        "to_degraded_conditions": [
+          "range_noise_m > max_range_noise_m_float",
+          "effective_points_ratio_pct < min_effective_points_ratio_pct_float"
+        ],
+        "to_failed_conditions": [
+          "no_data_timeout_s > 0.2",
+          "nan_ratio_pct > max_nan_ratio_pct_float * 4.0"
+        ]
+      },
+      "failover_policy": {
+        "on_degraded_enum": "REDUCE_SPEED_AND_INCREASE_CLEARANCE",
+        "on_failed_enum": "STOP_LOCOMOTION_IF_NO_ALTERNATIVE_SENSORS",
+        "notify_channels_list_str": [
+          "06_ether/consensus_reality.jsonc"
+        ]
+      }
+    }
+  }
+}

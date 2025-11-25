@@ -1,0 +1,68 @@
+{
+  "meta_group": {
+    "compliance_profile_id_str": "safety_service_robot_v1",
+    "last_reviewed_iso8601_str": "2025-11-23T15:05:00Z"
+  },
+  "regulatory_standards_map": {
+    "iso_certification_list_str": [
+      "ISO_13482_ServiceRobots",
+      "ISO_10218_Safety"
+    ],
+    "regional_marking_list_str": [
+      "CE_MARKING"
+    ],
+    "safety_performance_level_str": "PL_D"
+  },
+  "ownership_and_liability_config": {
+    "ownership_model_enum": "COMMUNITY_DECENTRALIZED_ASSET",
+    "responsible_entity_uri_str": "did:web:italia-robotica.org:foundation",
+    "role_access_matrix_map": {
+      "DEVELOPER_ROLE": {
+        "rights_list_str": [
+          "CODE_AUDIT",
+          "PUSH_SECURITY_PATCHES"
+        ],
+        "override_priority_int": 2
+      },
+      "OPERATOR_ROLE": {
+        "rights_list_str": [
+          "RUNTIME_CONTROL",
+          "GOAL_DEFINITION"
+        ],
+        "override_priority_int": 3
+      },
+      "OWNER_ROLE": {
+        "rights_list_str": [
+          "FACTORY_RESET",
+          "DECOMMISSION"
+        ],
+        "override_priority_int": 5
+      }
+    },
+    "access_control_file_ref_str": "access_control.json"
+  },
+  "audit_logging_config": {
+    "data_retention_days_int": 365,
+    "logging_destination_enum": "SEPARATE_ENCRYPTED_PARTITION",
+    "required_events_list_str": [
+      "E_STOP_ACTIVATION",
+      "HUMAN_COMMAND_OVERRIDE",
+      "ALIGNMENT_RULE_VIOLATION_ATTEMPT",
+      "UNCERTAINTY_ABORT"
+    ],
+    "telemetry_frequency_hz_float": 100.0
+  },
+  "geofencing_policy": {
+    "default_action_outside_zone_enum": "ENTER_STANDBY_AND_NOTIFY",
+    "restricted_zones_list_str": [
+      "healthcare_facility_restricted",
+      "military_zone_a"
+    ],
+    "time_constraints_local_str": "06:00-22:00"
+  },
+  "data_governance_config": {
+    "biometric_data_storage_policy_enum": "LOCAL_TEMPORARY",
+    "external_data_sharing_allowed_bool": false,
+    "data_anonymization_required_bool": true
+  }
+}

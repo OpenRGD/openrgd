@@ -1,0 +1,27 @@
+{
+  "meta_group": {
+    "engine_id_str": "generative_dreamer_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "resource_config": {
+    "preferred_schedule_ref_str": "biorhythm.maintenance_window",
+    "max_power_draw_w_float": 35.0,
+    "cost_per_hour_token_float": 0.05,
+    "interrupt_on_low_battery_bool": true
+  },
+  "simulation_parameters": {
+    "dream_policy_enum": "COUNTERFACTUAL_EXPLORATION",
+    "nightmare_prevention_bool": true,
+    "creativity_temperature_float": 1.2,
+    "simulation_targets_list_str": [
+      "SCENARIOS_WITH_HIGH_UNCERTAINTY",
+      "UNFULFILLED_ASPIRATIONS",
+      "FAILED_TASK_REPLAY"
+    ]
+  },
+  "consolidation_config": {
+    "consolidation_metric_str": "knowledge_graph_density",
+    "expected_knowledge_gain_score_float": 0.05,
+    "self_conflict_check_required_bool": true
+  }
+}

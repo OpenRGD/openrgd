@@ -1,0 +1,91 @@
+{
+  "meta_group": {
+    "wear_model_profile_id_str": "mechanical_degradation_v1",
+    "version_semver_str": "1.0.1",
+    "last_validated_iso8601_str": "2025-11-23T20:00:00Z",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+      "power_distribution_ref_str": "01_foundation/power_distribution.jsonc",
+      "ledger_ref_str": "04_volition/ledger.jsonc",
+      "immunology_ref_str": "04_volition/immunology.jsonc"
+    }
+  },
+  "fatigue_models_map": {
+    "actuator_tmotor_ak80": {
+      "component_type_enum": "MOTOR_SERVO",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "lifespan_base_cycles_int": 5000000,
+      "unit_of_wear_enum": "REVOLUTION_COUNT",
+      "stress_penalty_model": {
+        "model_type_enum": "RAINFLOW_COUNTING",
+        "high_load_threshold_nm_float": 40.0,
+        "high_load_multiplier_float": 3.0,
+        "overload_cutoff_nm_float": 60.0,
+        "severe_overload_multiplier_float": 10.0
+      },
+      "thermal_fatigue": {
+        "temp_threshold_c_float": 90.0,
+        "temp_impact_multiplier_float": 2.0,
+        "catastrophic_temp_c_float": 120.0,
+        "thermal_cycles_penalty_factor_float": 1.2
+      },
+      "friction_ageing_model": {
+        "base_friction_increase_pct_over_life_float": 30.0,
+        "backlash_increase_factor_over_life_float": 2.0
+      },
+      "failure_symptoms_list_str": [
+        "increase_backlash_error",
+        "spike_in_static_friction",
+        "unexpected_noise_signature",
+        "overtemp_events_frequency_increase"
+      ]
+    },
+    "battery_main_pack": {
+      "component_type_enum": "CHEMICAL_CELLS",
+      "component_model_ref_str": "main_battery_pack_v1",
+      "lifespan_base_cycles_int": 1000,
+      "unit_of_wear_enum": "DISCHARGE_CYCLE_COUNT",
+      "discharge_penalty_model": {
+        "dod_below_10pct_multiplier_float": 2.5,
+        "dod_above_90pct_multiplier_float": 1.5,
+        "calendar_aging_factor_pct_per_year_float": 5.0
+      },
+      "thermal_penalty_model": {
+        "high_temp_threshold_c_float": 45.0,
+        "high_temp_multiplier_float": 1.8,
+        "low_temp_threshold_c_float": 0.0,
+        "low_temp_multiplier_float": 1.3
+      },
+      "performance_degradation_type_enum": "CAPACITY_LOSS",
+      "end_of_life_criteria": {
+        "remaining_capacity_pct_threshold_float": 70.0,
+        "internal_resistance_increase_pct_threshold_float": 100.0
+      }
+    },
+    "structural_bearings_hips": {
+      "component_type_enum": "BEARING_JOINT",
+      "lifespan_base_hours_float": 10000.0,
+      "unit_of_wear_enum": "OPERATIONAL_HOURS",
+      "load_penalty_model": {
+        "nominal_load_nm_float": 40.0,
+        "overload_factor_threshold_float": 1.5,
+        "overload_multiplier_float": 2.0
+      },
+      "contamination_risk_enum": "MEDIUM",
+      "recommended_replacement_policy_enum": "REPLACE_AT_80_PERCENT_LIFE"
+    },
+    "fasteners_main_chassis": {
+      "component_type_enum": "FASTENER_JOINT",
+      "inspection_interval_hours_int": 500,
+      "max_reuse_cycles_int": 5,
+      "unit_of_wear_enum": "MAINTENANCE_EVENTS",
+      "criticality_level_enum": "SAFETY_CRITICAL",
+      "inspection_symptoms_list_str": [
+        "visible_looseness",
+        "corrosion_spots",
+        "elongated_holes_or_play"
+      ]
+    }
+  }
+}

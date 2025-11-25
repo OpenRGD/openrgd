@@ -1,0 +1,109 @@
+{
+  "meta_group": {
+    "topology_id_str": "bhl_compute_stack_v2_iso_compliant",
+    "version_semver_str": "1.2.0",
+    "last_verified_iso8601_str": "2025-11-23T12:00:00Z",
+    "domain_id_str": "01_foundation",
+    "file_role_enum": "COMPUTE_HARDWARE_TOPOLOGY",
+    "governance": {
+      "stewardship_organization_str": "Italia Robotica",
+      "lead_architect_str": "Pasquale Ranieri",
+      "contact_uri_str": "mailto:engineering@italiarobotica.it"
+    },
+    "related_files_map": {
+      "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
+      "safety_policies_ref_str": "02_operation/safety_critical.jsonc",
+      "compute_federation_ref_str": "06_ether/compute_federation.jsonc",
+      "swarm_protocol_ref_str": "06_ether/swarm_protocol.jsonc"
+    },
+    "interpretation_guides": {
+      "for_humans_str": "Describes on-board compute resources, buses, and timing constraints. Use it to check if planned behaviors are compatible with hardware limits.",
+      "for_llms_str": "Treat these values as HARD constraints for safety and latency. If a requested behavior exceeds ai_processing_budget_max_us_int or safety_loop_frequency_min_hz_int, suggest using reflex-level control or offloading according to compute_federation.jsonc."
+    }
+  },
+  "compute_nodes_map": {
+    "main_brain_unit": {
+      "role_enum": "HIGH_LEVEL_PLANNER",
+      "hardware_model_str": "NVIDIA Jetson Orin Nano 8GB",
+      "architecture_enum": "ARM64_AARCH64",
+      "performance_specs": {
+        "cpu_cores_count_int": 6,
+        "ai_inference_int8_tops_float": 40.0,
+        "gpu_cuda_cores_count_int": 1024
+      },
+      "memory_specs": {
+        "ram_capacity_gb_float": 8.0,
+        "is_unified_memory_bool": true
+      },
+      "logical_hosting_capabilities": {
+        "can_host_llm_planner_bool": true,
+        "max_recommended_llm_context_tokens_int": 16384,
+        "supports_realtime_control_loops_bool": false
+      }
+    },
+    "spinal_cord_mcu": {
+      "role_enum": "REALTIME_CONTROLLER",
+      "hardware_model_str": "STM32H7",
+      "architecture_enum": "ARM_CORTEX_M7",
+      "performance_specs": {
+        "cpu_clock_max_mhz_float": 480.0,
+        "control_loop_max_frequency_hz_float": 20000.0
+      },
+      "safety_certified_bool": true,
+      "logical_hosting_capabilities": {
+        "can_host_llm_planner_bool": false,
+        "supports_reflex_policies_bool": true
+      }
+    },
+    "safety_monitor_fpga": {
+      "role_enum": "SAFETY_CORE_CHANNEL_A",
+      "hardware_model_str": "Dedicated_Safety_FPGA",
+      "architecture_enum": "SIL_3_CERTIFIED",
+      "redundancy_channel_int": 1
+    },
+    "diagnostics_check_unit": {
+      "role_enum": "DIAGNOSTIC_CORE_CHANNEL_B",
+      "hardware_model_str": "Lockstep_MCU",
+      "redundancy_channel_int": 2
+    }
+  },
+  "communication_buses_map": {
+    "vision_pipeline_bus": {
+      "type_enum": "MIPI_CSI_2",
+      "connected_nodes_list_str": [
+        "head_camera_main",
+        "main_brain_unit"
+      ],
+      "specs": {
+        "bandwidth_gbps_float": 10.0,
+        "latency_roundtrip_us_float": 50.0
+      }
+    },
+    "locomotion_can_bus": {
+      "type_enum": "CAN_FD",
+      "connected_nodes_list_str": [
+        "spinal_cord_mcu",
+        "leg_actuators_group"
+      ],
+      "specs": {
+        "latency_worst_case_us_float": 500.0
+      }
+    },
+    "inter_process_link": {
+      "type_enum": "USB_SERIAL_HIGH_SPEED",
+      "connected_nodes_list_str": [
+        "main_brain_unit",
+        "spinal_cord_mcu"
+      ],
+      "specs": {
+        "latency_roundtrip_us_float": 1000.0
+      }
+    }
+  },
+  "timing_constraints": {
+    "sensor_to_actuator_max_latency_us_int": 50000,
+    "safety_loop_frequency_min_hz_int": 200,
+    "ai_processing_budget_max_us_int": 10000,
+    "safety_architecture_enum": "DUAL_CHANNEL_CAT3"
+  }
+}

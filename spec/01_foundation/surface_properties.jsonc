@@ -1,0 +1,156 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - SURFACE PROPERTIES v0.5
+ * ------------------------------------------------------------------
+ * FILE: surface_properties.jsonc
+ * CONTEXT: 01_FOUNDATION (The Body)
+ *
+ * PURPOSE:
+ * Defines both the physical properties (for Physics Engines like Isaac/MuJoCo)
+ * and the semantic properties (for AI reasoning/Safety) of the robot's surfaces.
+ *
+ * BRIDGES:
+ * - Physics: Friction, Restitution, Density -> Used by 'rgd export isaac'
+ * - Cognition: Hazard Levels, Thermal Properties -> Used by '02_operation/safety_critical'
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA
+  // ==============================================================
+  "meta_group": {
+    "profile_id_str": "bhl_surfaces_hybrid_v1",
+    "version_semver_str": "1.2.0",
+    "last_updated_iso8601_str": "2025-11-25T15:00:00Z",
+    "domain_id_str": "01_foundation",
+
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "safety_critical_ref_str": "02_operation/safety_critical.jsonc"
+    }
+  },
+
+  // ==============================================================
+  // 1. MATERIAL CATALOG (Reusable Definitions)
+  // Defines physics and semantics for each material type.
+  // ==============================================================
+  "materials_catalog_map": {
+
+    // ------------------------------------------------------------
+    // GRIPPER PADS (High Friction / Soft)
+    // ------------------------------------------------------------
+    "silicone_rubber_shore_a40": {
+      "description_str": "Soft grip pads for manipulation.",
+      
+      // --- PHYSICS (Isaac/MuJoCo) ---
+      "physics_properties": {
+        "static_friction_coeff_float": 1.0,    // Very sticky
+        "dynamic_friction_coeff_float": 0.8,
+        "restitution_coeff_float": 0.0,        // No bounce (absorbs impact)
+        "density_kg_m3_float": 1200.0
+      },
+
+      // --- SEMANTICS (AI/Safety) ---
+      "semantic_properties": {
+        "surface_type_enum": "ELASTOMER",
+        "hardness_shore_a_int": 40,
+        "thermal_conductivity_w_mk_float": 0.18, // Insulator (safe to touch hot objects briefly)
+        "hazard_level_enum": "SAFE_FOR_HUMAN_CONTACT"
+      }
+    },
+
+    // ------------------------------------------------------------
+    // CHASSIS SHELL (Low Friction / Rigid)
+    // ------------------------------------------------------------
+    "carbon_fiber_composite": {
+      "description_str": "Rigid structural outer shell.",
+
+      // --- PHYSICS ---
+      "physics_properties": {
+        "static_friction_coeff_float": 0.35,   // Slippery
+        "dynamic_friction_coeff_float": 0.30,
+        "restitution_coeff_float": 0.5,        // Slightly bouncy (rigid)
+        "density_kg_m3_float": 1600.0
+      },
+
+      // --- SEMANTICS ---
+      "semantic_properties": {
+        "surface_type_enum": "RIGID_COMPOSITE",
+        "hardness_shore_d_int": 85,
+        "fragility_enum": "ROBUST",
+        "hazard_level_enum": "LOW_RISK"
+      }
+    },
+
+    // ------------------------------------------------------------
+    // EXPOSED METAL / EDGES (Collision Hazards)
+    // ------------------------------------------------------------
+    "machined_aluminum_6061": {
+      "description_str": "Exposed structural metal elements.",
+
+      // --- PHYSICS ---
+      "physics_properties": {
+        "static_friction_coeff_float": 0.6,
+        "dynamic_friction_coeff_float": 0.5,
+        "restitution_coeff_float": 0.3,
+        "density_kg_m3_float": 2700.0
+      },
+
+      // --- SEMANTICS ---
+      "semantic_properties": {
+        "surface_type_enum": "METAL",
+        "thermal_conductivity_w_mk_float": 167.0, // Conductive (gets hot fast)
+        "hazard_level_enum": "CAUTION_BLUNT_IMPACT", // Hard surface, dangerous in collision
+        "max_impact_energy_j_float": 50.0
+      }
+    }
+  },
+
+  // ==============================================================
+  // 2. LINK BINDING (Topology Map)
+  // Maps the visual/collision meshes to the materials above.
+  // Crucial for "rgd export isaac" or "rgd export mujoco".
+  // ==============================================================
+  "link_surface_binding_map": {
+    // Feet / Hands
+    "foot_right_link": "silicone_rubber_shore_a40",
+    "foot_left_link": "silicone_rubber_shore_a40",
+    "finger_pad_left": "silicone_rubber_shore_a40",
+    "finger_pad_right": "silicone_rubber_shore_a40",
+
+    // Body
+    "torso_base_link": "carbon_fiber_composite",
+    "head_link": "carbon_fiber_composite",
+
+    // Skeleton
+    "thigh_right_link": "machined_aluminum_6061",
+    "shin_right_link": "machined_aluminum_6061"
+  },
+
+  // ==============================================================
+  // 3. DOMAIN RANDOMIZATION POLICY (The RL Secret Sauce)
+  // Instructs Simulators on how to vary these values during training.
+  // ==============================================================
+  "domain_randomization_policy": {
+    "enabled_bool": true,
+    
+    // Ranges are multipliers [min_factor, max_factor] or absolute deltas.
+    "parameter_ranges_map": {
+      
+      "global_friction_scale": {
+        "description": "Simulates walking on different surfaces (ice vs carpet)",
+        "range_multiplier_vec2_float": [0.5, 1.5] 
+      },
+
+      "actuator_friction_noise": {
+        "description": "Simulates dirty or degraded bearings",
+        "additive_noise_std_dev_float": 0.05
+      },
+
+      "mass_estimation_error": {
+        "description": "Simulates payload variations or calibration errors",
+        "range_multiplier_vec2_float": [0.95, 1.05]
+      }
+    }
+  }
+}

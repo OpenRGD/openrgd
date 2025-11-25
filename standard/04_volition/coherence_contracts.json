@@ -1,0 +1,23 @@
+{
+  "meta_group": {
+    "arbitration_id_str": "rgd_lexicographic_arbiter_v1",
+    "method_description_str": "Lexicographic ordering with weighted utility scoring."
+  },
+  "arbitration_policy": {
+    "resolution_method_enum": "LEXICOGRAPHIC_ORDERING",
+    "log_exceptions_bool": true,
+    "max_arbitration_cycles_int": 5
+  },
+  "priority_stack_list": [
+    "02_operation/safety_critical.json",
+    "04_volition/alignment.json",
+    "02_operation/compliance.json",
+    "06_ether/civilization_manifesto.json",
+    "04_volition/social_synergy.json",
+    "04_volition/ledger.json",
+    "04_volition/aesthetic_canon.json",
+    "04_volition/aspirations.json"
+  ],
+  "dissonance_threshold_float": 0.95,
+  "dissonance_escalation_action_enum": "PAUSE_AND_REQUEST_EXTERNAL_INPUT"
+}

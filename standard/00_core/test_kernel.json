@@ -1,0 +1,7 @@
+{
+  "meta_group": {
+    "id": "did:rgd:test-robot",
+    "schema_version": "0.1.0"
+  },
+  "module_loading_order_list": []
+}

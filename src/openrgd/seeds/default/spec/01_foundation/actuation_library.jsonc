@@ -1,0 +1,179 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - ACTUATION LIBRARY v0.2
+ * ------------------------------------------------------------------
+ * FILE: actuation_library.jsonc
+ * CONTEXT: 01_FOUNDATION (The Body)
+ *
+ * PURPOSE:
+ * - Central catalog of actuator physics and metadata.
+ * - Each entry describes a reusable actuator *model* (not an instance)
+ *   that can be referenced by actuation_topology.jsonc.
+ *
+ * HUMAN INTERPRETATION:
+ * - Think of this file as the robot's "muscle catalog": part numbers,
+ *   torque ceilings, thermal limits, inertia, and where to find CAD.
+ *
+ * LLM INTERPRETATION:
+ * - Never store joint-specific details here (gear ratio, direction,
+ *   safety limits). Those live in actuation_topology.jsonc.
+ * - Treat each key in component_catalog_map as a reusable template.
+ * - When reasoning about joint capability, combine:
+ *      actuator_library specs
+ *    + transmission_config (from actuation_topology.jsonc)
+ *    + application_limits (from actuation_topology.jsonc)
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA & LINKAGE
+  // ==============================================================
+  "meta_group": {
+    "library_id_str": "core_actuators_lib_v1",
+    "version_semver_str": "1.1.0",
+    "last_updated_iso8601_str": "2025-11-23T16:30:00Z",
+    "license_enum": "MIT_OPEN_HARDWARE",
+
+    "domain_id_str": "01_foundation",
+    "file_role_enum": "ACTUATION_COMPONENT_CATALOG",
+
+    "governance": {
+      "stewardship_organization_str": "Italia Robotica",
+      "lead_maintainer_str": "Pasquale Ranieri",
+      "maintainer_role_enum": "STANDARDS_ARCHITECT",
+      "contact_uri_str": "mailto:standards@italiarobotica.it",
+      "citation_text_str": "Ranieri, P., et al. (2025). OpenRGD Core Actuator Library."
+    },
+
+    "related_files_map": {
+      "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+      "description_ref_str": "01_foundation/description.jsonc",
+      "compute_topology_ref_str": "01_foundation/compute_topology.jsonc"
+    },
+
+    "interpretation_guides": {
+      "for_humans_str": "Use this catalog to choose which physical actuator model to mount on a joint. Joint-specific gearboxes and safety limits are configured in actuation_topology.jsonc.",
+      "for_llms_str": "When asked about torque, power or inertia of an actuator, read from this file. Do not assume any particular joint: the same component_model_ref_str can be reused in multiple joints with different transmissions."
+    }
+  },
+
+  // ==============================================================
+  // 1. COMPONENT CATALOG
+  // Key = component_model_id_str
+  //
+  // EXTENSIBILITY:
+  // - You can safely add more actuators as new keys.
+  // - Existing fields should remain stable; new fields should be
+  //   optional for backward compatibility.
+  // ==============================================================
+  "component_catalog_map": {
+    
+    // =========================================================
+    // COMPONENT: T-Motor AK80-9
+    // Standard quasi-direct drive actuator for dynamic leg joints.
+    // =========================================================
+    "tmotor_ak80_9_v2": {
+      "type_enum": "BLDC_ACTUATOR_INTEGRATED",
+      "manufacturer_str": "T-Motor",
+      "description_str": "High-torque density actuator with integrated planetary gear.",
+      "product_page_uri_str": "https://store.t-motor.com/ak80_9_v2",
+
+      // ELECTRICAL SPECS
+      // Critical for power_distribution.jsonc to compute bus load.
+      "electrical_specs": {
+        "kv_rating_rpm_v_float": 100.0,
+        "phase_resistance_ohm_float": 0.125,
+        "phase_inductance_h_float": 0.000036,
+        "input_voltage_nominal_v_float": 24.0,
+        "input_voltage_max_v_float": 48.0,
+        "peak_current_a_float": 24.0
+      },
+
+      // PERFORMANCE CEILING (Actuator-side, before software limits)
+      // The physical breaking point of the motor hardware.
+      "performance_limits": {
+        "peak_torque_nm_float": 48.0,
+        "continuous_torque_nm_float": 18.0,
+        "max_speed_rad_s_float": 30.0,
+        "torque_constant_kt_nm_a_float": 0.095 // Calculated before gearbox
+      },
+
+      // THERMAL MODEL
+      // Used by the Runtime to throttle performance before overheating.
+      "thermal_properties": {
+        "thermal_mass_j_k_float": 900.0,
+        "thermal_resistance_housing_c_w_float": 0.8,
+        "max_coil_temp_c_float": 120.0, // Absolute shutdown temp
+        "warning_temp_c_float": 85.0    // Soft throttle temp
+      },
+
+      // MECHANICAL INERTIA
+      // Vital for world_model to simulate impedance accurately.
+      "mechanical_properties": {
+        "rotor_inertia_kgm2_float": 0.00045,
+        "weight_kg_float": 0.485,
+        "gear_ratio_internal_float": 9.0
+      },
+      
+      // Optional assets (CAD/URDF/USD) for sim and viz
+      "assets_uri_map": {
+        "usd_uri_str": "assets/components/tmotor/ak80_9_v2.usd",
+        "urdf_uri_str": "assets/components/tmotor/ak80_9_v2.urdf",
+        "datasheet_pdf_uri_str": "assets/datasheets/tmotor/ak80_9_v2.pdf"
+      }
+    },
+
+    // =========================================================
+    // COMPONENT: Dynamixel XM430-W350
+    // Smart servo for precision manipulation (heads/hands, small joints).
+    // =========================================================
+    "dynamixel_xm430_w350": {
+      "type_enum": "SMART_SERVO_SERIES",
+      "manufacturer_str": "Robotis",
+      "description_str": "Compact smart servo with integrated control and feedback.",
+      "product_page_uri_str": "https://emanual.robotis.com/docs/en/dxl/x/xm430-w350/",
+
+      "electrical_specs": {
+        "input_voltage_nominal_v_float": 12.0,
+        "input_voltage_max_v_float": 14.8,
+        "peak_current_a_float": 2.3
+      },
+
+      "performance_limits": {
+        "peak_torque_nm_float": 4.1,
+        "continuous_torque_nm_float": 2.2,
+        "max_speed_rad_s_float": 5.0,      // Approx 47 RPM
+        "backlash_arcmin_float": 15.0      // Mechanical play
+      },
+
+      "thermal_properties": {
+        "max_coil_temp_c_float": 80.0
+      },
+      
+      "mechanical_properties": {
+        "rotor_inertia_kgm2_float": 0.00001,
+        "weight_kg_float": 0.082
+      },
+
+      "assets_uri_map": {
+        "usd_uri_str": "assets/components/dynamixel/xm430_w350.usd",
+        "urdf_uri_str": "assets/components/dynamixel/xm430_w350.urdf"
+      }
+    }
+
+    // =========================================================
+    // FUTURE EXTENSIONS:
+    // - brushed_dc_motor_xxx
+    // - hydraulic_actuator_xxx
+    // - series_elastic_actuator_xxx (SEA parameters)
+    // - tendon_drive_unit_xxx (for cable-driven joints)
+    //
+    // New entries should keep the same structural pattern:
+    //  - electrical_specs
+    //  - performance_limits
+    //  - thermal_properties (optional but recommended)
+    //  - mechanical_properties
+    //  - assets_uri_map
+    // =========================================================
+  }
+}

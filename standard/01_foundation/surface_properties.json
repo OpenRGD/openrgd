@@ -1,0 +1,92 @@
+{
+  "meta_group": {
+    "profile_id_str": "bhl_surfaces_hybrid_v1",
+    "version_semver_str": "1.2.0",
+    "last_updated_iso8601_str": "2025-11-25T15:00:00Z",
+    "domain_id_str": "01_foundation",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "safety_critical_ref_str": "02_operation/safety_critical.jsonc"
+    }
+  },
+  "materials_catalog_map": {
+    "silicone_rubber_shore_a40": {
+      "description_str": "Soft grip pads for manipulation.",
+      "physics_properties": {
+        "static_friction_coeff_float": 1.0,
+        "dynamic_friction_coeff_float": 0.8,
+        "restitution_coeff_float": 0.0,
+        "density_kg_m3_float": 1200.0
+      },
+      "semantic_properties": {
+        "surface_type_enum": "ELASTOMER",
+        "hardness_shore_a_int": 40,
+        "thermal_conductivity_w_mk_float": 0.18,
+        "hazard_level_enum": "SAFE_FOR_HUMAN_CONTACT"
+      }
+    },
+    "carbon_fiber_composite": {
+      "description_str": "Rigid structural outer shell.",
+      "physics_properties": {
+        "static_friction_coeff_float": 0.35,
+        "dynamic_friction_coeff_float": 0.3,
+        "restitution_coeff_float": 0.5,
+        "density_kg_m3_float": 1600.0
+      },
+      "semantic_properties": {
+        "surface_type_enum": "RIGID_COMPOSITE",
+        "hardness_shore_d_int": 85,
+        "fragility_enum": "ROBUST",
+        "hazard_level_enum": "LOW_RISK"
+      }
+    },
+    "machined_aluminum_6061": {
+      "description_str": "Exposed structural metal elements.",
+      "physics_properties": {
+        "static_friction_coeff_float": 0.6,
+        "dynamic_friction_coeff_float": 0.5,
+        "restitution_coeff_float": 0.3,
+        "density_kg_m3_float": 2700.0
+      },
+      "semantic_properties": {
+        "surface_type_enum": "METAL",
+        "thermal_conductivity_w_mk_float": 167.0,
+        "hazard_level_enum": "CAUTION_BLUNT_IMPACT",
+        "max_impact_energy_j_float": 50.0
+      }
+    }
+  },
+  "link_surface_binding_map": {
+    "foot_right_link": "silicone_rubber_shore_a40",
+    "foot_left_link": "silicone_rubber_shore_a40",
+    "finger_pad_left": "silicone_rubber_shore_a40",
+    "finger_pad_right": "silicone_rubber_shore_a40",
+    "torso_base_link": "carbon_fiber_composite",
+    "head_link": "carbon_fiber_composite",
+    "thigh_right_link": "machined_aluminum_6061",
+    "shin_right_link": "machined_aluminum_6061"
+  },
+  "domain_randomization_policy": {
+    "enabled_bool": true,
+    "parameter_ranges_map": {
+      "global_friction_scale": {
+        "description": "Simulates walking on different surfaces (ice vs carpet)",
+        "range_multiplier_vec2_float": [
+          0.5,
+          1.5
+        ]
+      },
+      "actuator_friction_noise": {
+        "description": "Simulates dirty or degraded bearings",
+        "additive_noise_std_dev_float": 0.05
+      },
+      "mass_estimation_error": {
+        "description": "Simulates payload variations or calibration errors",
+        "range_multiplier_vec2_float": [
+          0.95,
+          1.05
+        ]
+      }
+    }
+  }
+}

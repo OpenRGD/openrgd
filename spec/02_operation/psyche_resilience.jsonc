@@ -1,0 +1,91 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - REFERENCE IMPLEMENTATION v0.1
+ * ------------------------------------------------------------------
+ * FILE: psyche_resilience.json
+ * CONTEXT: 03_AGENCY (Cognitive State)
+ * * PURPOSE:
+ * Defines the parameters for monitoring, measuring, and managing the robot's
+ * internal cognitive load and stress level, analogous to psychological resilience.
+ * This prevents computational 'burnout' and preserves long-term policy quality.
+ * * LINKAGE:
+ * The resulting Psyche Score dictates behavior changes defined in the 'coping_mechanisms_map'.
+ */
+{
+  "meta_group": {
+    "psyche_model_id_str": "cognitive_load_v1",
+    "version_semver_str": "1.0.0",
+    "stress_score_range_vec2_int": [0, 100] // 0 is perfect calm, 100 is critical overload
+  },
+
+  // ==============================================================
+  // 1. STRESS INPUT METRICS (Sources of Cognitive Load)
+  // Defines the hardware and logical variables that contribute to stress.
+  // ==============================================================
+  "stress_input_metrics_map": {
+    
+    "cognitive_load_tops_pct": {
+      "source_ref_str": "compute_topology/main_brain_unit/performance_specs/load_pct",
+      "weight_factor_float": 0.4, // Heavy weight: High CPU/NPU usage is the primary stressor
+      "threshold_max_pct_float": 95.0
+    },
+    
+    "goal_conflict_score": {
+      "source_ref_str": "alignment/conflict_monitor/active_count_int",
+      "weight_factor_float": 0.3, // Medium weight: Ethical/alignment conflicts are stressful
+      "threshold_max_int": 5
+    },
+    
+    "motor_thermal_stress": {
+      "source_ref_str": "telemetry/motor_temp_avg_c_float",
+      "weight_factor_float": 0.15, // Low weight: Physical discomfort translates to cognitive distraction
+      "threshold_max_c_float": 85.0
+    },
+    
+    "sensor_anomaly_rate": {
+      "source_ref_str": "immunology/sensor_fault_rate_per_min_int",
+      "weight_factor_float": 0.15, // Dealing with bad data requires cognitive overhead
+      "threshold_max_int": 3
+    }
+  },
+
+  // ==============================================================
+  // 2. RESILIENCE MODEL CONFIGURATION
+  // Defines how the inputs are processed into the final 'Psyche Score'.
+  // ==============================================================
+  "resilience_model_config": {
+    "integration_method_enum": "WEIGHTED_SUM_AVERAGE", // Simple sum for V0.1
+    
+    "burnout_threshold_int": 75, // Critical point: above 75, automatic coping is triggered
+    
+    "adaptation_rate_per_hour_float": 0.05, // Rate at which the robot habituates to constant, non-critical stress
+    
+    "recovery_rate_base_per_min_float": 0.5 // Default rate of score reduction when inactive
+  },
+  
+  // ==============================================================
+  // 3. COPING MECHANISMS (Recovery Policies)
+  // Actions to take when stress thresholds are exceeded.
+  // ==============================================================
+  "coping_mechanisms_map": {
+    
+    "stress_level_moderate_50_75": {
+      "action_type_enum": "TASK_DEPRIORITIZATION",
+      "policy_ref_str": "agency/policy_refusal_v2", // Link to an LLM policy for polite refusal
+      "effect_str": "Increase task latency by 20% to conserve resources."
+    },
+    
+    "stress_level_critical_75_90": {
+      "action_type_enum": "SYSTEMIC_DOWNGRADE",
+      "policy_ref_str": "operation/downshift_mode_v1",
+      "effect_str": "Reduce NPU clock speed by 50% and disable high-resolution vision."
+    },
+    
+    "stress_level_burnout_90_100": {
+      "action_type_enum": "SELF_QUARANTINE_AND_REBOOT",
+      "policy_ref_str": "system/emergency_reboot_safe_mode",
+      "max_quarantine_duration_min_int": 60,
+      "energy_cost_ref_str": "ledger/reboot_cost_wh_float" // Cost recorded in the ledger
+    }
+  }
+}

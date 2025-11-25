@@ -1,0 +1,77 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.1 - REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: sim_to_real_protocol.json
+ * CONTEXT: 03_AGENCY (Cognitive Capacity)
+ * * PURPOSE:
+ * Defines the parameters for Domain Randomization (DR) and Domain Adaptation (DA).
+ * This protocol instructs the simulator on how to randomly vary physical and visual
+ * properties during policy training to ensure robustness in real-world deployment.
+ * * CORE CONCEPT:
+ * The instruction set for teaching the robot to tolerate uncertainty.
+ */
+
+{
+  "meta_group": {
+    "protocol_id_str": "domain_randomization_v2",
+    "version_semver_str": "1.0.0"
+  },
+
+  // ==============================================================
+  // 1. PHYSICAL RANDOMIZATION (Dynamics Uncertainty)
+  // Varies parameters of the simulated world and the robot itself.
+  // ==============================================================
+  "physical_randomization_config": {
+    
+    // Limits of the robot's self-modeling error (linked to description.json mass)
+    "robot_mass_uncertainty_factor_float": 0.05, // Randomize the robot's mass by +/- 5%
+    "gravity_variance_factor_float": 0.02,       // Randomize gravity by +/- 2%
+    
+    // Environment parameters (surface interaction)
+    "surface_friction_scale_range_list_float": [0.5, 1.5], // Varies friction from slippery (0.5) to rough (1.5)
+    "surface_density_scale_range_list_float": [0.8, 1.2],
+    
+    // Perturbation: Applying unexpected external forces
+    "perturbation_policy": {
+      "apply_random_pushes_bool": true,
+      "force_magnitude_range_n_list_float": [10.0, 50.0], // Max force magnitude (50N ~ 5kg lateral push)
+      "push_frequency_sec_float": 5.0
+    }
+  },
+
+  // ==============================================================
+  // 2. VISUAL RANDOMIZATION (Appearance Uncertainty)
+  // Varies lighting, textures, and camera properties.
+  // ==============================================================
+  "visual_randomization_config": {
+    "texture_swap_probability_float": 0.5, // 50% chance to swap environment textures randomly
+    "lighting_position_jitter_m_float": 2.0, // Random movement of light sources by 2m
+    "exposure_variation_ev_float": 2.0,       // Random exposure variation of +/- 2EV
+    
+    "shadow_texture_noise_enabled_bool": true, // Adds noise to shadows for realism
+    "fog_density_range_list_float": [0.0, 0.1]
+  },
+
+  // ==============================================================
+  // 3. TEMPORAL & SENSOR RANDOMIZATION (Lag and Data Age)
+  // Ensures robustness against real-world timing and network issues.
+  // ==============================================================
+  "temporal_randomization_config": {
+    "latency_injection_max_ms_int": 50, // Maximum simulated command/sensor delay
+    "frequency_jitter_max_hz_float": 5.0, // Simulates sensor reading frequency variations
+    "sensor_noise_scale_factor_float": 1.5 // Multiplier for noise defined in sensor_fidelity.json
+  },
+  
+  // ==============================================================
+  // 4. CURRICULUM LEARNING PROTOCOL
+  // Defines how the difficulty of the randomization increases over time.
+  // ==============================================================
+  "curriculum_protocol": {
+    "enable_curriculum_bool": true,
+    "initial_difficulty_level_float": 0.2, // Start with low randomization
+    "difficulty_increment_per_milestone_float": 0.1, // Increase difficulty by 10% after milestone
+    "milestone_completion_metric_str": "task_success_rate_average > 0.90",
+    "final_difficulty_level_float": 1.0 // Goal is full randomization tolerance
+  }
+}

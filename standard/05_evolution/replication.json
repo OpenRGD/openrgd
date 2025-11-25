@@ -1,0 +1,24 @@
+{
+  "meta_group": {
+    "replication_id_str": "digital_autopoiesis_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "cloning_authorization_config": {
+    "can_self_replicate_bool": false,
+    "max_active_forks_int": 1,
+    "min_ledger_balance_for_clone_float": 500.0,
+    "replication_cost_token_ref_str": "ledger/replication_fee_float"
+  },
+  "inheritance_policy_map": {
+    "core_alignment_transfer_bool": true,
+    "skills_transfer_bool": true,
+    "memory_transfer_policy_enum": "EPISODIC_MEMORY_WIPE",
+    "personality_transfer_bool": true,
+    "ledger_transfer_initial_amount_float": 10.0
+  },
+  "merge_protocol_config": {
+    "conflict_resolution_strategy_enum": "BAYESIAN_CONSENSUS_V2",
+    "max_divergence_tolerance_float": 0.8,
+    "merge_logging_level_enum": "CRITICAL"
+  }
+}

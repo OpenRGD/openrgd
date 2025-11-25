@@ -1,0 +1,81 @@
+{
+  "meta_group": {
+    "materials_library_id_str": "soft_materials_core_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T19:15:00Z",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "soft_body_dynamics_ref_str": "01_foundation/soft_body_dynamics.jsonc",
+      "physics_solver_overrides_ref_str": "01_foundation/physics_solver_overrides.jsonc"
+    }
+  },
+  "material_catalog_map": {
+    "electro_jamming_polymer": {
+      "class_enum": "ACTIVE_RIGIDITY_MEDIA",
+      "short_description_str": "Granular / polymer matrix that stiffens under electric or vacuum stimulus.",
+      "mechanical_properties": {
+        "youngs_modulus_soft_pa_float": 50000.0,
+        "youngs_modulus_stiff_pa_float": 5000000.0,
+        "poisson_ratio_float": 0.49,
+        "density_kg_m3_float": 1200.0
+      },
+      "control_channel_spec": {
+        "activation_mode_enum": "ELECTRO_OR_VACUUM",
+        "nominal_activation_voltage_v_float": 24.0,
+        "activation_latency_ms_float": 15.0,
+        "deactivation_latency_ms_float": 25.0
+      },
+      "thermal_properties": {
+        "operating_temp_range_c_vec2_float": [
+          -10.0,
+          60.0
+        ],
+        "max_safe_temp_c_float": 70.0
+      }
+    },
+    "self_healing_polymer": {
+      "class_enum": "SELF_HEALING_SKIN",
+      "short_description_str": "Elastomeric skin with microcapsule-based self-repair chemistry.",
+      "mechanical_properties": {
+        "youngs_modulus_pa_float": 1000000.0,
+        "poisson_ratio_float": 0.48,
+        "density_kg_m3_float": 1100.0,
+        "max_strain_pct_float": 150.0
+      },
+      "healing_properties": {
+        "baseline_healing_rate_per_s_float": 0.0001,
+        "thermal_acceleration_factor_float": 1.5,
+        "max_damage_energy_j_float": 10.0
+      },
+      "energy_cost_model": {
+        "healing_power_draw_w_float": 10.0,
+        "min_healing_temp_c_float": 5.0
+      }
+    },
+    "kevlar_reinforced_silicone": {
+      "class_enum": "SOFT_ACTUATION_ENVELOPE",
+      "short_description_str": "Silicone matrix with Kevlar fibers for high-pressure fluidic muscles.",
+      "mechanical_properties": {
+        "youngs_modulus_pa_float": 3000000.0,
+        "poisson_ratio_float": 0.47,
+        "density_kg_m3_float": 1300.0,
+        "burst_pressure_kpa_float": 500.0
+      },
+      "fluidic_compatibility": {
+        "compatible_fluids_list_enum": [
+          "AIR",
+          "WATER_GLYCOL_MIX"
+        ],
+        "max_operating_pressure_kpa_float": 300.0,
+        "recommended_safety_factor_float": 1.5
+      },
+      "thermal_properties": {
+        "operating_temp_range_c_vec2_float": [
+          -20.0,
+          80.0
+        ],
+        "max_safe_temp_c_float": 90.0
+      }
+    }
+  }
+}

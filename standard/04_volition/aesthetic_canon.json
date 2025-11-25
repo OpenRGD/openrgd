@@ -1,0 +1,22 @@
+{
+  "meta_group": {
+    "canon_id_str": "minimalist_expressive_v1",
+    "source_style_str": "BAUHAUS_FUNCTIONALIST_V2",
+    "last_reviewed_iso8601_str": "2025-11-23T15:30:00Z"
+  },
+  "movement_aesthetics_map": {
+    "kinematic_preference_enum": "FLUID_CONTINUOUS",
+    "resting_pose_style_enum": "NATURAL_RELAXED",
+    "max_gesticulation_angle_degrees_int": 45,
+    "timing_rhythm_map": {
+      "default_tempo_bpm_int": 100,
+      "gesticulation_latency_ms_int": 150
+    }
+  },
+  "expressive_output_map": {
+    "calm_state_animation_str": "GREEN_STATIC",
+    "confusion_state_animation_str": "AMBER_PULSE_SLOW",
+    "max_nonverbal_sound_level_db_float": 65.0,
+    "nonverbal_sound_use_frequency_pct_float": 0.15
+  }
+}

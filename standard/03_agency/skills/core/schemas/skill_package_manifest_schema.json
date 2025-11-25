@@ -1,0 +1,72 @@
+{
+  "meta_group": {
+    "schema_id_str": "openrgd_skill_package_manifest_schema_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "required_top_level_fields_list_str": [
+    "package_id_str",
+    "version_semver_str",
+    "provider_name_str",
+    "license_enum",
+    "exposed_skills_list_str",
+    "required_capabilities_group",
+    "safety_profile_group"
+  ],
+  "field_definitions_map": {
+    "package_id_str": {
+      "type_str": "STRING",
+      "description_str": "Global identifier of the skill package."
+    },
+    "version_semver_str": {
+      "type_str": "STRING",
+      "description_str": "Semantic version (e.g. 1.0.0)."
+    },
+    "provider_name_str": {
+      "type_str": "STRING"
+    },
+    "source_uri_str": {
+      "type_str": "STRING",
+      "is_optional_bool": true
+    },
+    "license_enum": {
+      "type_str": "ENUM"
+    },
+    "crypto_signature_hash_str": {
+      "type_str": "STRING",
+      "is_optional_bool": true
+    },
+    "exposed_skills_list_str": {
+      "type_str": "LIST_OF_STRING",
+      "description_str": "List of skill IDs provided by this package."
+    },
+    "required_capabilities_group.required_sensors_list_str": {
+      "type_str": "LIST_OF_STRING",
+      "is_optional_bool": true
+    },
+    "required_capabilities_group.required_actuators_list_str": {
+      "type_str": "LIST_OF_STRING",
+      "is_optional_bool": true
+    },
+    "required_capabilities_group.required_world_model_tags_list_str": {
+      "type_str": "LIST_OF_STRING",
+      "is_optional_bool": true
+    },
+    "safety_profile_group.declared_risk_level_enum": {
+      "type_str": "ENUM",
+      "allowed_values_list_str": [
+        "LOW",
+        "LOW_TO_MEDIUM",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "safety_profile_group.max_rated_speed_m_s_float": {
+      "type_str": "FLOAT",
+      "is_optional_bool": true
+    },
+    "safety_profile_group.human_proximity_mode_enum": {
+      "type_str": "ENUM",
+      "is_optional_bool": true
+    }
+  }
+}

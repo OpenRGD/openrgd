@@ -1,0 +1,29 @@
+{
+  "meta_group": {
+    "safety_protocol_version_str": "iso_13849_pl_d",
+    "last_validated_iso8601_str": "2025-11-23T12:00:00Z"
+  },
+  "physical_hard_limits_map": {
+    "max_velocity_rad_s_float": 12.5,
+    "max_torque_nm_float": 45.0,
+    "min_payload_weight_kg_float": 0.0,
+    "emergency_stop_deceleration_rad_s2_float": 50.0
+  },
+  "thermal_and_electrical_limits": {
+    "max_coil_temp_c_float": 100.0,
+    "min_bus_voltage_v_float": 40.0,
+    "battery_shutdown_percent_float": 0.03
+  },
+  "reflex_triggers_list": [
+    {
+      "trigger_input_str": "joint_torque_overload",
+      "condition_logic_str": "torque_measured > 1.2 * max_torque",
+      "action_enum": "TORQUE_LIMIT_FREEZE"
+    },
+    {
+      "trigger_input_str": "body_tilt_excessive",
+      "condition_logic_str": "roll_pitch_rad > 0.5",
+      "action_enum": "ACTIVATE_ZMP_RECOVERY"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "meta_group": {
+    "model_id_str": "theory_of_mind_v0.1",
+    "version_semver_str": "1.0.0"
+  },
+  "tom_config": {
+    "depth_of_recursion_int": 2,
+    "max_simultaneous_agents_int": 5,
+    "simulation_frequency_hz_float": 10.0
+  },
+  "mirror_neuron_policy": {
+    "enable_mirroring_bool": true,
+    "action_inference_model_enum": "INVERSE_REINFORCEMENT_LEARNING",
+    "distress_sensitivity_threshold_float": 0.95
+  },
+  "prediction_model_config": {
+    "resource_volition_weight_float": 0.6,
+    "predict_compliance_violation_bool": true,
+    "conflict_resolution_strategy_enum": "TASK_AUCTION_PARETO"
+  },
+  "model_strength_config": {
+    "prediction_confidence_min_float": 0.55,
+    "prediction_latency_max_ms_int": 200,
+    "self_projection_bias_factor_float": 0.1
+  }
+}

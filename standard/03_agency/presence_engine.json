@@ -1,0 +1,36 @@
+{
+  "meta_group": {
+    "engine_id_str": "basal_activity_v1",
+    "version_semver_str": "1.0.0"
+  },
+  "idle_animations_config": {
+    "micro_movements_list_str": [
+      "simulated_breathing",
+      "weight_shifting",
+      "subtle_hand_fidgeting"
+    ],
+    "frequency_hz_float": 0.5,
+    "amplitude_max_deg_float": 1.0,
+    "purpose_str": "prevent_joint_stiction_and_signal_life"
+  },
+  "gaze_behavior_config": {
+    "mode_enum": "SACCADIC_EXPLORATION",
+    "interest_targets_list_str": [
+      "faces",
+      "moving_objects",
+      "bright_colors"
+    ],
+    "stare_limit_sec_float": 3.0,
+    "eye_blink_frequency_per_min_int": 10
+  },
+  "soundscape_config": {
+    "emit_purr_on_idle_bool": false,
+    "fan_noise_modulation_enum": "ORGANIC_VARIATION",
+    "default_audible_cue_str": "gentle_servo_hum",
+    "speaker_volume_limit_db_float": 50.0
+  },
+  "resource_impact_config": {
+    "energy_cost_factor_float": 1.05,
+    "minimum_soc_required_pct_float": 0.1
+  }
+}

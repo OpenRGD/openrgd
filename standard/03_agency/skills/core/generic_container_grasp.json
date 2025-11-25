@@ -1,0 +1,55 @@
+{
+  "meta_group": {
+    "skill_id_str": "generic_container_grasp",
+    "version_semver_str": "1.0.0",
+    "category_enum": "MANIPULATION",
+    "capability_level_enum": "INTERMEDIATE",
+    "is_core_skill_bool": true
+  },
+  "description_group": {
+    "summary_str": "Grasp a container-like object (box, bin, small crate) with stable contact and minimal slip.",
+    "intended_use_cases_list_str": [
+      "pick_and_place_boxes",
+      "small_logistics_tasks",
+      "assisted_indoor_delivery"
+    ]
+  },
+  "preconditions_group": {
+    "required_world_model_tags_list_str": [
+      "affordance:container",
+      "surface:is_graspable"
+    ],
+    "required_sensors_list_str": [
+      "rgbd_head_camera",
+      "tactile_fingertips",
+      "force_torque_wrist"
+    ],
+    "required_actuators_list_str": [
+      "arms_full_chain",
+      "fingers_all"
+    ],
+    "disallowed_context_flags_list_str": [
+      "human_body_as_target"
+    ]
+  },
+  "safety_envelope_group": {
+    "max_contact_force_n_float": 60.0,
+    "max_lift_mass_kg_float": 5.0,
+    "slip_detection_enabled_bool": true,
+    "auto_abort_on_high_torque_bool": true
+  },
+  "control_profile_group": {
+    "policy_family_str": "container_grasp_v1",
+    "control_mode_enum": "IMPEDANCE_CONTROL",
+    "training_domain_str": "indoor_shelves_and_tables",
+    "sim2real_calibration_level_enum": "LAB_VALIDATED"
+  },
+  "runtime_policy_group": {
+    "learning_allowed_bool": true,
+    "max_policy_drift_per_hour_float": 0.05
+  },
+  "fallback_group": {
+    "on_failure_action_enum": "PLACE_OBJECT_BACK_AND_RELEASE",
+    "fallback_skill_ref_str": "skills/core/safe_stance.jsonc"
+  }
+}

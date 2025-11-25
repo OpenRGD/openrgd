@@ -1,0 +1,25 @@
+{
+  "meta_group": {
+    "mirror_id_str": "dynamic_reputation_v1",
+    "evaluation_algorithm_enum": "TRUST_SCORE_DECAY",
+    "last_updated_iso8601_str": "2025-11-23T15:38:00Z"
+  },
+  "reputation_metrics_map": {
+    "competence_trust_score_float": 0.78,
+    "ethical_trust_score_float": 0.85,
+    "self_efficacy_rating_float": 0.92,
+    "likeability_score_float": 0.61
+  },
+  "stereotype_perception_map": {
+    "primary_stereotype_str": "FORMAL_BUT_HELPFUL_SERVANT",
+    "stereotype_confidence_float": 0.65,
+    "misinterpretation_log_list_str": [
+      "Mistaken for a cleaning bot on 2025-11-20"
+    ]
+  },
+  "reciprocity_ledger": {
+    "favors_owed_count_int": 2,
+    "favors_due_count_int": 5,
+    "net_social_debt_factor_float": 0.3
+  }
+}

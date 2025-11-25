@@ -1,0 +1,57 @@
+{
+  "meta_group": {
+    "skill_id_str": "safe_stance",
+    "version_semver_str": "1.0.0",
+    "category_enum": "SAFETY_AND_RECOVERY",
+    "capability_level_enum": "BASIC",
+    "is_core_skill_bool": true
+  },
+  "description_group": {
+    "summary_str": "Adopt and maintain a stable, low-risk stance in place.",
+    "intended_use_cases_list_str": [
+      "idle_waiting_near_humans",
+      "pre_shutdown_posture",
+      "fallback_pose_after_task_failure"
+    ]
+  },
+  "preconditions_group": {
+    "required_world_model_tags_list_str": [
+      "has_ground_contact",
+      "center_of_mass_known"
+    ],
+    "required_sensors_list_str": [
+      "imu_body",
+      "joint_position_sensors"
+    ],
+    "required_actuators_list_str": [
+      "legs_full_chain"
+    ],
+    "disallowed_context_flags_list_str": [
+      "in_free_fall",
+      "external_emergency_e_stop"
+    ]
+  },
+  "safety_envelope_group": {
+    "max_joint_velocity_scale_float": 0.4,
+    "max_contact_force_n_float": 150.0,
+    "allowed_contact_zones_list_str": [
+      "feet",
+      "lower_legs"
+    ],
+    "human_proximity_mode_enum": "SAFE_SLOW"
+  },
+  "control_profile_group": {
+    "policy_family_str": "standing_balance_v2",
+    "control_mode_enum": "BALANCE_CONTROLLER",
+    "training_domain_str": "flat_and_slightly_irregular_terrain",
+    "sim2real_calibration_level_enum": "FIELD_TESTED"
+  },
+  "runtime_policy_group": {
+    "learning_allowed_bool": false,
+    "max_policy_drift_per_hour_float": 0.0
+  },
+  "fallback_group": {
+    "on_failure_action_enum": "HARD_E_STOP",
+    "notes_str": "If safe stance cannot be guaranteed, halt non-essential motion and request human assistance."
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "meta_group": {
+    "power_architecture_id_str": "bhl_power_stack_v2",
+    "version_semver_str": "1.2.0",
+    "last_updated_iso8601_str": "2025-11-23T18:20:00Z",
+    "related_files_map": {
+      "compute_topology_ref_str": "01_foundation/compute_topology.jsonc",
+      "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+      "safety_critical_ref_str": "04_volition/safety_critical.jsonc",
+      "ledger_ref_str": "04_volition/ledger.jsonc"
+    }
+  },
+  "primary_energy_source": {
+    "battery_model_str": "Custom_LiPo_12S",
+    "chemistry_enum": "LITHIUM_POLYMER",
+    "capacity_wh_float": 500.0,
+    "nominal_voltage_v_float": 44.4,
+    "max_discharge_current_a_float": 100.0,
+    "internal_resistance_ohm_float": 0.005,
+    "temp_limit_c_float": 55.0,
+    "bms_spec": {
+      "supports_cell_balancing_bool": true,
+      "balancing_algorithm_enum": "DELTA_V_ACTIVE",
+      "cell_count_int": 12,
+      "telemetry_update_rate_hz_float": 5.0,
+      "communication_protocol_enum": "CAN_BUS_FD"
+    }
+  },
+  "voltage_rails_map": {
+    "motor_actuation_rail": {
+      "voltage_v_float": 48.0,
+      "priority_enum": "HIGH",
+      "max_current_a_float": 120.0,
+      "powered_components_list_str": [
+        "leg_actuator_group",
+        "arm_actuator_group"
+      ]
+    },
+    "logic_sensor_rail": {
+      "voltage_v_float": 12.0,
+      "priority_enum": "CRITICAL",
+      "max_current_a_float": 20.0,
+      "powered_components_list_str": [
+        "main_brain_unit",
+        "spinal_cord_mcu",
+        "perception_sensors"
+      ]
+    },
+    "low_power_logic_rail": {
+      "voltage_v_float": 5.0,
+      "priority_enum": "CRITICAL",
+      "powered_components_list_str": [
+        "tts_driver",
+        "status_led_array",
+        "rf_modems"
+      ]
+    }
+  },
+  "rail_routing_policy": {
+    "brownout_priority_order_list_enum": [
+      "low_power_logic_rail",
+      "logic_sensor_rail",
+      "motor_actuation_rail"
+    ],
+    "load_shedding_rules": {
+      "max_total_current_a_float": 140.0,
+      "shed_strategy_enum": "DISABLE_NONESSENTIAL_ACTUATORS",
+      "shutdown_threshold_voltage_v_float": 40.0
+    }
+  },
+  "protection_config": {
+    "system_fuse_rating_a_float": 120.0,
+    "software_shutdown_voltage_v_float": 40.0,
+    "thermal_monitoring_map": {
+      "sensors_list_str": [
+        "battery_pack_center",
+        "power_bus_main",
+        "motor_controller_group"
+      ],
+      "update_rate_hz_float": 10.0
+    },
+    "fault_response_policies": {
+      "overcurrent_response_enum": "GRACEFUL_SHUTDOWN",
+      "overtemp_response_enum": "THROTTLE_AND_COOL",
+      "bms_fault_enum": "IMMEDIATE_CUTOFF"
+    }
+  },
+  "regeneration_spec": {
+    "regenerative_braking_efficiency_pct_float": 0.15,
+    "regen_enabled_bool": true,
+    "regen_safety_limits": {
+      "max_regen_current_a_float": 20.0,
+      "min_battery_temperature_c_float": 5.0,
+      "max_battery_voltage_v_float": 50.4
+    }
+  },
+  "charging_spec": {
+    "charging_protocol_enum": "SMART_BMS",
+    "max_charge_rate_w_float": 500.0,
+    "supported_charging_methods_map": {
+      "direct_dc_fast_charge": {
+        "supported_bool": true,
+        "max_voltage_v_float": 50.4,
+        "max_current_a_float": 12.0
+      },
+      "wireless_inductive_charge": {
+        "supported_bool": true,
+        "max_power_w_float": 100.0,
+        "alignment_tolerance_cm_float": 5.0
+      }
+    }
+  },
+  "power_introspection": {
+    "telemetry_stream_uri_str": "/rgd/power/telemetry",
+    "telemetry_update_rate_hz_float": 10.0,
+    "exposed_metrics_list_str": [
+      "battery_soc_pct",
+      "battery_voltage_v",
+      "rail_currents_a",
+      "rail_status_flags",
+      "thermal_warnings"
+    ]
+  }
+}

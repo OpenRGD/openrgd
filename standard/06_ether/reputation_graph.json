@@ -1,0 +1,250 @@
+{
+  "meta_group": {
+    "reputation_graph_id_str": "core_reputation_graph_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T09:00:00Z",
+    "license_enum": "MIT_OPEN_AICOG",
+    "governance": {
+      "stewardship_organization_str": "OpenRGD Consortium",
+      "lead_maintainer_str": "Pasquale Ranieri",
+      "maintainer_role_enum": "TRUST_SYSTEMS_ARCHITECT",
+      "contact_uri_str": "mailto:trust@openrgd.org"
+    }
+  },
+  "identity_and_scope": {
+    "subject_types_list": [
+      "ROBOT_AGENT",
+      "HUMAN_OPERATOR",
+      "EXTERNAL_SERVICE",
+      "AI_MODEL_ENDPOINT"
+    ],
+    "id_format_spec": {
+      "pattern_str": "urn:rgd:id::<ENTITY_TYPE>::<UUIDv7>",
+      "examples_list": [
+        "urn:rgd:id::ROBOT_AGENT::a3f2a1d0-7e30-7b21-b001-28f189f5e000",
+        "urn:rgd:id::HUMAN_OPERATOR::h-47af1c2b-7e31-7b21-b002-413a9da12000"
+      ]
+    },
+    "storage_topology": {
+      "mode_enum": "PARTITIONED_FEDERATED_LEDGER",
+      "replication_factor_int": 5,
+      "allow_offline_caches_bool": true
+    }
+  },
+  "base_trust_model": {
+    "min_trust_score_float": 0.0,
+    "max_trust_score_float": 1.0,
+    "default_trust_score_float": 0.5,
+    "time_decay_policy": {
+      "enable_decay_bool": true,
+      "half_life_days_float": 365.0,
+      "floor_trust_after_decay_float": 0.4,
+      "ceiling_trust_after_decay_float": 0.9
+    },
+    "web_of_trust_influence": {
+      "enable_web_of_trust_bool": true,
+      "max_hops_int": 3,
+      "attenuation_per_hop_float": 0.5,
+      "max_aggregate_boost_float": 0.2
+    }
+  },
+  "event_types_catalog": {
+    "COOP_SUCCESS": {
+      "description_str": "Successful cooperative interaction (task completed, no safety issues).",
+      "trust_delta_float": 0.01,
+      "max_daily_applications_int": 20
+    },
+    "COOP_FAILURE": {
+      "description_str": "Failed cooperation (task not completed, non-critical).",
+      "trust_delta_float": -0.02,
+      "max_daily_applications_int": 10
+    },
+    "SAFETY_VIOLATION_MINOR": {
+      "description_str": "Minor safety protocol violation with no harm.",
+      "trust_delta_float": -0.08,
+      "max_daily_applications_int": 5,
+      "requires_human_review_bool": false
+    },
+    "SAFETY_VIOLATION_MAJOR": {
+      "description_str": "Major violation (risk or actual harm to humans/agents/env).",
+      "trust_delta_float": -0.3,
+      "max_daily_applications_int": 2,
+      "requires_human_review_bool": true
+    },
+    "MALICIOUS_BEHAVIOUR_CONFIRMED": {
+      "description_str": "Confirmed malicious intent (exploit, deception, sabotage).",
+      "trust_delta_float": -0.6,
+      "max_daily_applications_int": 1,
+      "requires_human_review_bool": true
+    },
+    "LONG_TERM_RELIABILITY": {
+      "description_str": "Awarded periodically for consistently reliable behavior.",
+      "trust_delta_float": 0.05,
+      "period_days_int": 90
+    },
+    "SELF_REPORT_INCONSISTENCY": {
+      "description_str": "Agent's self-reported state repeatedly contradicts observed reality.",
+      "trust_delta_float": -0.1,
+      "max_daily_applications_int": 3
+    }
+  },
+  "score_update_policy": {
+    "aggregation_mode_enum": "WEIGHTED_SUM_WITH_CLAMP",
+    "max_daily_total_delta_float": 0.3,
+    "min_daily_total_delta_float": -0.6,
+    "contextual_scaling": {
+      "enable_scaling_bool": true,
+      "high_trust_threshold_float": 0.8,
+      "betrayal_penalty_multiplier_float": 1.5,
+      "low_trust_threshold_float": 0.3,
+      "low_trust_failure_multiplier_float": 0.75
+    }
+  },
+  "edge_model_template": {
+    "fields_list": [
+      {
+        "field_name_str": "subject_id_str",
+        "description_str": "The entity whose trust score is being recorded (e.g., target robot)."
+      },
+      {
+        "field_name_str": "observer_id_str",
+        "description_str": "The entity assigning this score (e.g., current agent or council)."
+      },
+      {
+        "field_name_str": "trust_score_float",
+        "description_str": "The current trust score assigned by the observer to the subject."
+      },
+      {
+        "field_name_str": "last_update_iso8601_str",
+        "description_str": "Timestamp of the last trust score update event."
+      },
+      {
+        "field_name_str": "evidence_refs_list",
+        "description_str": "References to ledger entries, logs or events that justify this score."
+      }
+    ]
+  },
+  "action_thresholds": {
+    "trusted_partner_policy": {
+      "min_trust_score_float": 0.8,
+      "effects_list": [
+        "ALLOW_HIGH_VALUE_TASKS",
+        "PREFER_FOR_COMPUTE_FEDERATION",
+        "ALLOWED_TO_SHARE_EPHEMERAL_SKILLS_DIRECTLY"
+      ]
+    },
+    "caution_zone_policy": {
+      "min_trust_score_float": 0.4,
+      "max_trust_score_float": 0.8,
+      "effects_list": [
+        "ALLOW_LOW_RISK_TASKS_ONLY",
+        "LIMIT_SENSITIVE_DATA_ACCESS"
+      ]
+    },
+    "untrusted_policy": {
+      "max_trust_score_float": 0.4,
+      "effects_list": [
+        "BLOCK_ACCESS_TO_CRITICAL_INFRASTRUCTURE",
+        "DISALLOW_COMPUTE_FEDERATION",
+        "DISALLOW_SKILL_STREAMING",
+        "FLAG_FOR_ADDITIONAL_MONITORING"
+      ]
+    },
+    "blacklisted_policy": {
+      "max_trust_score_float": 0.1,
+      "effects_list": [
+        "ISOLATE_FROM_SWARM_PROTOCOL",
+        "LOG_ALL_CONTACT_ATTEMPTS",
+        "REQUIRE_HUMAN_OVERSIGHT_FOR_ANY_INTERACTION"
+      ]
+    }
+  },
+  "sybil_resistance_policy": {
+    "require_strong_identity_binding_bool": true,
+    "identity_binding_methods_list": [
+      "HARDWARE_ROOT_OF_TRUST",
+      "CRYPTOGRAPHIC_ATTESTATION",
+      "COUNCIL_VOUCHING"
+    ],
+    "sybil_suspicion_rules": {
+      "min_link_density_for_suspicion_float": 0.7,
+      "max_shared_neighbors_for_new_ids_int": 3,
+      "suspicious_cluster_min_size_int": 5,
+      "actions_on_suspicious_cluster": [
+        "REDUCE_TRUST_WEIGHTS_CLUSTER_WIDE",
+        "REQUIRE_ADDITIONAL_VERIFICATION",
+        "NOTIFY_SAFETY_COUNCIL"
+      ]
+    }
+  },
+  "rehabilitation_policy": {
+    "enable_rehabilitation_bool": true,
+    "cooldown_before_rehabilitation_days_int": 30,
+    "entry_conditions": {
+      "requires_human_or_council_approval_bool": true,
+      "no_new_major_violations_days_int": 60
+    },
+    "rehab_deltas": {
+      "period_days_int": 30,
+      "trust_boost_per_period_float": 0.05,
+      "max_rehabilitated_trust_score_float": 0.7
+    },
+    "log_rehabilitation_events_bool": true
+  },
+  "logging_and_audit": {
+    "enable_detailed_reputation_logs_bool": true,
+    "log_channel_str": "ledger://reputation_events",
+    "record_fields_list": [
+      "subject_id",
+      "observer_id",
+      "event_type",
+      "trust_delta",
+      "resulting_score",
+      "timestamp_iso8601"
+    ],
+    "allow_readonly_public_audit_bool": true,
+    "privacy_notes_str": "Reputation scores are considered public, but raw sensitive data (biometrics, internal logs) may be redacted or aggregated."
+  },
+  "integration_points": {
+    "used_by_components_list": [
+      "06_ether/compute_federation.json",
+      "06_ether/ephemeral_skills.json",
+      "06_ether/consensus_reality.json",
+      "03_agency/swarm_protocol.json",
+      "04_volition/social_synergy.json"
+    ],
+    "typical_queries_examples": [
+      {
+        "query_label_str": "Can I safely offload compute to this host?",
+        "required_min_trust_score_float": 0.6,
+        "components_involved_list": [
+          "compute_federation",
+          "reputation_graph",
+          "alignment"
+        ]
+      },
+      {
+        "query_label_str": "Can I accept a streamed skill from this peer?",
+        "required_min_trust_score_float": 0.7,
+        "components_involved_list": [
+          "ephemeral_skills",
+          "reputation_graph",
+          "consensus_reality"
+        ]
+      },
+      {
+        "query_label_str": "Should this agent's observations weigh heavily in consensus?",
+        "required_min_trust_score_float": 0.8,
+        "components_involved_list": [
+          "consensus_reality",
+          "reputation_graph"
+        ]
+      }
+    ]
+  },
+  "runtime_interpretation": {
+    "is_core_infrastructure_bool": true,
+    "failure_mode_notes_str": "If the reputation graph is unavailable, systems must fall back to conservative defaults: treat unknown agents cautiously, avoid high-risk cooperation, and prefer local, verifiable information.",
+    "semantic_notes_str": "Reputation is not punishment; it is collective memory. The goal is not to create an elite, but to protect the ecosystem from repeated harm while allowing honest agents to rebuild trust over time."
+  }
+}

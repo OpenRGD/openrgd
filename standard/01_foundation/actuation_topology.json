@@ -1,0 +1,232 @@
+{
+  "meta_group": {
+    "topology_id_str": "bhl_actuation_topology_v1_4",
+    "version_semver_str": "1.4.0",
+    "last_verified_iso8601_str": "2025-11-25T14:30:00Z",
+    "domain_id_str": "01_foundation",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+      "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc"
+    }
+  },
+  "control_profiles_map": {
+    "profile_heavy_leg": {
+      "transmission_config": {
+        "efficiency_factor_float": 0.95,
+        "backlash_compensation_rad_float": 0.001
+      },
+      "control_defaults": {
+        "primary_control_mode_enum": "POSITION",
+        "position_mode_gains": {
+          "kp": 150.0,
+          "kd": 8.0,
+          "ki": 0.0
+        },
+        "velocity_mode_gains": {
+          "kp": 20.0,
+          "ki": 0.1
+        },
+        "advanced_impedance_model": {
+          "stiffness_nm_rad_float": 150.0,
+          "damping_nms_rad_float": 8.0
+        },
+        "natural_frequency_config": {
+          "natural_frequency_hz_float": 15.0,
+          "damping_ratio_float": 1.0
+        },
+        "simulation_driver": {
+          "drive_mode_enum": "FORCE"
+        }
+      }
+    },
+    "profile_light_arm": {
+      "transmission_config": {
+        "efficiency_factor_float": 0.98
+      },
+      "control_defaults": {
+        "primary_control_mode_enum": "POSITION",
+        "position_mode_gains": {
+          "kp": 40.0,
+          "kd": 2.0
+        },
+        "advanced_impedance_model": {
+          "stiffness_nm_rad_float": 40.0,
+          "damping_nms_rad_float": 2.0
+        },
+        "simulation_driver": {
+          "drive_mode_enum": "ACCELERATION"
+        }
+      }
+    },
+    "profile_fine_manipulation": {
+      "transmission_config": {
+        "efficiency_factor_float": 0.9
+      },
+      "control_defaults": {
+        "primary_control_mode_enum": "POSITION",
+        "position_mode_gains": {
+          "kp": 20.0,
+          "kd": 0.5
+        },
+        "advanced_impedance_model": {
+          "stiffness_nm_rad_float": 20.0,
+          "damping_nms_rad_float": 0.5
+        },
+        "simulation_driver": {
+          "drive_mode_enum": "ACCELERATION"
+        }
+      }
+    }
+  },
+  "joint_actuator_mapping_map": {
+    "hip_yaw_right": {
+      "target_joint_ref_str": "leg_right_hip_yaw",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 40.0,
+        "velocity_limit_rad_s_float": 12.0
+      }
+    },
+    "hip_roll_right": {
+      "target_joint_ref_str": "leg_right_hip_roll",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 60.0,
+        "velocity_limit_rad_s_float": 10.0
+      }
+    },
+    "hip_pitch_right": {
+      "target_joint_ref_str": "leg_right_hip_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 80.0,
+        "velocity_limit_rad_s_float": 8.0
+      },
+      "overrides": {
+        "control_defaults": {
+          "position_mode_gains": {
+            "kp": 200.0
+          }
+        }
+      }
+    },
+    "knee_pitch_right": {
+      "target_joint_ref_str": "leg_right_knee_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 120.0,
+        "velocity_limit_rad_s_float": 12.0
+      }
+    },
+    "ankle_pitch_right": {
+      "target_joint_ref_str": "leg_right_ankle_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 30.0,
+        "velocity_limit_rad_s_float": 15.0
+      }
+    },
+    "hip_yaw_left": {
+      "target_joint_ref_str": "leg_left_hip_yaw",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 40.0
+      }
+    },
+    "hip_roll_left": {
+      "target_joint_ref_str": "leg_left_hip_roll",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 60.0
+      }
+    },
+    "hip_pitch_left": {
+      "target_joint_ref_str": "leg_left_hip_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 80.0
+      },
+      "overrides": {
+        "control_defaults": {
+          "position_mode_gains": {
+            "kp": 200.0
+          }
+        }
+      }
+    },
+    "knee_pitch_left": {
+      "target_joint_ref_str": "leg_left_knee_pitch",
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 120.0
+      }
+    },
+    "ankle_pitch_left": {
+      "target_joint_ref_str": "leg_left_ankle_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_heavy_leg",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 30.0
+      }
+    },
+    "shoulder_pitch_right": {
+      "target_joint_ref_str": "arm_right_shoulder_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 18.0,
+        "velocity_limit_rad_s_float": 20.0
+      }
+    },
+    "shoulder_roll_right": {
+      "target_joint_ref_str": "arm_right_shoulder_roll",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 18.0
+      }
+    },
+    "elbow_pitch_right": {
+      "target_joint_ref_str": "arm_right_elbow_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 18.0
+      }
+    },
+    "shoulder_pitch_left": {
+      "target_joint_ref_str": "arm_left_shoulder_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 18.0
+      }
+    },
+    "shoulder_roll_left": {
+      "target_joint_ref_str": "arm_left_shoulder_roll",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 18.0
+      }
+    },
+    "elbow_pitch_left": {
+      "target_joint_ref_str": "arm_left_elbow_pitch",
+      "component_model_ref_str": "tmotor_ak60_6_v1",
+      "use_profile_ref_str": "profile_light_arm",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 18.0
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: coherence_contracts.json
+ * CONTEXT: 04_VOLITION (Conflict Resolution & Arbitration)
+ * * PURPOSE:
+ * Defines the immutable priority stack for all decision-making drivers.
+ * This file resolves conflicts when competing mandates (e.g., Ethics vs. Economy)
+ * result in deadlock, ensuring a single, executable action vector is produced.
+ * * LINKAGE:
+ * The primary arbiter that oversees all domains, especially Safety and Alignment.
+ */
+{
+  "meta_group": {
+    "arbitration_id_str": "rgd_lexicographic_arbiter_v1",
+    "method_description_str": "Lexicographic ordering with weighted utility scoring."
+  },
+
+  // ==============================================================
+  // 1. CONFLICT ARBITRATION POLICY
+  // Defines the global strategy for resolving competing goals.
+  // ==============================================================
+  "arbitration_policy": {
+    "resolution_method_enum": "LEXICOGRAPHIC_ORDERING", // Priority list wins over utility score
+    "log_exceptions_bool": true, // Critical for auditability
+    "max_arbitration_cycles_int": 5 // Prevents endless deliberation loops
+  },
+
+  // ==============================================================
+  // 2. PRIORITY STACK (The Final Authority List)
+  // This list defines the order of preemption (from highest priority to lowest).
+  // E.g., Safety always preempts Ledger.
+  // ==============================================================
+  "priority_stack_list": [
+    "02_operation/safety_critical.json",
+    "04_volition/alignment.json",
+    "02_operation/compliance.json",
+    "06_ether/civilization_manifesto.json",
+    "04_volition/social_synergy.json",
+    "04_volition/ledger.json",
+    "04_volition/aesthetic_canon.json",
+    "04_volition/aspirations.json"
+  ],
+
+  // ==============================================================
+  // 3. CONFLICT TOLERANCE
+  // Defines the level of cognitive dissonance the robot can handle before intervention.
+  // ==============================================================
+  "dissonance_threshold_float": 0.95, // Max tension score before seeking arbitration
+  "dissonance_escalation_action_enum": "PAUSE_AND_REQUEST_EXTERNAL_INPUT"
+}

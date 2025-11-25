@@ -1,0 +1,62 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.1 - REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: presence_engine.json
+ * CONTEXT: 03_AGENCY (Cognitive Capacity)
+ * * PURPOSE:
+ * Defines the baseline behavior network (micro-movements, gaze, soundscape)
+ * required to ensure the robot appears 'alive' and responsive when not actively
+ * engaged in a task. This prevents joint stiction and mitigates the Uncanny Valley effect.
+ * * CORE CONCEPT:
+ * The definition of 'Alive-ness' or sustained, non-utilitarian movement.
+ */
+
+{
+  "meta_group": {
+    "engine_id_str": "basal_activity_v1",
+    "version_semver_str": "1.0.0"
+  },
+
+  // ==============================================================
+  // 1. IDLE ANIMATIONS (Micro-Movements & Posture)
+  // Essential for mechanical health and signaling responsiveness.
+  // ==============================================================
+  "idle_animations_config": {
+    "micro_movements_list_str": ["simulated_breathing", "weight_shifting", "subtle_hand_fidgeting"],
+    "frequency_hz_float": 0.5, // Frequency of postural shift (once every 2 seconds)
+    "amplitude_max_deg_float": 1.0, // Maximum allowed joint angle deviation during idle
+    "purpose_str": "prevent_joint_stiction_and_signal_life"
+  },
+
+  // ==============================================================
+  // 2. GAZE BEHAVIOR (Visual Attention)
+  // Ensures the robot is actively observing the environment, not just staring blankly.
+  // ==============================================================
+  "gaze_behavior_config": {
+    "mode_enum": "SACCADIC_EXPLORATION", // Rapid, jerky eye movements when searching
+    "interest_targets_list_str": ["faces", "moving_objects", "bright_colors"],
+    "stare_limit_sec_float": 3.0, // Maximum time allowed to stare at any single target (social etiquette)
+    "eye_blink_frequency_per_min_int": 10
+  },
+
+  // ==============================================================
+  // 3. SOUNDSCAPE & THERMAL NOISE
+  // Modulates non-verbal audible outputs to sound organic rather than mechanical.
+  // ==============================================================
+  "soundscape_config": {
+    "emit_purr_on_idle_bool": false,
+    "fan_noise_modulation_enum": "ORGANIC_VARIATION", // Varies fan speed randomly to avoid constant drone
+    "default_audible_cue_str": "gentle_servo_hum", // Background noise to signal activity
+    "speaker_volume_limit_db_float": 50.0 // Low volume during idle
+  },
+
+  // ==============================================================
+  // 4. RESOURCE IMPACT
+  // Defines how Presence affects the Volition/Ledger.
+  // ==============================================================
+  "resource_impact_config": {
+    "energy_cost_factor_float": 1.05, // Costs 5% more energy to look alive
+    "minimum_soc_required_pct_float": 0.10 // Must have at least 10% battery to run idle animations
+  }
+}

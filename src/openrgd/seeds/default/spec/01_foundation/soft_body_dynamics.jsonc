@@ -1,0 +1,199 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.2 - REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: soft_body_dynamics.jsonc
+ * CONTEXT: 01_FOUNDATION (THE BODY — SOFT & SMART TISSUES)
+ *
+ * PURPOSE:
+ *   Defines the parameters for non-rigid components and advanced
+ *   smart materials (soft grippers, self-healing skin, fluidic
+ *   muscles). This file augments the rigid embodiment with
+ *   deformable structures and active materials.
+ *
+ * HUMAN INTERPRETATION:
+ *   Rigid links and joints define the skeleton.
+ *   This file defines the flesh: pads, skin, and soft muscles.
+ *
+ * LLM INTERPRETATION:
+ *   - DO NOT invent new components. Keys in
+ *     `deformable_components_map` must correspond to real parts
+ *     attached to links defined in description.jsonc.
+ *   - Material physics SHOULD be referenced via `material_ref_str`
+ *     pointing to soft_materials_library.jsonc.
+ *   - This file defines usage/context of materials, not their
+ *     universal properties.
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA
+  // ==============================================================
+
+  "meta_group": {
+    "profile_id_str": "bio_synthetic_v2",
+    "version_semver_str": "1.1.0",
+    "last_updated_iso8601_str": "2025-11-23T19:30:00Z",
+
+    "solver_requirements_map": {
+      "requires_soft_body_bool": true,
+      "requires_fluid_sim_bool": true,
+      "recommended_timestep_s_float": 0.0001,
+      "recommended_substeps_int": 4,
+
+      // High-level compatibility hints for the kernel
+      "target_solvers_list_enum": [
+        "PHYSX_5_X",
+        "ISAAC_SIM_4_X",
+        "ISAAC_SIM_5_X",
+        "MUJOCO_3_X_FEM"
+      ]
+    },
+
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "soft_materials_library_ref_str": "01_foundation/soft_materials_library.jsonc",
+      "power_distribution_ref_str": "01_foundation/power_distribution.jsonc",
+      "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc"
+    }
+  },
+
+  // ==============================================================
+  // 1. DEFORMABLE COMPONENTS
+  // ==============================================================
+
+  "deformable_components_map": {
+
+    // ------------------------------------------------------------
+    // 1. ACTIVE RIGIDITY GRIPPER (Smart Materials)
+    //   Granular / jamming pads on robot hand/fingers that change
+    //   stiffness with a control signal.
+    // ------------------------------------------------------------
+    "hand_gripper_pads_array": {
+      "type_enum": "ACTIVE_RIGIDITY_PAD",
+      "material_ref_str": "electro_jamming_polymer", // from soft_materials_library.jsonc
+
+      // Where this deformable element is anchored
+      "attachment_config": {
+        "parent_link_ref_str": "hand_right_link",
+        "contact_surface_tag_str": "fingerpads_array",
+        "coverage_area_cm2_float": 25.0
+      },
+
+      // PASSIVE DEFORMATION (control signal OFF)
+      "passive_response_model": {
+        "youngs_modulus_soft_pa_float": 50000.0,   // very soft
+        "poisson_ratio_float": 0.49,
+        "max_strain_pct_float": 80.0,
+        "damping_coefficient_ns_m_float": 150.0
+      },
+
+      // ACTIVE CONTROL (rigidity modulation)
+      "active_control_model": {
+        "rigidity_control_range_pa_vec2_float": [50000.0, 5000000.0], // 100x stiffness span
+        "control_signal_ref_str": "hand_pad_rigidity_command",        // logical channel from controller
+        "transition_time_ms_int": 20,
+        "energy_cost_w_float": 8.0      // approximate power when fully stiffening all pads
+      },
+
+      // Simulation hints (engine-specific adapters can override)
+      "simulation_overrides": {
+        "solver_hint_enum": "SOFT_BODY_PBD",
+        "mesh_resolution_hint_enum": "MEDIUM",
+        "enable_self_collision_bool": false,
+        "contact_friction_multiplier_float": 1.5  // stickier than bare metal
+      }
+    },
+
+    // ------------------------------------------------------------
+    // 2. SELF-HEALING SKIN (Autopoiesis)
+    //   Elastomeric protective layer that can repair micro-damage.
+    // ------------------------------------------------------------
+    "chassis_protective_skin": {
+      "type_enum": "SELF_HEALING_POLYMER",
+      "material_ref_str": "self_healing_polymer",
+
+      // Which rigid links are covered
+      "coverage_config": {
+        "covered_links_list_str": [
+          "torso_base_link",
+          "thigh_right_link",
+          "thigh_left_link"
+        ],
+        "average_thickness_m_float": 0.003
+      },
+
+      // DAMAGE MODEL
+      "damage_model": {
+        "damage_threshold_j_float": 5.0,          // impact energy to create damage
+        "abrasion_sensitivity_enum": "MEDIUM",
+        "max_cumulative_damage_j_float": 50.0     // above this, section is considered irreparable
+      },
+
+      // REPAIR MECHANISM
+      "healing_model": {
+        "healing_rate_per_s_float": 0.0001,       // 0.01% repair per second baseline
+        "requires_energy_input_w_float": 10.0,    // power draw during active healing
+        "repair_factor_thermal_dep_float": 1.5,   // heals faster at higher temp
+        "healing_activation_policy_enum": "TRIGGER_ON_DAMAGE_AND_IDLE" // only when robot is not busy
+      },
+
+      // Ledger / Volition coupling: healing has a cost
+      "ledger_integration": {
+        "energy_cost_credit_per_joule_float": 1.0, // for future eco-ledger
+        "log_healing_events_bool": true
+      },
+
+      "simulation_overrides": {
+        "solver_hint_enum": "SURFACE_DEFORMATION_ONLY",
+        "max_substeps_int": 2
+      }
+    },
+
+    // ------------------------------------------------------------
+    // 3. FLUIDIC MUSCLES (Soft Actuation)
+    //   Pressure-driven actuators approximating biological muscles.
+    // ------------------------------------------------------------
+    "bicep_hydro_actuator": {
+      "type_enum": "PNEUMATIC_FLUIDIC_MUSCLE",
+      "material_ref_str": "kevlar_reinforced_silicone",
+      "simulation_method_enum": "FINITE_ELEMENT_METHOD",
+
+      // Attachment & geometry
+      "mounting_config": {
+        "parent_link_ref_str": "upper_arm_right_link",
+        "child_link_ref_str": "forearm_right_link",
+        "anchor_points_local_vec3_list": [
+          [0.0, 0.03, 0.0],   // origin on upper arm
+          [0.0, 0.02, -0.18]  // insertion on forearm
+        ],
+        "rest_length_m_float": 0.22
+      },
+
+      // FLUIDIC PARAMETERS
+      "fluidic_params": {
+        "fluid_pressure_limits_kpa_vec2_float": [0.0, 300.0],
+        "volume_change_max_pct_float": 40.0,
+        "nominal_response_time_ms_int": 50
+      },
+
+      // REFERENCE TO FLUID SOURCE & CONTROL
+      "pressure_source_ref_str": "pump_unit_01",       // defined in power/compute topology
+      "control_channel_ref_str": "bicep_hydro_command",
+
+      // SAFETY LIMITS (structural & physiological)
+      "safety_limits": {
+        "max_safe_pressure_kpa_float": 280.0,
+        "burst_risk_threshold_pct_float": 90.0,       // above 90% of max_range considered risky
+        "max_duty_cycle_pct_float": 70.0              // to avoid overheating and material fatigue
+      },
+
+      // Simulation hints and fallbacks
+      "simulation_overrides": {
+        "solver_hint_enum": "FEM_COUPLED_WITH_RIGID",
+        "max_solver_iterations_int": 25,
+        "enable_internal_pressure_visualization_bool": true
+      }
+    }
+  }
+}

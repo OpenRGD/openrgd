@@ -3,86 +3,138 @@
 [![Status: RFC](https://img.shields.io/badge/Status-Draft_Standard_v0.1-blue.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**OpenRGD (Robot Graph Definition)** is an open architectural standard designed to serve as the universal semantic bridge between Artificial Intelligence and Physical Reality.
-
-As intelligence becomes disembodied and ubiquitous, the necessity for a standardized protocol to define physical existence—identity, capability, constraints, and ethics—becomes the foundational challenge of robotics. OpenRGD addresses this by defining a machine-readable "Self-Model" that allows any cognitive agent to safely and effectively embody any physical machine.
+**OpenRGD (Robot Graph Definition)** is an open architectural standard designed to serve as the universal semantic bridge between Artificial Intelligence and Physical Reality.  
+It defines a machine‑readable “Self‑Model” that enables any cognitive agent to safely and effectively embody any physical machine.
 
 ---
 
-## 1. The Mission
+## ⚡ Start Instantly: The 30‑Second Magic
 
-The primary objective of OpenRGD is to eliminate the "Grounding Gap"—the semantic disconnect between high-level reasoning models and low-level hardware control.
+Don't just read the spec — experience the **Cognitive BIOS** immediately.
 
-By formalizing the description of a robot not just as a kinematic chain (geometry), but as a semantic entity (purpose and limits), OpenRGD enables:
+### 🐧 Linux / macOS
 
-* **Introspection:** The ability for a machine to understand its own hardware and state.
-* **Safety-by-Design:** The separation of intent from execution through immutable safety layers.
-* **Interoperability:** A unified language allowing cognitive models to transfer seamlessly between different physical bodies.
+```bash
+# 1. Install the Toolchain
+git clone https://github.com/OpenRGD/openrgd.git && cd openrgd && pip install -e .
+
+# 2. The Magic Sequence (Create → Enter → Boot)
+rgd init Robot && cd Robot && rgd boot
+```
+
+---
+
+### 🪟 Windows (PowerShell)
+
+```powershell
+# 1. Install the Toolchain
+git clone https://github.com/OpenRGD/openrgd.git ; cd openrgd ; pip install -e .
+
+# 2. The Magic Sequence (Create → Enter → Boot)
+rgd init Robot ; cd Robot ; rgd boot
+```
+
+---
+
+## 1. Interoperability
+
+A unified language enabling cognitive models to transfer seamlessly across different robotic bodies, platforms, and ecosystems.
+
+---
 
 ## 2. The Architecture
 
-OpenRGD is not a monolithic file format, but a hierarchical **Semantic Graph**. The standard organizes the complexity of artificial life into six normative domains.
+OpenRGD is not a monolithic file but a hierarchical **Semantic Graph** structured into six normative domains.
 
-### 01. Foundation (The Body)
-*The immutable physical reality.*
-This domain defines the hardware abstraction, including actuator dynamics, sensor fidelity, physical dimensions, and resource topology. It serves as the ground truth of the machine's physical existence.
+### **01. Foundation — The Body**  
+*Immutable physical reality.*  
+Defines hardware abstraction: actuator models, sensors, dimensions, topology.
 
-### 02. Operation (The Physiology)
-*The autonomic safety system.*
-This domain defines the operational envelopes, reflex loops, and hard constraints that preserve the integrity of the machine and its environment. These rules are designed to override cognitive intent when safety is compromised.
+### **02. Operation — The Physiology**  
+*Autonomic safety system.*  
+Defines operational envelopes, reflex rules, and constraints that override unsafe intent.
 
-### 03. Agency (The Mind)
-*The capability interface.*
-This domain maps the robot's potential interactions with the world. It defines the "Skills Library" and the API surface that the cognitive model can utilize to effect change in its environment.
+### **03. Agency — The Mind**  
+*Capability interface.*  
+Defines the “Skills Library” and how the cognitive agent interacts with the environment.
 
-### 04. Volition (The Conscience)
-*The alignment of intent.*
-This domain formalizes the system's value hierarchy, priority resolution engines, and ethical constraints. It acts as the governance layer for decision-making processes.
+### **04. Volition — The Conscience**  
+*Intent alignment.*  
+Defines ethics, value hierarchies, and decision‑governance logic.
 
-### 05. Evolution (The Lifecycle)
-*The temporal state.*
-This domain tracks the history of the system, including component wear, fatigue models, plasticity rates, and maintenance schedules. It introduces the concept of "mortality" and degradation into the robotic definition.
+### **05. Evolution — The Lifecycle**  
+*Temporal state.*  
+Tracks wear, fatigue, maintenance, lifespan, and change over time.
 
-### 06. Ether (The Society)
-*The collective connectivity.*
-This domain defines the protocols for multi-agent coordination, swarm consensus, reputation management, and knowledge sharing between distinct entities.
-
-## 3. The Kernel Concept
-
-Implementations of the OpenRGD standard rely on a **Semantic Kernel**—an orchestration layer that dynamically loads and links all six domains. The Kernel ensures that the cognitive agent possesses a complete, consistent, and context-aware picture of its embodiment before any action is planned or executed.
-
-## 4. Governance
-
-OpenRGD is an open standard developed under the **Request for Comments (RFC)** process. It belongs to no single corporation but is maintained by the OpenRGD Organization for the benefit of the global robotics and AI community.
-
-We invite researchers, ethicists, and engineers to contribute to the refinement of this specification.
-
-* **Current Status:** v0.1 (Draft Proposal)
-* **Documentation:** See `STRUCTURE.md` for technical hierarchy.
-* **Collaboration:** See `CONTRIBUTING.md` to join the working group.
-
-### 4.1 Future Roadmap: AI-Governed Evolution
-> **Note:** This section outlines the architectural vision for v1.0+.
-
-OpenRGD is designed from the outset to support **AI-assisted stewardship**. The specification proposes a framework where authorized AI systems may eventually propose changes via **Commitment Proposals (CPs)**—machine-readable diffs subject to a strict validation hierarchy:
-
-1.  **Automated Validators:** Structural integrity and Safety Layer impact analysis.
-2.  **Human Oversight:** Final review by domain maintainers.
-3.  **Regulatory Audit:** Traceable cryptographic signatures to ensure legal compliance.
-
-This establishes a path toward a future where AI systems participate in the continuous improvement of safety standards without bypassing human governance.
+### **06. Ether — The Society**  
+*Collective intelligence.*  
+Defines swarm behavior, consensus, inter‑agent communication, and reputation.
 
 ---
 
-## 5. Authors
+## 3. Toolchain (CLI)
+
+The `rgd` CLI manages the entire lifecycle of an embodiment definition — effectively acting as the **Operating System of the Standard**.
+
+### The Golden Loop
+
+- **Ingest** (`rgd import`) — Convert URDF/USD into OpenRGD.  
+- **Compile** (`rgd compile-spec`) — Produce Digital Twins (`.jsonc` for LLMs, `.json` for validation).  
+- **Bridge** (`rgd export`) — Export to ROS2, Isaac Lab, and other engines.  
+- **Boot** (`rgd boot`) — Initialize the Cognitive BIOS and generate the System Prompt.
+
+### Example Workflow
+
+```bash
+rgd import my_robot.urdf
+cd my_robot
+rgd compile-spec
+rgd export ros2
+rgd boot
+```
+
+---
+
+## 4. The Kernel Concept
+
+Implementations rely on a **Semantic Kernel**, an orchestrator that loads the six domains and guarantees a complete and consistent cognitive embodiment before any action is executed.
+
+---
+
+## 5. Governance
+
+OpenRGD follows an open **RFC‑driven** development model.
+
+- **Status:** Draft v0.1  
+- **Documentation:** See `STRUCTURE.md`  
+- **Contribution Guide:** See `CONTRIBUTING.md`  
+
+---
+
+## 6. Future Roadmap: AI‑Governed Evolution
+
+> *This section anticipates the v1.0 architecture.*
+
+OpenRGD is designed to support **AI‑assisted stewardship** via **Commitment Proposals (CPs)** — machine‑generated diffs that undergo:
+
+1. **Automated Validation**  
+2. **Human Maintainer Review**  
+3. **Regulatory / Cryptographic Audit**
+
+A controlled path toward shared evolution of safety standards.
+
+---
+
+# 7. Authors
 
 * **Pasquale Ranieri (Italia Robotica)** - *Lead Architect & Specification Author*
 
 ### Acknowledgements
 * **Recursive Design:** Portions of this specification were developed with the assistance of Large Language Models (LLMs). The latest generation of models shows an emerging ability to infer physical behavior—linking geometry, dynamics, and constraints in ways that approximate real-world reasoning. These capabilities helped validate the internal consistency of the `01_Foundation` domain.
 
-## 6. Contribute
+## 8. Contribute
 **OpenRGD is an open standard.** To participate in its development, read the [`CONTRIBUTING.md`](CONTRIBUTING.md) guide and follow the contribution workflow.
 
 ---
+
 Copyright © 2025 OpenRGD Organization. Distributed under the MIT License.

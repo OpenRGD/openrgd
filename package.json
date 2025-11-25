@@ -1,0 +1,22 @@
+{
+  "name": "openrgd",
+  "version": "0.1.0",
+  "description": "OpenRGD — Open Robot Graph Definition Standard. A unified specification framework for cognitive embodiment, identity, capabilities and volition in robotic agents.",
+  "type": "module",
+
+  "scripts": {
+    "build:uni-spec": "node tools/spec-builder/build-uni-spec.mjs"
+  },
+
+  "devDependencies": {
+    "jsonc-parser": "^3.2.0"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenRGD/openrgd.git"
+  },
+
+  "author": "OpenRGD Foundation",
+  "license": "MIT"
+}

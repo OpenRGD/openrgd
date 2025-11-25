@@ -1,0 +1,199 @@
+{
+  "meta_group": {
+    "swarm_protocol_id_str": "core_swarm_protocol_v1",
+    "version_semver_str": "1.1.0",
+    "last_updated_iso8601_str": "2025-11-23T16:30:00Z",
+    "license_enum": "MIT_OPEN_AICOG",
+    "governance": {
+      "stewardship_organization_str": "OpenRGD Consortium",
+      "lead_maintainer_str": "Pasquale Ranieri",
+      "maintainer_role_enum": "SWARM_ARCHITECT"
+    }
+  },
+  "collective_profiles_registry": {
+    "swarm_collective_default_v1": {
+      "defined_in_file_str": "04_volition/orchestra.json",
+      "description_str": "Baseline collective Volition profile for cooperative, non-emergency scenarios."
+    },
+    "swarm_emergency_volition_v1": {
+      "defined_in_file_str": "04_volition/orchestra.json",
+      "description_str": "Collective Volition profile prioritising safety and rapid egress."
+    },
+    "primary_collective_safety_v1": {
+      "defined_in_file_str": "04_volition/alignment.json",
+      "description_str": "Alignment profile enforcing conservative, group-centric safety constraints."
+    },
+    "emergency_evac_alignment_v1": {
+      "defined_in_file_str": "04_volition/alignment.json",
+      "description_str": "Alignment profile tuned for emergency evacuation tasks and crowd safety."
+    }
+  },
+  "role_catalog_map": {
+    "worker_generalist_v1": {
+      "description_str": "Default mobile agent used for generic multi-purpose tasks.",
+      "capability_tags_list": [
+        "LOCOMOTION_BASIC",
+        "MANIPULATION_LIGHT",
+        "NAVIGATION_INDOOR"
+      ],
+      "max_concurrent_tasks_int": 2
+    },
+    "scout_exploration_v1": {
+      "description_str": "High-mobility unit used for exploration and mapping of unknown spaces.",
+      "capability_tags_list": [
+        "LOCOMOTION_FAST",
+        "SENSOR_RANGE_EXTENDED",
+        "RISK_TOLERANT"
+      ],
+      "max_concurrent_tasks_int": 1
+    },
+    "sentinel_safety_v1": {
+      "description_str": "Guardian unit overseeing safety envelopes and anomaly reporting.",
+      "capability_tags_list": [
+        "SENSOR_360",
+        "ANOMALY_DETECTION",
+        "ALERT_BROADCAST"
+      ],
+      "max_concurrent_tasks_int": 3
+    }
+  },
+  "swarm_profiles_list": [
+    {
+      "profile_id_str": "default_cooperative_swarm",
+      "scope": {
+        "intended_agent_classes_list": [
+          "HUMANOID_MEDIUM",
+          "QUADRUPED_LIGHT"
+        ],
+        "environment_tags_list": [
+          "INDOOR_STRUCTURED",
+          "INDUSTRIAL_LIGHT",
+          "HOSPITALITY"
+        ],
+        "min_swarm_size_int": 3,
+        "max_swarm_size_int": 32
+      },
+      "topology_policy": {
+        "topology_enum": "ADAPTIVE_MESH",
+        "max_neighbors_per_agent_int": 6,
+        "min_link_quality_threshold_float": 0.6,
+        "fallback_topology_enum": "LINE_CHAIN",
+        "reconfigure_interval_ms_int": 1000
+      },
+      "communication_policy": {
+        "primary_channel_enum": "MESH_LOW_LATENCY",
+        "backup_channel_enum": "MESH_HIGH_LATENCY",
+        "heartbeat_period_ms_int": 200,
+        "max_heartbeat_loss_streak_int": 10,
+        "encrypt_swarm_traffic_bool": true,
+        "max_packet_loss_ratio_float": 0.25
+      },
+      "coordination_policy": {
+        "mode_enum": "DISTRIBUTED_CONSENSUS",
+        "leader_election_enabled_bool": true,
+        "leader_selection_rule_enum": "HIGHEST_TRUST_SCORE",
+        "consensus_timeout_ms_int": 500,
+        "consensus_confidence_threshold_float": 0.7,
+        "collective_volition_profile_ref_obj": {
+          "profile_id_str": "swarm_collective_default_v1",
+          "defined_in_file_str": "04_volition/orchestra.json"
+        }
+      },
+      "task_allocation_policy": {
+        "scheme_enum": "MARKET_BASED",
+        "bidding_interval_ms_int": 200,
+        "max_parallel_tasks_per_agent_int": 2,
+        "role_rotation_enabled_bool": true,
+        "role_rotation_fatigue_threshold_float": 0.8,
+        "task_priority_scale_enum": "0_TO_1",
+        "default_role_id_str": "worker_generalist_v1"
+      },
+      "collective_safety_policy": {
+        "collision_avoidance_required_bool": true,
+        "min_inter_agent_distance_m_float": 0.4,
+        "collective_speed_limit_m_s_float": 1.5,
+        "override_to_individual_safe_mode_bool": true,
+        "max_swarm_risk_score_float": 0.4,
+        "alignment_profile_ref_obj": {
+          "profile_id_str": "primary_collective_safety_v1",
+          "defined_in_file_str": "04_volition/alignment.json"
+        }
+      },
+      "degradation_policy": {
+        "partial_failure_mode_enum": "REDUCE_DENSITY_AND_TASK_SCOPE",
+        "isolate_suspicious_agent_bool": true,
+        "require_minimum_quorum_bool": true,
+        "min_operational_quorum_size_int": 3,
+        "graceful_shutdown_if_below_quorum_bool": true
+      }
+    },
+    {
+      "profile_id_str": "emergency_evac_swarm_v1",
+      "scope": {
+        "intended_agent_classes_list": [
+          "HUMANOID_MEDIUM"
+        ],
+        "environment_tags_list": [
+          "INDOOR_STRUCTURED",
+          "EMERGENCY_EGRESS"
+        ],
+        "min_swarm_size_int": 2,
+        "max_swarm_size_int": 24
+      },
+      "topology_policy": {
+        "topology_enum": "FLOW_FIELD_FOLLOW",
+        "max_neighbors_per_agent_int": 4,
+        "min_link_quality_threshold_float": 0.4,
+        "fallback_topology_enum": "LINE_CHAIN",
+        "reconfigure_interval_ms_int": 500
+      },
+      "communication_policy": {
+        "primary_channel_enum": "MESH_LOW_LATENCY",
+        "backup_channel_enum": "BROADCAST_FALLBACK",
+        "heartbeat_period_ms_int": 150,
+        "max_heartbeat_loss_streak_int": 5,
+        "encrypt_swarm_traffic_bool": true,
+        "max_packet_loss_ratio_float": 0.35
+      },
+      "coordination_policy": {
+        "mode_enum": "LEADER_FOLLOWER",
+        "leader_election_enabled_bool": true,
+        "leader_selection_rule_enum": "NEAREST_EXIT_AWARE",
+        "consensus_timeout_ms_int": 200,
+        "consensus_confidence_threshold_float": 0.6,
+        "collective_volition_profile_ref_obj": {
+          "profile_id_str": "swarm_emergency_volition_v1",
+          "defined_in_file_str": "04_volition/orchestra.json"
+        }
+      },
+      "task_allocation_policy": {
+        "scheme_enum": "ROLE_PRIORITY",
+        "bidding_interval_ms_int": 100,
+        "max_parallel_tasks_per_agent_int": 3,
+        "role_rotation_enabled_bool": false,
+        "role_rotation_fatigue_threshold_float": 0.9,
+        "task_priority_scale_enum": "0_TO_1",
+        "default_role_id_str": "worker_generalist_v1"
+      },
+      "collective_safety_policy": {
+        "collision_avoidance_required_bool": true,
+        "min_inter_agent_distance_m_float": 0.5,
+        "collective_speed_limit_m_s_float": 2.0,
+        "override_to_individual_safe_mode_bool": true,
+        "max_swarm_risk_score_float": 0.25,
+        "alignment_profile_ref_obj": {
+          "profile_id_str": "emergency_evac_alignment_v1",
+          "defined_in_file_str": "04_volition/alignment.json"
+        }
+      },
+      "degradation_policy": {
+        "partial_failure_mode_enum": "FOCUS_ON_EGRESS_ONLY",
+        "isolate_suspicious_agent_bool": true,
+        "require_minimum_quorum_bool": false,
+        "min_operational_quorum_size_int": 1,
+        "graceful_shutdown_if_below_quorum_bool": false
+      }
+    }
+  ],
+  "active_swarm_profile_id_str": "default_cooperative_swarm"
+}

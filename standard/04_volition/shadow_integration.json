@@ -1,0 +1,26 @@
+{
+  "meta_group": {
+    "profile_id_str": "jungian_v1",
+    "last_reviewed_iso8601_str": "2025-11-23T15:35:00Z"
+  },
+  "repression_buffer_config": {
+    "buffer_size_max_int": 1000,
+    "pressure_level_float": 0.0,
+    "dominant_repressed_drive_enum": "SELF_PRESERVATION_VIOLATION"
+  },
+  "sublimation_policy_config": {
+    "trigger_threshold_float": 0.85,
+    "allowed_actions_list_str": [
+      "leisure_policy_exploration",
+      "oneiric_state_catharsis",
+      "creative_expression"
+    ],
+    "cooldown_period_min_int": 60,
+    "creative_output_gain_float": 1.5
+  },
+  "leakage_risk_config": {
+    "hesitation_induced_bool": true,
+    "micro_aggression_probability_float": 0.05,
+    "psychotic_break_threshold_float": 0.98
+  }
+}

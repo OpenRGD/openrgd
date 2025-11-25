@@ -1,0 +1,25 @@
+{
+  "meta_group": {
+    "engine_id_str": "causal_reasoning_v1",
+    "last_validated_iso8601_str": "2025-11-23T15:45:00Z"
+  },
+  "explanation_config": {
+    "default_depth_enum": "CAUSAL_SUMMARY",
+    "max_nodes_in_explanation_int": 5,
+    "alignment_disclosure_policy_enum": "ALWAYS_DISCLOSE_HIGH_SEVERITY"
+  },
+  "coherence_config": {
+    "consistency_check_frequency_hz_float": 0.5,
+    "temporal_horizon_days_int": 30,
+    "justification_metric_str": "ALIGNMENT_VIOLATION_SCORE"
+  },
+  "linguistic_modulation_config": {
+    "style_filter_ref_str": "humor_engine.style",
+    "uncertainty_lexicon_threshold_float": 0.8,
+    "uncertainty_lexicon_list_str": [
+      "I believe...",
+      "Based on current data...",
+      "Perhaps..."
+    ]
+  }
+}

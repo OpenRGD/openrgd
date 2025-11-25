@@ -1,0 +1,205 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.2 — REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: sensor_fidelity.jsonc
+ * CONTEXT: 01_FOUNDATION (THE BODY — SENSOR REALISM)
+ *
+ * PURPOSE:
+ *   Defines the probabilistic error profiles and domain randomization
+ *   settings for all sensors. This file is critical for closing the
+ *   Sim-to-Real gap by training policies on realistic, noisy, and
+ *   imperfect data.
+ *
+ * HUMAN INTERPRETATION:
+ *   description.jsonc = ideal, perfect sensors.
+ *   sensor_fidelity.jsonc = how sensors actually lie, drift, glitch
+ *   and fail — deliberately, inside simulation.
+ *
+ * LLM INTERPRETATION:
+ *   - Do NOT invent new sensors here. Each key in
+ *     `sensor_error_profiles_map` MUST match an ID in
+ *     description.jsonc → sensors_mounting_map.
+ *   - Distinguish between:
+ *       * noise_*          → random fluctuations
+ *       * bias_*           → systematic offsets
+ *       * fault_injection  → intermittent or permanent failures
+ *   - Domain randomization ranges must stay within physically-plausible
+ *     bounds, never violating safety_critical.jsonc.
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA
+  // ==============================================================
+
+  "meta_group": {
+    "fidelity_profile_id_str": "high_fidelity_v2",
+    "version_semver_str": "1.2.0",
+    "last_updated_iso8601_str": "2025-11-23T18:40:00Z",
+
+    // Multiple simulators can consume this profile.
+    "target_simulators_list_enum": [
+      "ISAAC_LAB_RTX_5_X",
+      "ISAAC_SIM_4_X",
+      "MUJOCO_3_X"
+    ],
+
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "calibration_ref_str": "01_foundation/calibration.jsonc",
+      "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
+      "runtime_validation_ref_str": "01_foundation/runtime_validation.jsonc"
+    }
+  },
+
+  // ==============================================================
+  // 1. GLOBAL DOMAIN RANDOMIZATION POLICY
+  // ==============================================================
+
+  "domain_randomization_policy": {
+    "enabled_bool": true,
+
+    // Training vs Evaluation
+    "contexts_map": {
+      "train": {
+        "noise_scale_multiplier_float": 1.0,   // full noise
+        "enable_fault_injection_bool": true
+      },
+      "eval": {
+        "noise_scale_multiplier_float": 0.5,   // milder noise
+        "enable_fault_injection_bool": false   // no random hard faults
+      }
+    }
+  },
+
+  // ==============================================================
+  // 2. SENSOR-SPECIFIC ERROR PROFILES
+  //    Keys MUST match sensors_mounting_map in description.jsonc
+  // ==============================================================
+
+  "sensor_error_profiles_map": {
+
+    // ------------------------------------------------------------
+    // 2.1. VISION (RGBD HEAD CAMERA)
+    // ------------------------------------------------------------
+    "head_camera_main": {
+      "type_enum": "CAMERA_RGBD",
+
+      // --- RGB NOISE MODEL ---
+      "noise_model_rgb_enum": "POISSON_GAUSSIAN",
+
+      "parameters_rgb": {
+        "noise_std_dev_float": 0.005,                // pixel noise
+        "rolling_shutter_enabled_bool": true,
+        "motion_blur_shutter_s_float": 0.01          // exposure time
+      },
+
+      // --- DEPTH NOISE MODEL ---
+      "noise_model_depth_enum": "GAUSSIAN",
+
+      "parameters_depth": {
+        "range_noise_m_float": 0.01,                 // 1 cm random error
+        "ir_dropout_rate_pct_float": 0.15            // IR ray failure probability
+      },
+
+      // --- SYSTEMATIC BIAS (THERMAL / OPTICAL) ---
+      "bias_systematic": {
+        "thermal_drift_per_c_m_float": 0.0001        // 0.1 mm per °C
+      },
+
+      // --- FAULT INJECTION ---
+      "fault_injection": {
+        "permanent_failure_rate_per_hour_float": 0.00001,
+        "temporary_glitch_rate_per_min_float": 0.01,
+        "glitch_duration_s_float": 0.5
+      },
+
+      // --- DOMAIN RANDOMIZATION BOUNDS ---
+      "randomization_bounds": {
+        "noise_std_dev_float_range": [0.003, 0.01],
+        "range_noise_m_float_range": [0.005, 0.02],
+        "ir_dropout_rate_pct_float_range": [0.05, 0.25]
+      }
+    },
+
+    // ------------------------------------------------------------
+    // 2.2. VESTIBULAR (TORSO IMU)
+    // ------------------------------------------------------------
+    "torso_imu": {
+      "type_enum": "IMU_6DOF",
+
+      // --- GYRO / ACCEL NOISE ---
+      "noise_model_gyro_enum": "WHITE_NOISE_RANDOM_WALK",
+
+      "parameters_gyro": {
+        "angular_rate_std_dev_rad_s_float": 0.005,
+        "bias_random_walk_rad_s_sqrt_float": 0.0001
+      },
+
+      // Potential accel model (future extension)
+      "parameters_accel": {
+        "accel_std_dev_m_s2_float": 0.02,
+        "bias_random_walk_m_s2_sqrt_float": 0.0005
+      },
+
+      // --- CROSS-MODAL INTERFERENCE ---
+      "cross_modal_bias": {
+        "motor_coupling_max_rad_s_float": 0.008,
+        "coupling_source_str": "actuator_motor_noise_bus"
+      },
+
+      "randomization_bounds": {
+        "angular_rate_std_dev_rad_s_range": [0.003, 0.01],
+        "accel_std_dev_m_s2_range": [0.01, 0.05]
+      }
+    },
+
+    // ------------------------------------------------------------
+    // 2.3. CONTACT & FORCE / TORQUE (WRIST F/T SENSOR)
+    // ------------------------------------------------------------
+    "right_wrist_ft": {
+      "type_enum": "FORCE_TORQUE_6DOF",
+      "noise_model_enum": "QUANTIZATION_NOISE",
+
+      "parameters": {
+        "zero_offset_drift_n_per_c_float": 0.01,
+        "quantization_bits_int": 16
+      },
+
+      "bias_systematic": {
+        "pre_load_offset_n_float": 5.0,
+        "pre_load_drift_per_c_float": 0.002
+      },
+
+      "randomization_bounds": {
+        "pre_load_offset_n_float_range": [2.0, 8.0],
+        "zero_offset_drift_n_per_c_range": [0.005, 0.02]
+      }
+    },
+
+    // ------------------------------------------------------------
+    // 2.4. RANGE SENSOR (CHEST LIDAR)
+    // ------------------------------------------------------------
+    "chest_lidar": {
+      "type_enum": "LIDAR_2D_SOLID_STATE",
+      "noise_model_enum": "UNIFORM_GAUSSIAN",
+
+      "parameters": {
+        "range_noise_m_float": 0.005,
+        "max_range_error_threshold_m_float": 0.05,
+        "max_angular_jitter_rad_float": 0.001
+      },
+
+      "performance_degradation": {
+        "intensity_scaling_loss_pct_float": 0.1,
+        "low_reflectivity_dropout_rate_pct_float": 0.25
+      },
+
+      "randomization_bounds": {
+        "range_noise_m_float_range": [0.003, 0.015],
+        "low_reflectivity_dropout_rate_pct_float_range": [0.15, 0.35]
+      }
+    }
+  }
+}

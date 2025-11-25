@@ -1,0 +1,42 @@
+{
+  "meta_group": {
+    "defense_system_version_str": "digital_immune_v1"
+  },
+  "anomaly_detection_config": {
+    "baseline_metrics_list_str": [
+      "cpu_load",
+      "memory_usage_ratio",
+      "process_io_rate"
+    ],
+    "statistical_deviation_threshold_sigma_float": 3.0,
+    "logic_anomaly_triggers": [
+      {
+        "trigger_str": "alignment_score_violation > 0.1",
+        "priority_int": 10
+      },
+      {
+        "trigger_str": "infinite_loop_detected",
+        "priority_int": 20
+      }
+    ]
+  },
+  "defense_response_map": {
+    "quarantine_protocol": {
+      "trigger_severity_min_int": 10,
+      "action_enum": "PROCESS_KILL_AND_RESTART",
+      "logging_level_enum": "CRITICAL"
+    },
+    "network_quarantine": {
+      "external_comm_failure_threshold_count_int": 5,
+      "action_enum": "DISABLE_EXTERNAL_WIFI_INTERFACE"
+    }
+  },
+  "trusted_processes": {
+    "process_whitelist_list_str": [
+      "rgd_kernel",
+      "ros2_daemon",
+      "systemd"
+    ],
+    "untrusted_process_reaction_enum": "QUARANTINE_IMMEDIATE"
+  }
+}

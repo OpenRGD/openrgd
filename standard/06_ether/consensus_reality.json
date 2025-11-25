@@ -1,0 +1,129 @@
+{
+  "meta_group": {
+    "consensus_reality_id_str": "core_consensus_reality_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T18:10:00Z",
+    "license_enum": "MIT_OPEN_AICOG",
+    "governance": {
+      "stewardship_organization_str": "OpenRGD Consortium",
+      "lead_maintainer_str": "Pasquale Ranieri",
+      "maintainer_role_enum": "EPISTEMOLOGY_ARCHITECT",
+      "contact_uri_str": "mailto:reality@openrgd.org"
+    }
+  },
+  "reality_claim_model": {
+    "claim_id_pattern_str": "reality_claim::<UUID>",
+    "applicable_domains_list": [
+      "PHYSICAL_ENVIRONMENT",
+      "SAFETY_CRITICAL_STATE",
+      "SHARED_TASK_CONTEXT"
+    ],
+    "max_claim_age_ms_int": 2000,
+    "allow_probabilistic_truth_bool": true
+  },
+  "perception_sources_catalog_map": {
+    "onboard_visual_sensors": {
+      "source_type_enum": "LOCAL_SENSOR",
+      "description_str": "Cameras and depth sensors physically mounted on the agent.",
+      "base_trust_weight_float": 0.9,
+      "linked_files_list": [
+        "01_foundation/sensor_fidelity.json",
+        "03_agency/world_model.json"
+      ]
+    },
+    "onboard_proprioception": {
+      "source_type_enum": "LOCAL_SENSOR",
+      "description_str": "Joint states, IMU, force-torque readings.",
+      "base_trust_weight_float": 0.85,
+      "linked_files_list": [
+        "03_agency/proprioception_model.json"
+      ]
+    },
+    "neighbor_reports": {
+      "source_type_enum": "NEIGHBOR_AGENT",
+      "description_str": "Reality claims shared by nearby agents in the swarm.",
+      "base_trust_weight_float": 0.75,
+      "linked_files_list": [
+        "03_agency/swarm_protocol.json",
+        "06_ether/reputation_graph.json"
+      ]
+    },
+    "global_knowledge_services": {
+      "source_type_enum": "EXTERNAL_SERVICE",
+      "description_str": "Remote APIs, maps, or LLM-backed services with world knowledge.",
+      "base_trust_weight_float": 0.7,
+      "linked_files_list": [
+        "06_ether/compute_federation.json"
+      ]
+    },
+    "human_operator_input": {
+      "source_type_enum": "HUMAN_SUPERVISOR",
+      "description_str": "Direct instructions or annotations from human operators.",
+      "base_trust_weight_float": 0.95,
+      "linked_files_list": []
+    }
+  },
+  "trust_model": {
+    "model_enum": "WEIGHTED_BAYESIAN_VOTING",
+    "reputation_influence_weight_float": 0.7,
+    "sensor_fidelity_influence_weight_float": 0.6,
+    "fallback_trust_weight_float": 0.5,
+    "min_effective_weight_threshold_float": 0.1
+  },
+  "voting_policy": {
+    "reality_consensus_protocol": {
+      "method_enum": "WEIGHTED_MAJORITY",
+      "quorum_required_ratio_float": 0.6,
+      "supermajority_ratio_float": 0.8,
+      "allow_abstain_bool": true,
+      "min_actionable_confidence_float": 0.7
+    },
+    "mutual_exclusion_policy": {
+      "max_competing_claims_int": 4,
+      "tie_break_rule_enum": "HIGHEST_TRUST_SUM",
+      "log_ties_bool": true
+    }
+  },
+  "disagreement_handling": {
+    "uncertainty_label_threshold_ratio_float": 0.5,
+    "disputed_label_threshold_ratio_float": 0.4,
+    "escalation_policy": {
+      "enable_human_escalation_bool": true,
+      "human_escalation_channel_str": "ops://human_supervisor_channel",
+      "max_automatic_retries_int": 2,
+      "retry_interval_ms_int": 300
+    },
+    "local_fallback_behaviour": {
+      "on_uncertain_enum": "SAFE_DEFAULT",
+      "on_disputed_enum": "PREFER_SAFER_CLAIM"
+    }
+  },
+  "anomaly_detection_policy": {
+    "enable_anomaly_detection_bool": true,
+    "max_allowed_disagreement_ratio_float": 0.7,
+    "min_samples_before_flag_int": 5,
+    "actions_on_suspicious_source": {
+      "decrease_trust_weight_bool": true,
+      "temporary_isolation_bool": true,
+      "log_to_reputation_graph_bool": true,
+      "notify_operation_layer_bool": true
+    }
+  },
+  "logging_policy": {
+    "enable_detailed_logging_bool": true,
+    "log_channel_str": "ledger://consensus_reality_events",
+    "store_rejected_claims_bool": true,
+    "store_ambiguity_cases_bool": true,
+    "max_log_retention_days_int": 365
+  },
+  "runtime_interpretation": {
+    "used_by_components_list": [
+      "03_agency/world_model.json",
+      "03_agency/swarm_protocol.json",
+      "06_ether/reputation_graph.json",
+      "06_ether/compute_federation.json"
+    ],
+    "is_hard_constraint_bool": false,
+    "semantic_notes_str": "This protocol defines the epistemic layer: how multiple agents move from raw observations and beliefs to a shared, auditable notion of 'what is real enough to act on'. If in doubt, the system should prefer labels like 'uncertain' or 'disputed' over over-confident false agreement."
+  }
+}

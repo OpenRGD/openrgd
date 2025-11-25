@@ -1,0 +1,137 @@
+{
+  "meta_group": {
+    "profile_id_str": "solver_alignment_v2",
+    "required_rgd_version_str": "0.2.0",
+    "last_updated_iso8601_str": "2025-11-23T18:00:00Z",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "calibration_ref_str": "01_foundation/calibration.jsonc",
+      "actuation_dynamics_ref_str": "01_foundation/actuation_dynamics.jsonc"
+    }
+  },
+  "mujoco_solver_map": {
+    "general_defaults": {
+      "time_step_s_float": 0.002,
+      "solver_iterations_int": 50,
+      "enable_warmstart_bool": true
+    },
+    "contact_config": {
+      "solref_damping_float": 0.02,
+      "solref_stiffness_float": 1.0,
+      "solimp_tolerance_float": 0.001,
+      "friction_model_enum": "PYRAMIDAL"
+    },
+    "material_friction_overrides_map": {
+      "rubber_foot": {
+        "mu_static_float": 1.0,
+        "mu_dynamic_float": 0.8
+      },
+      "plastic_shell": {
+        "mu_static_float": 0.4,
+        "mu_dynamic_float": 0.3
+      }
+    }
+  },
+  "physx_solver_map": {
+    "general_defaults": {
+      "simulation_type_enum": "GPU_BASED_PBD",
+      "enable_ccd_bool": true,
+      "enable_gpu_determinism_bool": true
+    },
+    "collision_config": {
+      "contact_offset_m_float": 0.005,
+      "rest_offset_m_float": 0.001,
+      "max_depenetration_velocity_m_s_float": 1.0,
+      "enable_enhanced_determinism_bool": true
+    },
+    "joint_projection": {
+      "projection_tolerance_m_float": 0.01,
+      "projection_angle_rad_float": 0.05
+    },
+    "soft_body_solver_config": {
+      "solver_iterations_int": 20,
+      "max_gpu_memory_gb_float": 4.0,
+      "volume_conservation_bool": true
+    }
+  },
+  "isaac_4x_solver_map": {
+    "engine_id_enum": "ISAAC_SIM_4_X",
+    "general_overrides": {
+      "use_gpu_pipeline_bool": true,
+      "enable_stabilization_bool": true,
+      "substeps_int": 2
+    },
+    "collision_overrides": {
+      "contact_offset_m_float": 0.007,
+      "rest_offset_m_float": 0.0005,
+      "max_depenetration_velocity_m_s_float": 0.7
+    },
+    "joint_overrides": {
+      "projection_tolerance_m_float": 0.008,
+      "projection_angle_rad_float": 0.04,
+      "enable_joint_stabilization_bool": true
+    },
+    "profiling_hints": {
+      "recommended_timestep_s_float": 0.002,
+      "recommended_solver_iterations_int": 8,
+      "note_str": "For bipedal robots in Isaac 4.x, use 2 substeps and 8+ iterations to minimize knee jitter."
+    }
+  },
+  "isaac_5x_solver_map": {
+    "engine_id_enum": "ISAAC_SIM_5_X",
+    "general_overrides": {
+      "use_gpu_pipeline_bool": true,
+      "enable_stabilization_bool": true,
+      "substeps_int": 1,
+      "enable_async_streams_bool": true
+    },
+    "collision_overrides": {
+      "contact_offset_m_float": 0.005,
+      "rest_offset_m_float": 0.0005,
+      "max_depenetration_velocity_m_s_float": 1.0
+    },
+    "joint_overrides": {
+      "projection_tolerance_m_float": 0.008,
+      "projection_angle_rad_float": 0.04,
+      "enable_joint_stabilization_bool": true
+    },
+    "profiling_hints": {
+      "recommended_timestep_s_float": 0.002,
+      "recommended_solver_iterations_int": 6,
+      "note_str": "Isaac 5.x GPU pipeline is generally more stable; prefer fewer substeps and tune iterations per scenario."
+    }
+  },
+  "bullet_solver_map": {
+    "general_defaults": {
+      "erp_float": 0.2,
+      "cfm_float": 0.001
+    },
+    "contact_config": {
+      "friction_direction_iterations_int": 10
+    }
+  },
+  "ode_solver_map": {
+    "global_parameters": {
+      "erp_float": 0.2,
+      "cfm_float": 1e-05
+    }
+  },
+  "engine_negotiation_protocol": {
+    "required_capabilities_list_enum": [
+      "STABLE_CONTACTS",
+      "WARMSTARTING",
+      "JOINT_LIMITS",
+      "FIRM_SOLVER_ITERATIONS"
+    ],
+    "fallback_strategy_enum": "USE_CLOSEST_ENGINE_BEHAVIOR",
+    "unsupported_feature_behaviour_enum": "WARN_AND_CLAMP"
+  },
+  "external_unit_conversions": {
+    "ros2_compatibility": {
+      "joint_limits_in_radians_bool": true,
+      "base_frame_convention_enum": "X_FORWARD_Z_UP"
+    },
+    "fallback_angular_unit_enum": "RADIANS",
+    "fallback_linear_unit_enum": "METERS"
+  }
+}

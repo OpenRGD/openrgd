@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <ros2_control name="OpenRGD_System" type="system">
+    <hardware>
+      <plugin>odrive_can_controller/ODriveCANInterface</plugin>
+    </hardware>
+    <joint name="knee_joint_right">
+      <param name="can_id">12</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="hip_pitch_right">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="ankle_pitch_right">
+      <param name="can_id">5</param>
+      <param name="bus">/dev/ttyUSB0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
+</robot>

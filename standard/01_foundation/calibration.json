@@ -1,0 +1,87 @@
+{
+  "meta_group": {
+    "robot_serial_number_str": "BHL_UNIT_0042",
+    "calibration_profile_id_str": "default_factory_profile_v1",
+    "domain_id_str": "01_foundation",
+    "file_role_enum": "CALIBRATION_DELTA_INSTANCE",
+    "last_calibrated_iso8601_str": "2025-11-23T14:30:00Z",
+    "calibration_method_enum": "AUTOMATED_VISUAL_MARKERS",
+    "technician_id_str": "auto_calib_routine_v2.1",
+    "target_description_ref_str": "01_foundation/description.jsonc",
+    "target_description_hash_str": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "calibration_confidence_score_float": 0.92,
+    "calibration_health_status_enum": "GREEN_OK",
+    "interpretation_guides": {
+      "for_humans_str": "Apply these deltas on top of the ideal description to reconstruct the real robot geometry and dynamics.",
+      "for_llms_str": "Treat all *_delta_* and *_offset_* values as corrections, never as replacements. When reasoning about reality, mentally compose ideal + delta."
+    }
+  },
+  "kinematic_offsets_map": {
+    "knee_joint_right": {
+      "zero_point_offset_rad_float": 0.021,
+      "backlash_hysteresis_rad_float": 0.005
+    },
+    "hip_pitch_right": {
+      "zero_point_offset_rad_float": -0.015,
+      "backlash_hysteresis_rad_float": 0.002
+    }
+  },
+  "sensor_extrinsics_delta_map": {
+    "head_camera_main": {
+      "mount_delta_xyz_m_vec3_float": [
+        0.001,
+        -0.002,
+        0.0
+      ],
+      "mount_delta_rpy_rad_vec3_float": [
+        0.0,
+        0.0087,
+        0.0
+      ]
+    },
+    "torso_imu": {
+      "mount_delta_rpy_rad_vec3_float": [
+        0.001,
+        0.001,
+        0.0
+      ]
+    }
+  },
+  "sensor_intrinsics_map": {
+    "head_camera_main": {
+      "distortion_model_enum": "PLUMB_BOB",
+      "distortion_coeffs_vec5_float": [
+        -0.2,
+        0.05,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "camera_matrix_k_vec9_float": [
+        520.1,
+        0.0,
+        320.5,
+        0.0,
+        520.1,
+        240.5,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "dynamics_correction_map": {
+    "knee_joint_right": {
+      "friction_scale_factor_float": 1.2,
+      "damping_scale_factor_float": 1.1
+    },
+    "global_body": {
+      "total_mass_delta_kg_float": 0.05,
+      "center_of_mass_shift_xyz_m_vec3_float": [
+        0.005,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

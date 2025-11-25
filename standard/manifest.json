@@ -1,0 +1,39 @@
+{
+  "meta_group": {
+    "bundle_id_str": "bhl_reference_genesis",
+    "rgd_standard_version_semver_str": "0.2.0",
+    "description_str": "First reference implementation of OpenRGD Standard v0.2.",
+    "author_str": "OpenRGD Foundation",
+    "license_enum": "MIT",
+    "integrity_hash_str": "sha256:placeholder_auto_generated",
+    "created_at_iso8601_str": "2025-11-23T05:10:14.795731Z",
+    "rgd_schema_ref_str": "rgd_schema.jsonc",
+    "kernel_ref_str": "kernel.jsonc"
+  },
+  "domains_map": {
+    "01_foundation": {
+      "required_bool": true,
+      "status_enum": "STABLE"
+    },
+    "02_operation": {
+      "required_bool": true,
+      "status_enum": "STABLE"
+    },
+    "03_agency": {
+      "required_bool": true,
+      "status_enum": "EXPERIMENTAL"
+    },
+    "04_volition": {
+      "required_bool": false,
+      "status_enum": "EXPERIMENTAL"
+    },
+    "05_evolution": {
+      "required_bool": false,
+      "status_enum": "PROPOSAL"
+    },
+    "06_ether": {
+      "required_bool": false,
+      "status_enum": "PROPOSAL"
+    }
+  }
+}

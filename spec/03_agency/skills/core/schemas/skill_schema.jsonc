@@ -1,0 +1,113 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: skills/schemas/skill_schema.jsonc
+ *
+ * PURPOSE:
+ * Describes the expected structure of a single skill definition.
+ * This schema is intentionally minimal and human-readable. It can be
+ * translated into formal JSON Schema in downstream tooling.
+ */
+
+{
+  "meta_group": {
+    "schema_id_str": "openrgd_skill_schema_v1",
+    "version_semver_str": "1.0.0"
+  },
+
+  "required_top_level_fields_list_str": [
+    "meta_group",
+    "description_group",
+    "preconditions_group",
+    "safety_envelope_group",
+    "control_profile_group",
+    "runtime_policy_group",
+    "fallback_group"
+  ],
+
+  "field_definitions_map": {
+    "meta_group.skill_id_str": {
+      "type_str": "STRING",
+      "description_str": "Globally unique identifier for the skill (snake_case)."
+    },
+    "meta_group.category_enum": {
+      "type_str": "ENUM",
+      "allowed_values_list_str": [
+        "LOCOMOTION",
+        "MANIPULATION",
+        "SOCIAL_INTERACTION",
+        "MAINTENANCE_AND_SELF_CARE",
+        "SAFETY_AND_RECOVERY",
+        "SWARM_AND_COORDINATION",
+        "COGNITIVE_AND_PLANNING"
+      ]
+    },
+    "meta_group.capability_level_enum": {
+      "type_str": "ENUM",
+      "allowed_values_list_str": [
+        "BASIC",
+        "INTERMEDIATE",
+        "ADVANCED",
+        "EXPERIMENTAL"
+      ]
+    },
+    "meta_group.is_core_skill_bool": {
+      "type_str": "BOOLEAN"
+    },
+
+    "description_group.summary_str": {
+      "type_str": "STRING"
+    },
+    "description_group.intended_use_cases_list_str": {
+      "type_str": "LIST_OF_STRING"
+    },
+
+    "preconditions_group.required_world_model_tags_list_str": {
+      "type_str": "LIST_OF_STRING"
+    },
+    "preconditions_group.required_sensors_list_str": {
+      "type_str": "LIST_OF_STRING"
+    },
+    "preconditions_group.required_actuators_list_str": {
+      "type_str": "LIST_OF_STRING"
+    },
+    "preconditions_group.disallowed_context_flags_list_str": {
+      "type_str": "LIST_OF_STRING",
+      "is_optional_bool": true
+    },
+
+    "safety_envelope_group.max_joint_velocity_scale_float": {
+      "type_str": "FLOAT",
+      "allowed_range_str": "[0.0, 1.0]",
+      "is_optional_bool": true
+    },
+    "safety_envelope_group.max_contact_force_n_float": {
+      "type_str": "FLOAT",
+      "is_optional_bool": true
+    },
+
+    "control_profile_group.policy_family_str": {
+      "type_str": "STRING"
+    },
+    "control_profile_group.control_mode_enum": {
+      "type_str": "ENUM",
+      "allowed_values_list_str": [
+        "BALANCE_CONTROLLER",
+        "IMPEDANCE_CONTROL",
+        "TRAJECTORY_PRIMITIVE",
+        "HIGH_LEVEL_PLANNER"
+      ]
+    },
+
+    "runtime_policy_group.learning_allowed_bool": {
+      "type_str": "BOOLEAN"
+    },
+    "runtime_policy_group.max_policy_drift_per_hour_float": {
+      "type_str": "FLOAT",
+      "is_optional_bool": true
+    },
+
+    "fallback_group.on_failure_action_enum": {
+      "type_str": "ENUM"
+    }
+  }
+}

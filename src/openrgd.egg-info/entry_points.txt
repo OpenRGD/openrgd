@@ -1,0 +1,2 @@
+[console_scripts]
+rgd = openrgd.main:run

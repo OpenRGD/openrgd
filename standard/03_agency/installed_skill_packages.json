@@ -1,0 +1,15 @@
+{
+  "meta_group": {
+    "host_robot_id_str": "bhl_unit_italia_0001",
+    "last_refresh_iso8601_str": "2025-11-24T11:45:00Z"
+  },
+  "installed_packages_map": {
+    "pkg_indoor_delivery_v1": {
+      "install_status_enum": "DOWNLOADED_AWAITING_REVIEW",
+      "enabled_bool": false,
+      "trust_level_enum": "UNREVIEWED",
+      "installed_version_semver_str": "1.0.0",
+      "local_manifest_ref_str": "03_agency/skills/extensions/pkg_indoor_delivery_v1/manifest.jsonc"
+    }
+  }
+}
