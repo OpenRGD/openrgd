@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "openrgd"
-version = "0.1.0"
+name = "rgd"
+version = "0.1.1"
 description = "The Cognitive BIOS for Robotics - Standard CLI"
 authors = [
   { name = "Pasquale Ranieri", email = "rfc@openrgd.org" },
