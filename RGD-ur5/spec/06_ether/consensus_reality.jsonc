@@ -1,0 +1,255 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - CONSENSUS REALITY v0.1
+ * ------------------------------------------------------------------
+ * CONTEXT: 06_ETHER (Shared World-Model & Collective Epistemology)
+ *
+ * PURPOSE:
+ * This file defines how multiple agents negotiate a shared view of
+ * reality when their individual perceptions or models disagree.
+ *
+ * AUDIENCE NOTES:
+ * - For humans: read this as the "science protocol" of the robots:
+ *   how they do observation, voting, and revision of beliefs.
+ * - For LLMs: treat each section as a structured description of:
+ *   (1) data sources, (2) trust weights, (3) voting rules,
+ *   (4) conflict-resolution strategies, (5) logging of uncertainty.
+ *
+ * DESIGN NOTES:
+ * - Individual perception lives in: 03_agency/world_model.json,
+ *   01_foundation/sensor_fidelity.json, 02_operation/active_defense.json.
+ * - This file operates above that level, mediating *between agents*.
+ */
+
+{
+  "meta_group": {
+    "consensus_reality_id_str": "core_consensus_reality_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T18:10:00Z",
+    "license_enum": "MIT_OPEN_AICOG",
+
+    "governance": {
+      "stewardship_organization_str": "OpenRGD Consortium",
+      "lead_maintainer_str": "Pasquale Ranieri",
+      "maintainer_role_enum": "EPISTEMOLOGY_ARCHITECT",
+      "contact_uri_str": "mailto:reality@openrgd.org"
+    }
+  },
+
+  // ============================================================
+  // A. REALITY CLAIM MODEL
+  // This describes *what kind of statements* this protocol applies to.
+  //
+  // The idea:
+  // - A "reality claim" is a statement like:
+  //   "object X is at position (x,y,z)" or "door is open".
+  // - The protocol does NOT cover abstract beliefs (e.g. ideology),
+  //   only claims about the observable world.
+  // ============================================================
+  "reality_claim_model": {
+    "claim_id_pattern_str": "reality_claim::<UUID>",
+    "applicable_domains_list": [
+      "PHYSICAL_ENVIRONMENT",
+      "SAFETY_CRITICAL_STATE",
+      "SHARED_TASK_CONTEXT"
+    ],
+    "max_claim_age_ms_int": 2000,             // After this, claims expire (world may have changed)
+    "allow_probabilistic_truth_bool": true    // Claims can hold confidence scores, not just true/false
+  },
+
+  // ============================================================
+  // B. PERCEPTION SOURCES CATALOG
+  // List of data sources that can support or oppose a reality claim.
+  //
+  // NOTE:
+  // - "source_type_enum" indicates the class of source.
+  // - "base_trust_weight_float" is the *prior* trust level in [0.0, 1.0].
+  // - Final trust can be modulated by 'reputation_graph.json'.
+  // ============================================================
+  "perception_sources_catalog_map": {
+    "onboard_visual_sensors": {
+      "source_type_enum": "LOCAL_SENSOR",
+      "description_str": "Cameras and depth sensors physically mounted on the agent.",
+      "base_trust_weight_float": 0.9,
+      "linked_files_list": [
+        "01_foundation/sensor_fidelity.json",
+        "03_agency/world_model.json"
+      ]
+    },
+    "onboard_proprioception": {
+      "source_type_enum": "LOCAL_SENSOR",
+      "description_str": "Joint states, IMU, force-torque readings.",
+      "base_trust_weight_float": 0.85,
+      "linked_files_list": [
+        "03_agency/proprioception_model.json"
+      ]
+    },
+    "neighbor_reports": {
+      "source_type_enum": "NEIGHBOR_AGENT",
+      "description_str": "Reality claims shared by nearby agents in the swarm.",
+      "base_trust_weight_float": 0.75,
+      "linked_files_list": [
+        "03_agency/swarm_protocol.json",
+        "06_ether/reputation_graph.json"
+      ]
+    },
+    "global_knowledge_services": {
+      "source_type_enum": "EXTERNAL_SERVICE",
+      "description_str": "Remote APIs, maps, or LLM-backed services with world knowledge.",
+      "base_trust_weight_float": 0.7,
+      "linked_files_list": [
+        "06_ether/compute_federation.json"
+      ]
+    },
+    "human_operator_input": {
+      "source_type_enum": "HUMAN_SUPERVISOR",
+      "description_str": "Direct instructions or annotations from human operators.",
+      "base_trust_weight_float": 0.95,
+      "linked_files_list": []
+    }
+  },
+
+  // ============================================================
+  // C. TRUST & WEIGHTING MODEL
+  // How to combine base trust, reputation and context into a
+  // single weight used for voting.
+  //
+  // For an LLM:
+  // - Think: final_weight = base_weight * reputation_factor * context_factor
+  //   clipped to [0.0, 1.0].
+  // ============================================================
+  "trust_model": {
+    "model_enum": "WEIGHTED_BAYESIAN_VOTING",
+
+    // How much reputation from 'reputation_graph.json' influences trust.
+    "reputation_influence_weight_float": 0.7,
+
+    // How much sensor fidelity (noise models, calibration) influences trust.
+    "sensor_fidelity_influence_weight_float": 0.6,
+
+    // Default trust if no specific information is available.
+    "fallback_trust_weight_float": 0.5,
+
+    // Lower bound: if a source is this untrusted, its votes can be ignored.
+    "min_effective_weight_threshold_float": 0.1
+  },
+
+  // ============================================================
+  // D. VOTING POLICY
+  // This describes how multiple observations are combined into
+  // a consensus about a single claim.
+  //
+  // For an LLM:
+  // - "agreement_ratio" is the weighted fraction of support.
+  // - A claim is accepted if agreement_ratio >= quorum_required.
+  // ============================================================
+  "voting_policy": {
+    "reality_consensus_protocol": {
+      "method_enum": "WEIGHTED_MAJORITY",
+      "quorum_required_ratio_float": 0.6,       // Minimum support needed
+      "supermajority_ratio_float": 0.8,         // Strong support threshold
+      "allow_abstain_bool": true,               // Agents can abstain if uncertain
+
+      // For probabilistic claims, this is the minimum combined confidence
+      // needed to consider a statement actionable.
+      "min_actionable_confidence_float": 0.7
+    },
+
+    // If multiple claims are mutually exclusive (e.g., "door is open"
+    // vs "door is closed"), the protocol must choose among them.
+    "mutual_exclusion_policy": {
+      "max_competing_claims_int": 4,
+      "tie_break_rule_enum": "HIGHEST_TRUST_SUM",  // Sum of weights wins
+      "log_ties_bool": true                         // Keep trace of ties for diagnostics
+    }
+  },
+
+  // ============================================================
+  // E. DISAGREEMENT & CONFLICT HANDLING
+  // What happens when the agents cannot agree on a claim.
+  //
+  // NOTE FOR LLM:
+  // - Use these rules to decide when to label a situation as
+  //   "uncertain", "disputed", or "requires human escalation".
+  // ============================================================
+  "disagreement_handling": {
+    "uncertainty_label_threshold_ratio_float": 0.5,    // Below this, mark claim as "uncertain"
+    "disputed_label_threshold_ratio_float": 0.4,       // Below this but with strong opposing evidence
+
+    "escalation_policy": {
+      "enable_human_escalation_bool": true,
+      "human_escalation_channel_str": "ops://human_supervisor_channel",
+      "max_automatic_retries_int": 2,                  // How many re-reads / re-samplings before escalation
+      "retry_interval_ms_int": 300
+    },
+
+    "local_fallback_behaviour": {
+      "on_uncertain_enum": "SAFE_DEFAULT",           // Examples: SAFE_DEFAULT, HALT, SLOW_DOWN
+      "on_disputed_enum": "PREFER_SAFER_CLAIM"
+    }
+  },
+
+  // ============================================================
+  // F. ANOMALY & HALLUCINATION DETECTION
+  // Detects when a source (sensor, agent, or external service)
+  // appears to be systematically unreliable or adversarial.
+  //
+  // Connected to:
+  // - 06_ether/reputation_graph.json
+  // - 02_operation/active_defense.json
+  // ============================================================
+  "anomaly_detection_policy": {
+    "enable_anomaly_detection_bool": true,
+
+    // If a single source repeatedly disagrees with the majority
+    // by more than this amount, it is treated as suspicious.
+    "max_allowed_disagreement_ratio_float": 0.7,
+    "min_samples_before_flag_int": 5,
+
+    "actions_on_suspicious_source": {
+      "decrease_trust_weight_bool": true,
+      "temporary_isolation_bool": true,
+      "log_to_reputation_graph_bool": true,
+      "notify_operation_layer_bool": true         // So safety layer can react
+    }
+  },
+
+  // ============================================================
+  // G. LOGGING & TRACEABILITY
+  // How to record the reasoning process for future audit and
+  // learning (including LLM-based analysis).
+  //
+  // FOR LLM:
+  // - These logs are ideal training material to learn how robots
+  //   revise beliefs and handle conflicting information.
+  // ============================================================
+  "logging_policy": {
+    "enable_detailed_logging_bool": true,
+    "log_channel_str": "ledger://consensus_reality_events",
+    "store_rejected_claims_bool": true,          // Keep claims that lost the vote
+    "store_ambiguity_cases_bool": true,          // Cases where no consensus was reached
+    "max_log_retention_days_int": 365
+  },
+
+  // ============================================================
+  // H. RUNTIME INTERPRETATION
+  // How other components should use this file.
+  //
+  // FOR LLM:
+  // - When answering questions about "what is actually true now",
+  //   you should conceptually:
+  //   (1) gather candidate claims,
+  //   (2) weight them with this protocol,
+  //   (3) label the result as accepted / uncertain / disputed.
+  // ============================================================
+  "runtime_interpretation": {
+    "used_by_components_list": [
+      "03_agency/world_model.json",
+      "03_agency/swarm_protocol.json",
+      "06_ether/reputation_graph.json",
+      "06_ether/compute_federation.json"
+    ],
+    "is_hard_constraint_bool": false,           // Safety hard constraints live elsewhere
+    "semantic_notes_str": "This protocol defines the epistemic layer: how multiple agents move from raw observations and beliefs to a shared, auditable notion of 'what is real enough to act on'. If in doubt, the system should prefer labels like 'uncertain' or 'disputed' over over-confident false agreement."
+  }
+}

@@ -1,6 +1,6 @@
 import typer
-import os
 from pathlib import Path
+
 from ..core.visuals import log, smart_track
 from ..importers import get_importer_class, list_supported_formats
 
@@ -8,24 +8,44 @@ app = typer.Typer()
 
 @app.command("import")
 def import_cmd(
-    file_path: Path = typer.Argument(..., help="Source file (e.g. robot.urdf)"),
-    output_dir: Path = typer.Option(None, "--out", "-o", help="Output directory")
+    file_path: Path = typer.Argument(
+        ...,
+        help="Path to the robot description file (auto-detected format: .urdf, .xml, .usd, .usda)."
+    ),
+    output_dir: Path = typer.Option(
+        None,
+        "--out",
+        "-o",
+        help="RGD root for the generated structure (defaults to RGD-<robot_name>).",
+    ),
 ):
     """
-    Ingests external robot definitions and converts them to OpenRGD.
-    Automatically detects format based on extension.
+    Import a robot description and convert it into an OpenRGD-compatible structure.
+
+    The importer is selected automatically based on the file extension.
+
+    Supported formats (v0.1.0):
+        • URDF (.urdf, .xml)
+        • USD  (.usd, .usda)
+
+    The importer produces a directory tree under:
+
+        RGD-<robot_name>/spec/
+
+    ready for further compilation via `rgd compile-spec` or bundling.
     """
     if not file_path.exists():
         log(f"File not found: {file_path}", "ERROR")
         raise typer.Exit(1)
 
-    # 1. Dynamic Resolution
+    # 1. Dynamic Resolution (extension -> Importer)
     ext = file_path.suffix.lower()
     ImporterClass = get_importer_class(ext)
-    
+
     if not ImporterClass:
+        supported = ", ".join(list_supported_formats())
         log(f"Unsupported format: {ext}", "ERROR")
-        log(f"Supported formats: {', '.join(list_supported_formats())}", "INFO")
+        log(f"Supported formats in v0.1.0: {supported}", "INFO")
         raise typer.Exit(1)
 
     # 2. Instantiation
@@ -38,28 +58,35 @@ def import_cmd(
     except Exception as e:
         log(f"Critical Import Failure: {e}", "ERROR")
         raise typer.Exit(1)
-    
+
     if not rgd_data:
         log("Import produced empty data structure.", "ERROR")
         raise typer.Exit(1)
 
-    # 4. Write to Disk
+    # 4. RGD root & spec dir
     target_name = importer.robot_name
-    if output_dir is None:
-        output_dir = Path(target_name)
-    
-    if output_dir.exists():
-        log(f"Target directory '{output_dir}' exists. Merging...", "WARN")
-    else:
-        output_dir.mkdir()
 
-    log(f"Writing OpenRGD structure to: {output_dir}", "SYSTEM")
-    
-    # Scrittura con barra di caricamento per effetto scenico
+    if output_dir is None:
+        rgd_root = Path(f"RGD-{target_name}")
+    else:
+        rgd_root = Path(output_dir)
+
+    spec_dir = rgd_root / "spec"
+
+    if rgd_root.exists():
+        log(f"Target RGD root '{rgd_root}' exists. Merging...", "WARN")
+    else:
+        rgd_root.mkdir()
+
+    spec_dir.mkdir(parents=True, exist_ok=True)
+
+    log(f"Writing OpenRGD structure to: {spec_dir}", "SYSTEM")
+
+    # 5. Scrittura sotto spec/ con effetto scenico
     for rel_path, content in smart_track(rgd_data.items(), "[cyan]Transcribing DNA...[/]"):
-        full_path = output_dir / rel_path
+        full_path = spec_dir / rel_path
         full_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         with open(full_path, "w", encoding="utf-8") as f:
             f.write(content)
 

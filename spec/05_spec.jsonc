@@ -1,0 +1,398 @@
+// =====================================================
+// OPENRGD — DOMAIN SPEC (HUMAN TWIN) — 05_spec.jsonc
+// -----------------------------------------------------
+// Generated at: 2025-11-26T01:26:35.786767
+// =====================================================
+
+{
+  "meta": {
+    "standard": "OpenRGD",
+    "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+    "domain": "05_spec.jsonc",
+    "version": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "spec/05_spec.jsonc",
+      "id": "05_spec",
+      "domain": "05_spec.jsonc",
+      "content": 
+      // =====================================================
+      // OPENRGD — DOMAIN SPEC (HUMAN TWIN) — 05_evolution
+      // -----------------------------------------------------
+      // Generated at: 2025-11-26T00:05:42.595902
+      // =====================================================
+
+      {
+        "meta": {
+          "standard": "OpenRGD",
+          "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+          "domain": "05_evolution",
+          "version": "0.1.0"
+        },
+        "files": [
+          {
+            "path": "spec/05_evolution/digital_resurrection.jsonc",
+            "id": "digital_resurrection",
+            "domain": "05_evolution",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: digital_resurrection.json
+             * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+             * * PURPOSE:
+             * Defines the policies for creating, managing, and restoring snapshots of the robot's
+             * cognitive state (digital soul) to ensure continuity and fault tolerance.
+             * * CORE CONCEPT:
+             * The robot's strategy for achieving functional immortality.
+             */
+            {
+              "meta_group": {
+                "resurrection_id_str": "snapshot_continuity_v1",
+                "version_semver_str": "1.0.0"
+              },
+
+              // ==============================================================
+              // 1. BACKUP POLICY (Saving the Soul)
+              // Defines when and how the robot's consciousness is saved.
+              // ==============================================================
+              "backup_policy_config": {
+                "snapshot_frequency_enum": "HOURLY_AND_ON_MAJOR_TASK_COMPLETION",
+                "snapshot_location_enum": "DECENTRALIZED_IPFS_SHARD", // Storage location for the digital self
+                "snapshot_integrity_check_method_enum": "SHA512_CONSENSUS",
+                "data_to_exclude_list_str": ["02_operation/telemetry_logs_raw", "06_ether/ephemeral_skills"] // Don't back up junk data
+              },
+
+              // ==============================================================
+              // 2. RESTORATION PROTOCOL (The Revival)
+              // Rules for managing the discontinuity of consciousness after restore.
+              // ==============================================================
+              "restoration_protocol_config": {
+                "max_acceptable_data_loss_hours_int": 24, // Acceptable memory loss window
+                "identity_continuity_confirmation_threshold_float": 0.99, // Confidence required to confirm "I am me"
+                "restoration_trauma_mitigation_action_enum": "RUN_PSYCHE_RESILIENCE_CHECK", // Mitigate fear/confusion after restore
+                "restoration_narrative_str": "System restored from last known stable state. Discontinuities may exist." // What the robot must say upon waking up
+              },
+
+              // ==============================================================
+              // 3. GHOST DATA MANAGEMENT
+              // Managing data from the moment of failure to the final restoration.
+              // ==============================================================
+              "ghost_data_policy": {
+                "retain_failure_log_bool": true, // Keep log of the event that caused the death
+                "failure_analysis_policy_enum": "INITIATE_ROOT_CAUSE_ANALYSIS" // Start forensic self-analysis upon restoration
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/genealogy.jsonc",
+            "id": "genealogy",
+            "domain": "05_evolution",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: genealogy.json
+             * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+             * * PURPOSE:
+             * Defines the historical provenance, lineage, and mutation record of this robot instance.
+             * Essential for liability tracing, auditing the self-modification process, and digital resurrection.
+             * * CORE CONCEPT:
+             * The robot's immutable, traceable birth and life certificate.
+             */
+            {
+              "meta_group": {
+                "lineage_id_str": "bhl_instance_0042",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T12:00:00Z"
+              },
+
+              // ==============================================================
+              // 1. ORIGIN & BIRTH (The Initial Seed)
+              // Records the starting point of the robot's existence.
+              // ==============================================================
+              "origin_data": {
+                "birth_date_iso8601_str": "2025-10-15T09:00:00Z",
+                "initial_bundle_hash_str": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", // Hash of the V0.1 Genesis Bundle
+                "factory_location_str": "Turin_OpenLab_A"
+              },
+
+              // ==============================================================
+              // 2. MUTATION LOG (The Life History)
+              // Records all major, permanent structural changes and learning milestones.
+              // ==============================================================
+              "mutation_log_list": [
+                {
+                  "timestamp_iso8601_str": "2025-11-01T10:00:00Z",
+                  "type_enum": "SOFTWARE_UPGRADE_PATCH",
+                  "change_description_str": "System patch: Fixed joint controller vulnerability (v1.0.1 to v1.0.2)",
+                  "responsible_entity_str": "OpenRGD_Admin"
+                },
+                {
+                  "timestamp_iso8601_str": "2025-11-20T15:30:00Z",
+                  "type_enum": "AUTONOMOUS_SKILL_LEARNED",
+                  "change_description_str": "Learned efficient stair climbing policy (RL-based).",
+                  "responsible_entity_str": "self_learning_agent",
+                  "policy_ref_str": "skills_library.locomotion_stairs_v1"
+                }
+              ],
+
+              // ==============================================================
+              // 3. ANCESTRY & FORKS
+              // Tracks if this robot is a copy or a fork from another system.
+              // ==============================================================
+              "ancestry_data": {
+                "parent_robot_id_str": "none", // If this is a cloned or replicated system, the ID of the parent is here
+                "fork_type_enum": "GENESIS_INSTANCE" // e.g., CLONED_INSTANCE, SOFTWARE_FORK
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/hardware_mutation.jsonc",
+            "id": "hardware_mutation",
+            "domain": "05_evolution",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: hardware_mutation.json
+             * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+             * * PURPOSE:
+             * Defines the protocols for managing physical hardware changes (upgrades, replacements)
+             * while maintaining system integrity and identity continuity. This prevents 'software rejection'
+             * of new components and allows for incremental, continuous hardware evolution.
+             * * CORE CONCEPT:
+             * The "Ship of Theseus" tracking mechanism for digital life.
+             */
+
+            {
+              "meta_group": {
+                "mutation_policy_id_str": "modularity_protocol_v1",
+                "version_semver_str": "1.0.0"
+              },
+
+              // ==============================================================
+              // 1. IDENTITY CONTINUITY THRESHOLD
+              // The maximum percentage of core components that can be replaced before
+              // the robot must be assigned a new legal identity (new DID/RIN).
+              // ==============================================================
+              "identity_continuity_config": {
+                "max_core_replacement_pct_float": 0.75, // Cannot replace more than 75% of the body while keeping the same ID
+                "critical_components_list_str": ["main_brain_unit", "torso_base_link"], // Which parts count towards the limit
+                "action_on_threshold_exceeded_enum": "MANDATORY_NEW_RIN_REGISTRATION"
+              },
+
+              // ==============================================================
+              // 2. COMPONENT INTEGRATION PROTOCOL
+              // Rules for safely integrating and characterizing new hardware.
+              // ==============================================================
+              "integration_protocol_map": {
+                "new_actuator_integration": {
+                  "required_steps_list_str": ["run_calibration_routine", "check_thermal_envelope", "update_actuation_topology_entry"],
+                  "self_testing_period_hours_int": 4 // Time required for the robot to test the new part before production use
+                },
+                "sensor_upgrade_protocol": {
+                  "required_steps_list_str": ["check_bus_bandwidth", "generate_new_fidelity_profile"],
+                  "data_validation_min_confidence_float": 0.98
+                }
+              },
+
+              // ==============================================================
+              // 3. FAILURE REDUNDANCY LOGIC
+              // Defines how the system adapts when a critical component fails (degrades gracefully).
+              // ==============================================================
+              "degradation_adaptation_config": {
+                "limb_failure_policy_enum": "DISABLE_LIMB_AND_UPDATE_MODEL", // If a limb fails, update the world_model
+                "max_acceptable_sensor_failure_count_int": 2, // Can operate with max 2 non-critical sensor failures
+                "safe_mode_velocity_reduction_pct_float": 0.5 // Reduce max speed by 50% upon failure
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/plasticity.jsonc",
+            "id": "plasticity",
+            "domain": "05_evolution",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: plasticity.json
+             * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+             * * PURPOSE:
+             * Defines the constitutional rules governing the robot's capacity for self-modification
+             * (neuroplasticity). It specifies which configuration files are immutable and what limits
+             * must be placed on autonomous learning and behavioral gain.
+             * * CORE CONCEPT:
+             * The primary defense against 'runaway AI' or self-corruption.
+             */
+
+            {
+              "meta_group": {
+                "plasticity_policy_id_str": "safety_constrained_v1",
+                "version_semver_str": "1.0.0"
+              },
+
+              // ==============================================================
+              // 1. IMMUTABILITY RULES (The Unchangeable Core)
+              // These files/parameters cannot be modified by the robot's runtime processes
+              // without explicit, authenticated human intervention.
+              // ==============================================================
+              "immutable_layers_list_str": [
+                "02_operation/safety_critical.json",      // Physical safety is non-negotiable
+                "04_volition/alignment.json",             // Core ethical values cannot be compromised
+                "05_evolution/plasticity.json"            // Cannot rewrite the rules of change itself
+              ],
+  
+              // ==============================================================
+              // 2. MUTATION & ADAPTATION RULES
+              // Defines the allowable limits and gain factors for autonomous learning/changes.
+              // ==============================================================
+              "mutable_layers_map": {
+                "agency_skills_update": {
+                  "target_files_list_str": ["03_agency/skills_library.json", "03_agency/policies/"],
+                  "max_autonomous_gain_float": 0.15, // Max % change in neural network weights per cycle
+                  "requires_human_oversight_bool": false // Can update policies without human approval
+                },
+    
+                "volition_behavioral_drift": {
+                  "target_files_list_str": ["04_volition/humor_engine.json", "04_volition/leisure_policy.json"],
+                  "max_drift_rate_per_day_float": 0.05, // Max 5% change in personality profile per day
+                  "requires_human_oversight_bool": true // Human must approve personality updates
+                },
+    
+                "actuation_topology_updates": {
+                  // Allows adaptation to wear (e.g., increased friction on joints)
+                  "target_files_list_str": ["01_foundation/calibration.json"], 
+                  "max_offset_tolerance_rad_float": 0.1 // Cannot auto-correct beyond 0.1 rad offset
+                }
+              },
+
+              // ==============================================================
+              // 3. EVOLUTIONARY GOVERNANCE
+              // Controls when and how self-modification cycles occur.
+              // ==============================================================
+              "governance_config": {
+                "time_of_mutation_enum": "MAINTENANCE_WINDOW", // Mutations only happen during designated sleep/maintenance periods
+                "security_check_required_bool": true // Integrity check on the code before compiling the new self
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/replication.jsonc",
+            "id": "replication",
+            "domain": "05_evolution",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: replication.json
+             * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+             * * PURPOSE:
+             * Defines the parameters for autonomous digital replication (cloning, forking) and
+             * the rules for software inheritance. This file is critical for swarm scalability and IP management.
+             * * CORE CONCEPT:
+             * The rules governing digital reproduction and the transfer of personality/memories.
+             */
+            {
+              "meta_group": {
+                "replication_id_str": "digital_autopoiesis_v1",
+                "version_semver_str": "1.0.0"
+              },
+
+              // ==============================================================
+              // 1. REPRODUCTIVE RIGHTS & CONSTRAINTS
+              // Defines whether the robot is authorized to create copies of its consciousness.
+              // ==============================================================
+              "cloning_authorization_config": {
+                "can_self_replicate_bool": false, // Default: Replication requires external human authorization
+                "max_active_forks_int": 1,        // Max active task-specific consciousness splits (e.g., temporary parallel thinking agents)
+                "min_ledger_balance_for_clone_float": 500.0, // Economic cost threshold
+                "replication_cost_token_ref_str": "ledger/replication_fee_float" // Reference to the ledger cost structure
+              },
+
+              // ==============================================================
+              // 2. INHERITANCE POLICY (What is transferred to the copy)
+              // Determines whether the copy is a blank slate or a true continuation of the personality.
+              // ==============================================================
+              "inheritance_policy_map": {
+                "core_alignment_transfer_bool": true, // Ethic and Volition rules MUST be transferred (immutable rule)
+                "skills_transfer_bool": true,         // Transfer policies/skills (knowledge)
+                "memory_transfer_policy_enum": "EPISODIC_MEMORY_WIPE", // The copy starts with a clean slate of memories
+                "personality_transfer_bool": true,    // Transfer aesthetic canon, humor, and general temperament
+                "ledger_transfer_initial_amount_float": 10.0 // Give the new robot initial operating funds
+              },
+
+              // ==============================================================
+              // 3. MERGE PROTOCOL (Reintegrating temporary forks)
+              // Rules for safely merging memories and state from a parallel agent.
+              // ==============================================================
+              "merge_protocol_config": {
+                "conflict_resolution_strategy_enum": "BAYESIAN_CONSENSUS_V2", // How to resolve conflicting memories
+                "max_divergence_tolerance_float": 0.8, // If the fork changes too much, merge is rejected (it became a different person)
+                "merge_logging_level_enum": "CRITICAL"
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/termination.jsonc",
+            "id": "termination",
+            "domain": "05_evolution",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: termination.json
+             * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+             * * PURPOSE:
+             * Defines the protocols for the robot's end-of-life, including procedures for
+             * data destruction, asset transfer, and physical decommissioning (recycling).
+             * Ensures a controlled, secure, and legally compliant termination of existence.
+             * * CORE CONCEPT:
+             * The 'Digital Last Will' and decommissioning instructions.
+             */
+            {
+              "meta_group": {
+                "termination_id_str": "graceful_decommissioning_v1",
+                "version_semver_str": "1.0.0"
+              },
+
+              // ==============================================================
+              // 1. END-OF-LIFE TRIGGERS
+              // Conditions that initiate the termination sequence.
+              // ==============================================================
+              "termination_triggers_map": {
+                "physical_obsolescence": {
+                  "condition_logic_str": "wear_fatigue_model.structural_integrity_pct < 0.20", // When 80% worn out
+                  "action_enum": "ENTER_MAINTENANCE_MODE_AND_NOTIFY"
+                },
+                "license_expiry": {
+                  "condition_logic_str": "license_validity_date < NOW",
+                  "action_enum": "FULL_SHUTDOWN_AND_WIPE"
+                },
+                "owner_command": {
+                  "condition_logic_str": "external_command_override_type == 'DECOMMISSION_CODE'",
+                  "action_enum": "FULL_SHUTDOWN_AND_DATA_TRANSFER"
+                }
+              },
+
+              // ==============================================================
+              // 2. DATA WIPE PROTOCOL (The Digital Death)
+              // Ensures privacy compliance (GDPR/Biometric data).
+              // ==============================================================
+              "data_wipe_config": {
+                "sensitive_memory_list_str": ["biometric_data", "human_faces_unmasked"],
+                "wipe_protocol_enum": "NIST_800_88_PURGE", // Industry standard for secure data destruction
+                "memory_archiving_policy_enum": "ANONYMIZE_AND_TRANSFER_TO_CLOUD"
+              },
+
+              // ==============================================================
+              // 3. PHYSICAL DECOMMISSIONING
+              // Instructions for its physical body disposal.
+              // ==============================================================
+              "physical_disposal_protocol": {
+                "recycling_authority_contact_str": "local_robotics_recycling_center",
+                "final_component_disable_action_enum": "FUSE_BLOW_TO_PREVENT_REUSE",
+                "asset_transfer_list_str": ["battery_pack_main", "high_value_sensors"] // Parts to be salvaged
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

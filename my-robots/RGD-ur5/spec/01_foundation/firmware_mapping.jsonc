@@ -1,0 +1,234 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.2 — REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: firmware_mapping.jsonc
+ * CONTEXT: 01_FOUNDATION (The Body)
+ *
+ * PURPOSE:
+ * Defines the "firmware identity" of every physical module that contains
+ * executable code: MCUs, ESCs, IMUs, Cameras, Safety FPGAs, TTS units,
+ * sensor hubs, actuator drivers.
+ *
+ * WHY THIS FILE EXISTS:
+ *  - Guarantees reproducible behavior across multiple robot units.
+ *  - Ensures HAL/Actuation/Compute layers interact only with compatible FW.
+ *  - Enables OTA updates with rollback support.
+ *  - Allows LLM-based reasoning about capability-levels of hardware.
+ *
+ * INTERPRETATION FOR HUMANS:
+ *  Think of this as the robot’s “BIOS table” — listing every firmware chip,
+ *  its version, its hash, and what it is allowed to do.
+ *
+ * INTERPRETATION FOR LLMs:
+ *  Use this file to determine:
+ *    - Which commands the hardware supports
+ *    - Which safety guarantees firmware provides
+ *    - Whether a module is compatible with the HAL driver
+ *    - If a firmware update is safe or requires immobilization
+ *
+ * EXTENSIBILITY:
+ *  Developers can add:
+ *    - New firmware families under `firmware_catalog_map`
+ *    - New robot-specific bindings under `device_firmware_map`
+ *    - New APIs and capabilities using semantic descriptors
+ */
+
+{
+  "meta_group": {
+    "firmware_spec_version_str": "0.2.0",
+    "last_updated_iso8601_str": "2025-11-23T17:40:00Z",
+    "stewardship_org_str": "OpenRGD Consortium",
+    "compatibility_policy_enum": "STRICT_SEMVER"  // Prevent silent breaking changes
+  },
+
+  // ==============================================================
+  // 1. FIRMWARE CATALOG (Global Library)
+  // Central registry of every firmware *type* supported by OpenRGD.
+  // Developers extend this map when adding new devices or drivers.
+  // ==============================================================
+
+  "firmware_catalog_map": {
+
+    // ------------------------------------------------------------
+    // MOTOR DRIVER FIRMWARE (Brushless ESC / Integrated Actuator)
+    // ------------------------------------------------------------
+    "tmotor_ak80_series_firmware_v3": {
+      "device_class_enum": "ACTUATOR_ESC",
+      "manufacturer_str": "T-Motor",
+      "supported_hardware_models_list_str": [
+        "AK80-9_v2",
+        "AK60-6_v1"
+      ],
+
+      "api_semantic_level_str": "MOTOR_API_LEVEL_2", 
+      // LEVEL_1 = basic current control
+      // LEVEL_2 = pos/vel/torque control + diagnostic frames
+      // LEVEL_3 = low-level FOC tuning access (risky)
+
+      "firmware_version_semver_str": "3.1.0",
+      "firmware_sha256_str": "sha256:8f223a...f9a1c9",
+
+      "capabilities": {
+        "supports_torque_control_bool": true,
+        "supports_position_control_bool": true,
+        "supports_velocity_control_bool": true,
+        "supports_temperature_stream_bool": true,
+        "supports_joint_impedance_mode_bool": false
+      },
+
+      "safety_invariants": {
+        "max_allowed_torque_nm_float": 60.0, // Firmware-locked cap
+        "overtemp_shutdown_c_float": 105.0,
+        "watchdog_period_ms_int": 20
+      },
+
+      "update_policy": {
+        "supports_ota_bool": true,
+        "requires_robot_immobilization_bool": true,
+        "rollback_on_failure_bool": true
+      }
+    },
+
+    // ------------------------------------------------------------
+    // MICROCONTROLLER FIRMWARE (Torso / Reflex / CAN Coordinator)
+    // ------------------------------------------------------------
+    "stm32h7_reflex_firmware_v5": {
+      "device_class_enum": "MCU_REALTIME",
+      "manufacturer_str": "STMicroelectronics",
+      "hardware_model_str": "STM32H743",
+
+      "api_semantic_level_str": "REFLEX_API_LEVEL_3",
+      // Reflex API Level 3: supports reflex maps, timed triggers,
+      // low-level gait safety, and CAN arbitration.
+
+      "firmware_version_semver_str": "5.4.2",
+      "firmware_sha256_str": "sha256:993cd4...7cf20e",
+
+      "capabilities": {
+        "supports_estop_bool": true,
+        "supports_realtime_gait_safety_bool": true,
+        "supports_low_latency_can_routing_bool": true,
+        "max_control_loop_freq_hz_int": 20000
+      },
+
+      "safety_invariants": {
+        "sil_level_enum": "SIL3",
+        "dual_channel_lockstep_required_bool": true,
+        "latency_budget_us_int": 1000
+      },
+
+      "update_policy": {
+        "supports_ota_bool": false, // Flash via STLink only
+        "requires_robot_immobilization_bool": true,
+        "rollback_on_failure_bool": false
+      }
+    },
+
+    // ------------------------------------------------------------
+    // CAMERA FIRMWARE (ISP / Auto Exposure / Sensor Timings)
+    // ------------------------------------------------------------
+    "sony_imx219_isp_fw_v2": {
+      "device_class_enum": "VISION_SENSOR",
+      "manufacturer_str": "Sony",
+      "hardware_model_str": "IMX219",
+
+      "api_semantic_level_str": "CAMERA_API_LEVEL_1",
+      // LEVEL_1: AE/AGC control
+      // LEVEL_2: Multi-exposure HDR streams
+      // LEVEL_3: Custom sensor timing programming
+
+      "firmware_version_semver_str": "2.0.1",
+      "firmware_sha256_str": "sha256:bd8ef1...cc14e7",
+
+      "capabilities": {
+        "supports_auto_exposure_bool": true,
+        "supports_auto_gain_bool": true,
+        "supports_multiframe_hdr_bool": false
+      },
+
+      "safety_invariants": {
+        "max_temperature_c_float": 90.0
+      },
+
+      "update_policy": {
+        "supports_ota_bool": false,
+        "requires_robot_immobilization_bool": false
+      }
+    }
+  },
+
+  // ==============================================================
+  // 2. DEVICE → FIRMWARE BINDINGS (Robot-specific)
+  // This is where *our robot instance* declares exactly which
+  // firmware each physical component is running.
+  // ==============================================================
+
+  "device_firmware_map": {
+
+    // ------------------------------------------------------------
+    // LEG ACTUATORS
+    // ------------------------------------------------------------
+    "knee_right_actuator": {
+      "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+      "hardware_uid_str": "AK80-RIGHT-KNEE-0017", // physical serial
+      "last_verified_iso8601_str": "2025-11-23T10:02:00Z",
+      "compatibility_status_enum": "COMPATIBLE"
+    },
+
+    "hip_pitch_right_actuator": {
+      "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+      "hardware_uid_str": "AK80-RIGHT-HIP-0021",
+      "compatibility_status_enum": "COMPATIBLE"
+    },
+
+    // ------------------------------------------------------------
+    // REFLEX MCU
+    // ------------------------------------------------------------
+    "spinal_cord_mcu": {
+      "firmware_ref_str": "stm32h7_reflex_firmware_v5",
+      "hardware_uid_str": "STM32-REFLEX-0009",
+      "compatibility_status_enum": "CRITICAL_COMPONENT"
+    },
+
+    // ------------------------------------------------------------
+    // CAMERA MODULE
+    // ------------------------------------------------------------
+    "head_camera_main": {
+      "firmware_ref_str": "sony_imx219_isp_fw_v2",
+      "hardware_uid_str": "IMX219-HEADCAM-0032",
+      "compatibility_status_enum": "COMPATIBLE"
+    }
+  },
+
+  // ==============================================================
+  // 3. COMPATIBILITY GRAPH (Cross-check for HAL/Actuation)
+  // This ensures that no firmware contradicts HAL or Actuation topology.
+  // ==============================================================
+
+  "compatibility_graph": {
+    "enforce_semver_strict_bool": true,
+    "invalid_combinations_list": [
+      {
+        "device_class_enum": "ACTUATOR_ESC",
+        "api_semantic_level_str": "MOTOR_API_LEVEL_1",
+        "reason_str": "Level 1 cannot execute torque or impedance modes required by actuation_topology.jsonc"
+      }
+    ]
+  },
+
+  // ==============================================================
+  // 4. FIRMWARE UPDATE RULES (OTA, Rollback, Swarm Rules)
+  // ==============================================================
+
+  "update_rules": {
+    "allow_swarm_batch_update_bool": true,
+    "max_parallel_updates_int": 2,
+    "require_quorum_for_ota_bool": false, // No need for consensus_reality here
+    "signed_firmware_only_bool": true,
+    "allowed_signing_authorities_list_str": [
+      "Italia Robotica Root CA",
+      "OpenRGD Maintainers CA"
+    ]
+  }
+}

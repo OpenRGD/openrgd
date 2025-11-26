@@ -11,13 +11,31 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.8"
+license = "MIT"
+
 dependencies = [
     "typer>=0.9.0",
     "rich>=13.0.0",
+
+    # Backport for entry_points on Python < 3.10
+    "importlib_metadata>=4.6; python_version<'3.10'",
+
+    # TOML parsing for Python < 3.11
+    "tomli>=1.2.0; python_version<'3.11'",
 ]
 
 [project.scripts]
 rgd = "openrgd.main:run"
+
+# ---------------------------------------------------------
+# Entry points here are RESERVED for EXTERNAL plugins ONLY.
+# The OpenRGD Core MUST keep this section empty.
+#
+# External plugins (e.g., rgd-timetravel) will register
+# themselves here in *their own* pyproject.toml.
+# ---------------------------------------------------------
+[project.entry-points."rgd.commands"]
+# (leave empty)
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,0 +1,170 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD v0.2 - REFERENCE IMPLEMENTATION
+ * ------------------------------------------------------------------
+ * FILE: wear_fatigue_model.jsonc
+ * CONTEXT: 01_FOUNDATION (THE BODY — DEGRADATION & FATIGUE)
+ *
+ * PURPOSE:
+ *   Defines structural, electro-mechanical, and chemical wear models
+ *   for critical components. Used by:
+ *     - ledger.jsonc          → economic depreciation & replacement cost
+ *     - immunology.jsonc      → predictive maintenance & failure prediction
+ *
+ * KEY PRINCIPLE:
+ *   Static cost (lifespan budget) of dynamic actions
+ *   (cycles, torque, temperature, runtime hours).
+ *
+ * HUMAN INTERPRETATION:
+ *   This file answers: "Quante vite ha questo componente,
+ *   e cosa le consuma più in fretta?"
+ *
+ * LLM INTERPRETATION:
+ *   - DO NOT invent new keys or units.
+ *   - Each entry in `fatigue_models_map` describes how one logical
+ *     component wears out over time and usage.
+ *   - This file encodes *models*, not live telemetry.
+ */
+
+{
+  // ==============================================================
+  // 0. METADATA
+  // ==============================================================
+
+  "meta_group": {
+    "wear_model_profile_id_str": "mechanical_degradation_v1",
+    "version_semver_str": "1.0.1",
+    "last_validated_iso8601_str": "2025-11-23T20:00:00Z",
+
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+      "power_distribution_ref_str": "01_foundation/power_distribution.jsonc",
+      "ledger_ref_str": "04_volition/ledger.jsonc",
+      "immunology_ref_str": "04_volition/immunology.jsonc"
+    }
+  },
+
+  // ==============================================================
+  // 1. FATIGUE MODELS
+  // Each key corresponds to a component family or model.
+  // ==============================================================
+
+  "fatigue_models_map": {
+
+    // ------------------------------------------------------------
+    // 1. ACTUATORS (Electro-Mechanical Wear)
+    //    High-stress components where lifespan is measured in
+    //    motion cycles / revolutions under load and temperature.
+    // ------------------------------------------------------------
+    "actuator_tmotor_ak80": {
+      "component_type_enum": "MOTOR_SERVO",
+      // Links to actuation_library for detailed specs
+      "component_model_ref_str": "tmotor_ak80_9_v2",
+
+      // Base lifespan under nominal conditions
+      "lifespan_base_cycles_int": 5000000,            // nominal revolutions before mandatory replacement
+      "unit_of_wear_enum": "REVOLUTION_COUNT",
+
+      // STRESS ANALYSIS MODEL
+      "stress_penalty_model": {
+        "model_type_enum": "RAINFLOW_COUNTING",       // cumulative fatigue algorithm
+        "high_load_threshold_nm_float": 40.0,         // torque above which additional penalty applies
+        "high_load_multiplier_float": 3.0,            // wear rate ×3 above threshold
+        "overload_cutoff_nm_float": 60.0,             // above this, cycles may be counted as "severe"
+        "severe_overload_multiplier_float": 10.0      // extreme cases (e.g. stall under heavy load)
+      },
+
+      // THERMAL FATIGUE MODEL
+      "thermal_fatigue": {
+        "temp_threshold_c_float": 90.0,               // temperature above which wear accelerates
+        "temp_impact_multiplier_float": 2.0,          // wear rate ×2 above threshold
+        "catastrophic_temp_c_float": 120.0,           // beyond this, component considered near-failure
+        "thermal_cycles_penalty_factor_float": 1.2    // repeated hot-cold cycles amplify damage
+      },
+
+      // LUBRICATION / FRICTION DEGRADATION (optional hook)
+      "friction_ageing_model": {
+        "base_friction_increase_pct_over_life_float": 30.0, // expected rise in friction from new → EOL
+        "backlash_increase_factor_over_life_float": 2.0     // backlash roughly doubles near EOL
+      },
+
+      // SYMPTOMS USED BY IMMUNOLOGY FOR PREDICTIVE DIAGNOSTICS
+      "failure_symptoms_list_str": [
+        "increase_backlash_error",
+        "spike_in_static_friction",
+        "unexpected_noise_signature",
+        "overtemp_events_frequency_increase"
+      ]
+    },
+
+    // ------------------------------------------------------------
+    // 2. CHEMICAL & POWER SOURCE (BATTERY WEAR)
+    //    Lifespan measured in equivalent full cycles (Depth-of-Discharge).
+    // ------------------------------------------------------------
+    "battery_main_pack": {
+      "component_type_enum": "CHEMICAL_CELLS",
+      "component_model_ref_str": "main_battery_pack_v1", // optional mapping in power_distribution
+
+      // Base life in equivalent full charge/discharge cycles (0–100–0)
+      "lifespan_base_cycles_int": 1000,
+      "unit_of_wear_enum": "DISCHARGE_CYCLE_COUNT",
+
+      "discharge_penalty_model": {
+        "dod_below_10pct_multiplier_float": 2.5,     // going below 10% SoC counts as 2.5× wear
+        "dod_above_90pct_multiplier_float": 1.5,     // repeatedly charging above 90% also hurts
+        "calendar_aging_factor_pct_per_year_float": 5.0 // capacity loss per year even if unused
+      },
+
+      "thermal_penalty_model": {
+        "high_temp_threshold_c_float": 45.0,
+        "high_temp_multiplier_float": 1.8,           // cycles at high temp wear faster
+        "low_temp_threshold_c_float": 0.0,
+        "low_temp_multiplier_float": 1.3            // cold cycles also penalized (lithium stress)
+      },
+
+      "performance_degradation_type_enum": "CAPACITY_LOSS",
+      "end_of_life_criteria": {
+        "remaining_capacity_pct_threshold_float": 70.0,  // below 70% considered EOL for performance
+        "internal_resistance_increase_pct_threshold_float": 100.0
+      }
+    },
+
+    // ------------------------------------------------------------
+    // 3. STRUCTURAL & PASSIVE (Bearings, Chassis)
+    // ------------------------------------------------------------
+
+    // 3.1 Hip Bearings
+    "structural_bearings_hips": {
+      "component_type_enum": "BEARING_JOINT",
+      "lifespan_base_hours_float": 10000.0,           // runtime hours
+      "unit_of_wear_enum": "OPERATIONAL_HOURS",
+
+      "load_penalty_model": {
+        "nominal_load_nm_float": 40.0,                // expected torque at hip
+        "overload_factor_threshold_float": 1.5,       // >1.5× nominal considered overload
+        "overload_multiplier_float": 2.0              // overload hours count double
+      },
+
+      "contamination_risk_enum": "MEDIUM",            // dust, moisture, etc.
+      "recommended_replacement_policy_enum": "REPLACE_AT_80_PERCENT_LIFE"
+    },
+
+    // 3.2 Chassis Fasteners (Bolts, screws)
+    "fasteners_main_chassis": {
+      "component_type_enum": "FASTENER_JOINT",
+
+      // No continuous fatigue model, but mandatory inspection schedule
+      "inspection_interval_hours_int": 500,           // visual check every 500 hours
+      "max_reuse_cycles_int": 5,                      // times a critical bolt may be loosened/re-tightened
+      "unit_of_wear_enum": "MAINTENANCE_EVENTS",
+
+      "criticality_level_enum": "SAFETY_CRITICAL",
+      "inspection_symptoms_list_str": [
+        "visible_looseness",
+        "corrosion_spots",
+        "elongated_holes_or_play"
+      ]
+    }
+  }
+}

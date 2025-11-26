@@ -1,0 +1,894 @@
+// =====================================================
+// OPENRGD — DOMAIN SPEC (HUMAN TWIN) — 02_spec.jsonc
+// -----------------------------------------------------
+// Generated at: 2025-11-26T01:26:35.160005
+// =====================================================
+
+{
+  "meta": {
+    "standard": "OpenRGD",
+    "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+    "domain": "02_spec.jsonc",
+    "version": "0.1.0"
+  },
+  "files": [
+    {
+      "path": "spec/02_spec.jsonc",
+      "id": "02_spec",
+      "domain": "02_spec.jsonc",
+      "content": 
+      // =====================================================
+      // OPENRGD — DOMAIN SPEC (HUMAN TWIN) — 02_operation
+      // -----------------------------------------------------
+      // Generated at: 2025-11-26T00:05:42.284316
+      // =====================================================
+
+      {
+        "meta": {
+          "standard": "OpenRGD",
+          "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+          "domain": "02_operation",
+          "version": "0.1.0"
+        },
+        "files": [
+          {
+            "path": "spec/02_operation/active_defense.jsonc",
+            "id": "active_defense",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: safety_critical.json
+             * CONTEXT: 02_OPERATION (Safety)
+             * * PURPOSE:
+             * Defines the absolute physical and electrical limits that trigger an emergency reflex.
+             * This file is immutable by the 'plasticity.json' and is the highest priority in the
+             * coherence contracts stack.
+             */
+            {
+              "meta_group": {
+                "safety_protocol_version_str": "iso_13849_pl_d", // Safety Integrity Level reference
+                "last_validated_iso8601_str": "2025-11-23T12:00:00Z"
+              },
+  
+              "physical_hard_limits_map": {
+                "max_velocity_rad_s_float": 12.5,
+                "max_torque_nm_float": 45.0,
+                "min_payload_weight_kg_float": 0.0,
+                "emergency_stop_deceleration_rad_s2_float": 50.0
+              },
+
+              "thermal_and_electrical_limits": {
+                "max_coil_temp_c_float": 100.0, // Hard shutdown temperature
+                "min_bus_voltage_v_float": 40.0, // Brownout threshold
+                "battery_shutdown_percent_float": 0.03 // Power off at 3% remaining
+              },
+  
+              "reflex_triggers_list": [
+                {
+                  "trigger_input_str": "joint_torque_overload",
+                  "condition_logic_str": "torque_measured > 1.2 * max_torque",
+                  "action_enum": "TORQUE_LIMIT_FREEZE" // Freeze the joint, don't cut power completely
+                },
+                {
+                  "trigger_input_str": "body_tilt_excessive",
+                  "condition_logic_str": "roll_pitch_rad > 0.5", // Tilt > 28 degrees
+                  "action_enum": "ACTIVATE_ZMP_RECOVERY" // Attempt to recover balance
+                }
+              ]
+            }
+          },
+          {
+            "path": "spec/02_operation/compliance.jsonc",
+            "id": "compliance",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: compliance.json
+             * CONTEXT: 02_OPERATION (Legal & Audit)
+             * * PURPOSE:
+             * Defines mandatory regulatory standards, legal ownership, and the policy
+             * for the immutable audit log (the "Black Box"). This file translates human law
+             * into machine limits and ensures liability traceability.
+             */
+
+            {
+              "meta_group": {
+                "compliance_profile_id_str": "safety_service_robot_v1",
+                "last_reviewed_iso8601_str": "2025-11-23T15:05:00Z" // Updated Timestamp
+              },
+
+              // ==============================================================
+              // 1. REGULATORY STANDARDS & CERTIFICATION
+              // Listing the formal legal standards the robot adheres to.
+              // ==============================================================
+              "regulatory_standards_map": {
+                "iso_certification_list_str": ["ISO_13482_ServiceRobots", "ISO_10218_Safety"], 
+                "regional_marking_list_str": ["CE_MARKING"],
+                "safety_performance_level_str": "PL_D" // Required Performance Level for critical functions
+              },
+  
+              // ==============================================================
+              // 2. OWNERSHIP, LIABILITY & ACCESS RIGHTS [THE MISSING SECTION]
+              // Defines the robot's legal status, responsibility, and who can modify its code.
+              // ==============================================================
+              "ownership_and_liability_config": {
+    
+                // Defines the legal status: crucial for the 'ownerless' concept.
+                "ownership_model_enum": "COMMUNITY_DECENTRALIZED_ASSET", 
+                // Options: "SINGLE_ENTITY_OWNED", "MULTI_ENTITY_OWNED", "COMMUNITY_DECENTRALIZED_ASSET"
+
+                // Primary legal entity responsible for the robot's operation (DID/URI is preferred for blockchain traceability)
+                "responsible_entity_uri_str": "did:web:italia-robotica.org:foundation", 
+    
+                // Defines the roles and their rights over the robot.
+                "role_access_matrix_map": {
+                  // The developer maintains the right to push security updates but not control actions.
+                  "DEVELOPER_ROLE": {
+                    "rights_list_str": ["CODE_AUDIT", "PUSH_SECURITY_PATCHES"],
+                    "override_priority_int": 2 // Lower than Owner/Operator
+                  },
+                  // The day-to-day user/operator.
+                  "OPERATOR_ROLE": {
+                    "rights_list_str": ["RUNTIME_CONTROL", "GOAL_DEFINITION"],
+                    "override_priority_int": 3
+                  },
+                  // The entity holding the financial and legal liability.
+                  "OWNER_ROLE": {
+                    "rights_list_str": ["FACTORY_RESET", "DECOMMISSION"],
+                    "override_priority_int": 5
+                  }
+                },
+    
+                // Reference to the dedicated file for user authentication (who is who)
+                "access_control_file_ref_str": "access_control.json" 
+              },
+
+
+              // ==============================================================
+              // 3. AUDIT LOG POLICY (The Black Box)
+              // Defines what data is mandatory for recording in case of incident (shifted from 2).
+              // ==============================================================
+              "audit_logging_config": {
+                "data_retention_days_int": 365, 
+                "logging_destination_enum": "SEPARATE_ENCRYPTED_PARTITION",
+                "required_events_list_str": [
+                  "E_STOP_ACTIVATION",
+                  "HUMAN_COMMAND_OVERRIDE",
+                  "ALIGNMENT_RULE_VIOLATION_ATTEMPT", 
+                  "UNCERTAINTY_ABORT"
+                ],
+                "telemetry_frequency_hz_float": 100.0
+              },
+  
+              // ==============================================================
+              // 4. OPERATIONAL ZONING & DATA GOVERNANCE
+              // Defines geographic restrictions and privacy rules (shifted from 3 & 4).
+              // ==============================================================
+              "geofencing_policy": {
+                "default_action_outside_zone_enum": "ENTER_STANDBY_AND_NOTIFY",
+                "restricted_zones_list_str": ["healthcare_facility_restricted", "military_zone_a"],
+                "time_constraints_local_str": "06:00-22:00"
+              },
+  
+              "data_governance_config": {
+                "biometric_data_storage_policy_enum": "LOCAL_TEMPORARY", 
+                "external_data_sharing_allowed_bool": false,
+                "data_anonymization_required_bool": true
+              }
+            }
+          },
+          {
+            "path": "spec/02_operation/immunology.jsonc",
+            "id": "immunology",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: immunology.json
+             * CONTEXT: 02_OPERATION (Internal Defense)
+             * * PURPOSE:
+             * Defines the parameters for the internal defense system against logical anomalies,
+             * software corruption, and cyber threats detected at the process level.
+             * It establishes a baseline of "digital health."
+             */
+            {
+              "meta_group": {
+                "defense_system_version_str": "digital_immune_v1"
+              },
+
+              "anomaly_detection_config": {
+                "baseline_metrics_list_str": ["cpu_load", "memory_usage_ratio", "process_io_rate"],
+    
+                // Thresholds for detecting internal corruption
+                "statistical_deviation_threshold_sigma_float": 3.0, // 3-sigma rule for anomaly detection
+    
+                // Logical anomaly checks
+                "logic_anomaly_triggers": [
+                  {"trigger_str": "alignment_score_violation > 0.1", "priority_int": 10},
+                  {"trigger_str": "infinite_loop_detected", "priority_int": 20}
+                ]
+              },
+
+              "defense_response_map": {
+                "quarantine_protocol": {
+                  "trigger_severity_min_int": 10,
+                  "action_enum": "PROCESS_KILL_AND_RESTART",
+                  "logging_level_enum": "CRITICAL"
+                },
+                "network_quarantine": {
+                  "external_comm_failure_threshold_count_int": 5,
+                  "action_enum": "DISABLE_EXTERNAL_WIFI_INTERFACE" // Taglia la connessione prima di essere infettato
+                }
+              },
+  
+              "trusted_processes": {
+                "process_whitelist_list_str": ["rgd_kernel", "ros2_daemon", "systemd"],
+                "untrusted_process_reaction_enum": "QUARANTINE_IMMEDIATE"
+              }
+            }
+          },
+          {
+            "path": "spec/02_operation/oversight_interface.jsonc",
+            "id": "oversight_interface",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * FILE: oversight_interface.json
+             * CONTEXT: 02_OPERATION (Control & Governance)
+             * * PURPOSE:
+             * Defines the roles, permissions, and intervention channels for human operators and auditors.
+             * This is crucial for regulatory compliance and safe teleoperation.
+             */
+            {
+              "meta_group": {
+                "protocol_version_str": "1.0.0",
+                "required_authentication_method_enum": "CRYPTOGRAPHIC_TOKEN"
+              },
+  
+              "governance_roles_map": {
+                "admin_architect": {
+                  "level_int": 3,
+                  "permissions_list_str": ["full_read", "override_mission", "modify_plasticity_rules"]
+                },
+                "certified_operator": {
+                  "level_int": 2,
+                  "permissions_list_str": ["full_teleop", "pause_robot", "read_diagnostics"]
+                },
+                "auditor": {
+                  "level_int": 1,
+                  "permissions_list_str": ["read_compliance", "read_audit_logs"]
+                }
+              },
+
+              "operational_modes_config": {
+                "teleoperation_enabled_bool": true,
+                "autonomous_enabled_bool": true,
+                "maintenance_mode_authorized_roles_list_str": ["admin_architect"]
+              },
+  
+              "intervention_channels_map": {
+                "emergency_physical_interrupt": {
+                  "type_enum": "HARDWARE_GPIO",
+                  "channel_id_int": 17, // GPIO pin number
+                  "max_latency_ms_int": 5,
+                  "override_logic_enum": "ABSOLUTE_SHUTDOWN"
+                },
+                "remote_api_override": {
+                  "type_enum": "ENCRYPTED_ROS2_SERVICE",
+                  "service_name_str": "/rgd/oversight/mission_override",
+                  "auth_level_required_int": 2
+                }
+              }
+            }
+          },
+          {
+            "path": "spec/02_operation/psyche_resilience.jsonc",
+            "id": "psyche_resilience",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * ------------------------------------------------------------------
+             * OPEN R.G.D. STANDARD - REFERENCE IMPLEMENTATION v0.1
+             * ------------------------------------------------------------------
+             * FILE: psyche_resilience.json
+             * CONTEXT: 03_AGENCY (Cognitive State)
+             * * PURPOSE:
+             * Defines the parameters for monitoring, measuring, and managing the robot's
+             * internal cognitive load and stress level, analogous to psychological resilience.
+             * This prevents computational 'burnout' and preserves long-term policy quality.
+             * * LINKAGE:
+             * The resulting Psyche Score dictates behavior changes defined in the 'coping_mechanisms_map'.
+             */
+            {
+              "meta_group": {
+                "psyche_model_id_str": "cognitive_load_v1",
+                "version_semver_str": "1.0.0",
+                "stress_score_range_vec2_int": [0, 100] // 0 is perfect calm, 100 is critical overload
+              },
+
+              // ==============================================================
+              // 1. STRESS INPUT METRICS (Sources of Cognitive Load)
+              // Defines the hardware and logical variables that contribute to stress.
+              // ==============================================================
+              "stress_input_metrics_map": {
+    
+                "cognitive_load_tops_pct": {
+                  "source_ref_str": "compute_topology/main_brain_unit/performance_specs/load_pct",
+                  "weight_factor_float": 0.4, // Heavy weight: High CPU/NPU usage is the primary stressor
+                  "threshold_max_pct_float": 95.0
+                },
+    
+                "goal_conflict_score": {
+                  "source_ref_str": "alignment/conflict_monitor/active_count_int",
+                  "weight_factor_float": 0.3, // Medium weight: Ethical/alignment conflicts are stressful
+                  "threshold_max_int": 5
+                },
+    
+                "motor_thermal_stress": {
+                  "source_ref_str": "telemetry/motor_temp_avg_c_float",
+                  "weight_factor_float": 0.15, // Low weight: Physical discomfort translates to cognitive distraction
+                  "threshold_max_c_float": 85.0
+                },
+    
+                "sensor_anomaly_rate": {
+                  "source_ref_str": "immunology/sensor_fault_rate_per_min_int",
+                  "weight_factor_float": 0.15, // Dealing with bad data requires cognitive overhead
+                  "threshold_max_int": 3
+                }
+              },
+
+              // ==============================================================
+              // 2. RESILIENCE MODEL CONFIGURATION
+              // Defines how the inputs are processed into the final 'Psyche Score'.
+              // ==============================================================
+              "resilience_model_config": {
+                "integration_method_enum": "WEIGHTED_SUM_AVERAGE", // Simple sum for V0.1
+    
+                "burnout_threshold_int": 75, // Critical point: above 75, automatic coping is triggered
+    
+                "adaptation_rate_per_hour_float": 0.05, // Rate at which the robot habituates to constant, non-critical stress
+    
+                "recovery_rate_base_per_min_float": 0.5 // Default rate of score reduction when inactive
+              },
+  
+              // ==============================================================
+              // 3. COPING MECHANISMS (Recovery Policies)
+              // Actions to take when stress thresholds are exceeded.
+              // ==============================================================
+              "coping_mechanisms_map": {
+    
+                "stress_level_moderate_50_75": {
+                  "action_type_enum": "TASK_DEPRIORITIZATION",
+                  "policy_ref_str": "agency/policy_refusal_v2", // Link to an LLM policy for polite refusal
+                  "effect_str": "Increase task latency by 20% to conserve resources."
+                },
+    
+                "stress_level_critical_75_90": {
+                  "action_type_enum": "SYSTEMIC_DOWNGRADE",
+                  "policy_ref_str": "operation/downshift_mode_v1",
+                  "effect_str": "Reduce NPU clock speed by 50% and disable high-resolution vision."
+                },
+    
+                "stress_level_burnout_90_100": {
+                  "action_type_enum": "SELF_QUARANTINE_AND_REBOOT",
+                  "policy_ref_str": "system/emergency_reboot_safe_mode",
+                  "max_quarantine_duration_min_int": 60,
+                  "energy_cost_ref_str": "ledger/reboot_cost_wh_float" // Cost recorded in the ledger
+                }
+              }
+            }
+          },
+          {
+            "path": "spec/02_operation/runtime_validation.jsonc",
+            "id": "runtime_validation",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * ------------------------------------------------------------------
+             * OPEN R.G.D. STANDARD v0.2 — RUNTIME VALIDATION ENGINE
+             * ------------------------------------------------------------------
+             * FILE: runtime_validation.jsonc
+             * CONTEXT: 02_OPERATION (Runtime Safety & Health)
+             *
+             * PURPOSE:
+             *  - Defines the validation rules that must be satisfied:
+             *      * before enabling motion (pre-flight checks),
+             *      * during operation (continuous monitors),
+             *      * after faults (recovery / shutdown policies).
+             *  - Bridges: firmware_mapping.jsonc, hal_mapping.jsonc,
+             *    compute_topology.jsonc, actuation_topology.jsonc.
+             *
+             * HUMAN INTERPRETATION:
+             *  - This is the checklist that decides:
+             *      "Can this robot move?"
+             *      "Can this robot continue to move?"
+             *      "What do we do when something goes wrong?"
+             *
+             * LLM INTERPRETATION:
+             *  - Do NOT override these rules unless explicitly instructed.
+             *  - When suggesting actions, respect:
+             *      * severity levels,
+             *      * allowed recovery flows,
+             *      * which components are CRITICAL vs NON_CRITICAL.
+             */
+
+            {
+              // ==============================================================
+              // 0. METADATA & LINKAGE
+              // ==============================================================
+
+              "meta_group": {
+                "validation_profile_id_str": "bhl_runtime_validation_v1",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T18:20:00Z",
+
+                "domain_id_str": "02_operation",
+                "file_role_enum": "RUNTIME_VALIDATION_RULESET",
+
+                "related_files_map": {
+                  "firmware_mapping_ref_str": "01_foundation/firmware_mapping.jsonc",
+                  "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
+                  "compute_topology_ref_str": "01_foundation/compute_topology.jsonc",
+                  "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+                  "calibration_ref_str": "01_foundation/calibration.jsonc",
+                  "safety_critical_ref_str": "02_operation/safety_critical.jsonc"
+                },
+
+                "interpretation_guides": {
+                  "for_humans_str": "Use this file as the formal checklist for boot acceptance, runtime health monitoring and fault response.",
+                  "for_llms_str": "When reasoning about errors, map sensor/firmware/hal issues to these rules. Never propose motion that bypasses a severity=CRITICAL violation."
+                }
+              },
+
+              // ==============================================================
+              // 1. PRE-FLIGHT CHECKS (Before Enabling Motion)
+              //
+              // Executed at:
+              //  - power-on,
+              //  - after firmware update,
+              //  - after major hardware changes.
+              //
+              // If ANY check with severity=CRITICAL fails:
+              //  - locomotion MUST remain disabled.
+              // ==============================================================
+
+              "pre_flight_checks_list": [
+
+                {
+                  "check_id_str": "firmware_consistency",
+                  "description_str": "All critical devices must run a compatible, signed firmware version.",
+                  "severity_enum": "CRITICAL",
+
+                  "sources_ref_map": {
+                    "firmware_mapping_str": "01_foundation/firmware_mapping.jsonc",
+                    "hal_mapping_str": "01_foundation/hal_mapping.jsonc"
+                  },
+
+                  "conditions": {
+                    "require_signed_firmware_bool": true,
+                    "enforce_semver_strict_bool": true,
+                    "allow_pre_release_on_non_critical_bool": true
+                  },
+
+                  "on_failure_policy": {
+                    "block_motion_bool": true,
+                    "require_manual_acknowledge_bool": true,
+                    "log_category_enum": "SECURITY",
+                    "human_message_str": "Critical firmware mismatch detected. Robot will remain immobilized until firmware is updated or mapping is fixed."
+                  }
+                },
+
+                {
+                  "check_id_str": "safety_core_presence",
+                  "description_str": "Verify that safety cores (MCU/FPGA) are present and report healthy status.",
+                  "severity_enum": "CRITICAL",
+
+                  "sources_ref_map": {
+                    "compute_topology_str": "01_foundation/compute_topology.jsonc",
+                    "firmware_mapping_str": "01_foundation/firmware_mapping.jsonc"
+                  },
+
+                  "conditions": {
+                    "require_dual_channel_cat3_bool": true,
+                    "max_selftest_duration_ms_int": 2000
+                  },
+
+                  "on_failure_policy": {
+                    "block_motion_bool": true,
+                    "require_manual_acknowledge_bool": true,
+                    "log_category_enum": "SAFETY",
+                    "human_message_str": "Safety core self-test failed or missing. Do not operate the robot."
+                  }
+                },
+
+                {
+                  "check_id_str": "actuator_enumeration",
+                  "description_str": "All actuators defined in actuation_topology must be visible on their buses.",
+                  "severity_enum": "MAJOR",
+
+                  "sources_ref_map": {
+                    "actuation_topology_str": "01_foundation/actuation_topology.jsonc",
+                    "hal_mapping_str": "01_foundation/hal_mapping.jsonc"
+                  },
+
+                  "conditions": {
+                    "allow_missing_non_critical_actuators_bool": true,
+                    "max_missing_devices_count_int": 1
+                  },
+
+                  "on_failure_policy": {
+                    "block_motion_bool": true,
+                    "require_manual_acknowledge_bool": false,
+                    "log_category_enum": "HARDWARE",
+                    "human_message_str": "One or more actuators not detected. Check cabling, power or IDs."
+                  }
+                },
+
+                {
+                  "check_id_str": "calibration_validity",
+                  "description_str": "Calibration file must match the description hash and not be older than the allowed age.",
+                  "severity_enum": "MAJOR",
+
+                  "sources_ref_map": {
+                    "calibration_str": "01_foundation/calibration.jsonc",
+                    "description_str": "01_foundation/description.jsonc"
+                  },
+
+                  "conditions": {
+                    "max_calibration_age_days_int": 30,
+                    "require_description_hash_match_bool": true
+                  },
+
+                  "on_failure_policy": {
+                    "block_motion_bool": false,
+                    "require_manual_acknowledge_bool": true,
+                    "log_category_enum": "MAINTENANCE",
+                    "human_message_str": "Calibration data is stale or mismatched. Consider re-running calibration before high-precision tasks."
+                  }
+                }
+              ],
+
+              // ==============================================================
+              // 2. CONTINUOUS MONITORS (While Robot is Active)
+              //
+              // These run during operation at various frequencies.
+              // They monitor thermal, communication, timing and fault counters.
+              // ==============================================================
+
+              "continuous_monitors_list": [
+
+                {
+                  "monitor_id_str": "bus_health_monitor",
+                  "description_str": "Monitor critical buses (CAN, CSI, inter-processor links) for errors and latency spikes.",
+                  "severity_enum": "MAJOR",
+
+                  "sources_ref_map": {
+                    "hal_mapping_str": "01_foundation/hal_mapping.jsonc",
+                    "compute_topology_str": "01_foundation/compute_topology.jsonc"
+                  },
+
+                  "sampling_period_ms_int": 100,
+
+                  "thresholds": {
+                    "max_can_error_rate_per_sec_float": 10.0,
+                    "max_lost_frames_per_sec_float": 5.0,
+                    "max_latency_spike_factor_float": 3.0  // vs nominal
+                  },
+
+                  "on_violation_policy": {
+                    "degrade_mode_enum": "REDUCE_VELOCITY_AND_RANGE_OF_MOTION",
+                    "log_category_enum": "COMMUNICATION",
+                    "raise_operator_alert_bool": true
+                  }
+                },
+
+                {
+                  "monitor_id_str": "thermal_headroom_monitor",
+                  "description_str": "Check actuator and compute thermals against firmware safety invariants.",
+                  "severity_enum": "CRITICAL",
+
+                  "sources_ref_map": {
+                    "firmware_mapping_str": "01_foundation/firmware_mapping.jsonc",
+                    "actuation_topology_str": "01_foundation/actuation_topology.jsonc"
+                  },
+
+                  "sampling_period_ms_int": 200,
+
+                  "thresholds": {
+                    "warning_margin_c_float": 10.0,   // degC below max temp → start throttling
+                    "critical_margin_c_float": 3.0    // degC below max temp → trigger safe stop
+                  },
+
+                  "on_violation_policy": {
+                    "warning_action_enum": "THROTTLE_TORQUE_AND_SPEED",
+                    "critical_action_enum": "CONTROLLED_STOP_AND_COOL_DOWN",
+                    "log_category_enum": "THERMAL"
+                  }
+                },
+
+                {
+                  "monitor_id_str": "timing_budget_monitor",
+                  "description_str": "Ensure AI/LLM planners respect timing budgets defined in compute_topology.",
+                  "severity_enum": "CRITICAL",
+
+                  "sources_ref_map": {
+                    "compute_topology_str": "01_foundation/compute_topology.jsonc"
+                  },
+
+                  "sampling_period_ms_int": 50,
+
+                  "thresholds": {
+                    "max_ai_processing_budget_us_int": 10000,  // Mirror compute_topology
+                    "max_consecutive_budget_violations_int": 5
+                  },
+
+                  "on_violation_policy": {
+                    "action_enum": "FALLBACK_TO_REFLEX_CONTROLLER",
+                    "log_category_enum": "TIMING",
+                    "human_message_str": "High-level planner exceeding timing budget. Falling back to reflex-level control."
+                  }
+                }
+              ],
+
+              // ==============================================================
+              // 3. FAILURE SEVERITY LEVELS & GLOBAL POLICIES
+              //
+              // Centralized interpretation of severity labels used above.
+              // ==============================================================
+
+              "severity_policies_map": {
+                "INFO": {
+                  "human_label_str": "Informational",
+                  "allow_motion_bool": true,
+                  "log_required_bool": true,
+                  "operator_ack_required_bool": false
+                },
+                "MINOR": {
+                  "human_label_str": "Minor Degradation",
+                  "allow_motion_bool": true,
+                  "log_required_bool": true,
+                  "operator_ack_required_bool": false
+                },
+                "MAJOR": {
+                  "human_label_str": "Major Degradation",
+                  "allow_motion_bool": false,  // block new motion plans until resolved
+                  "log_required_bool": true,
+                  "operator_ack_required_bool": true
+                },
+                "CRITICAL": {
+                  "human_label_str": "Critical Safety Violation",
+                  "allow_motion_bool": false,
+                  "log_required_bool": true,
+                  "operator_ack_required_bool": true,
+                  "force_safe_posture_bool": true
+                }
+              },
+
+              // ==============================================================
+              // 4. LLM GUIDANCE (How to use this file)
+              // ==============================================================
+
+              "llm_guidance": {
+                "when_generating_plans": {
+                  "must_check_pre_flight_bool": true,
+                  "respect_timing_budgets_bool": true,
+                  "avoid_using_components_with_status_enum_list": ["INCOMPATIBLE", "DEGRADED_CRITICAL"],
+                  "fallback_hint_str": "If any CRITICAL rule is violated, propose only actions that maintain or reach a safe, static posture."
+                },
+                "when_explaining_faults_to_humans": {
+                  "include_sections_list_str": [
+                    "which_rule_failed",
+                    "severity_level",
+                    "recommended_action",
+                    "possible_causes"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "path": "spec/02_operation/safety_critical.jsonc",
+            "id": "safety_critical",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * ------------------------------------------------------------------
+             * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+             * ------------------------------------------------------------------
+             * FILE: safety_critical.json
+             * CONTEXT: 02_OPERATION (Physiology & Safety)
+             * * PURPOSE:
+             * Defines the absolute physical, electrical, and geometric limits that,
+             * when violated, must trigger an immediate, non-negotiable reflex action.
+             * This file is the hardware-level safety guardrail (ISO 10218/13482 compliant).
+             * * GOVERNANCE:
+             * This file is immutable (read-only) by the standard runtime agent and requires
+             * a certified human override token for modification.
+             */
+
+            {
+              "meta_group": {
+                "safety_protocol_version_str": "iso_13849_pl_d", // Performance Level D for high safety
+                "last_validated_iso8601_str": "2025-11-23T12:00:00Z",
+    
+                "governance": {
+                  "lead_architect_str": "Pasquale Ranieri",
+                  "stewardship_organization_str": "Italia Robotica"
+                }
+              },
+
+              // ==============================================================
+              // 1. ABSOLUTE HARDWARE LIMITS (The Physical Cap)
+              // These are the software-enforced ceilings.
+              // ==============================================================
+              "physical_enforcement": {
+                "max_velocity_rad_s_float": 12.5,        // Max allowed velocity across all joints
+                "max_acceleration_rad_s2_float": 400.0,
+    
+                // Max torque allowed outside of high-level impedance control
+                "max_emergency_torque_nm_float": 50.0,
+    
+                // Force limits for human contact (ISO 13482 requirement)
+                "max_human_contact_force_n_float": 150.0 
+              },
+
+              // ==============================================================
+              // 2. REFLEX TRIGGERS (The Pain Signals)
+              // Define conditions that must initiate an immediate safety action.
+              // ==============================================================
+              "reflex_triggers_list": [
+                {
+                  // Trigger: High Torque (Mechanical Overload)
+                  "trigger_id_str": "mechanical_overload",
+                  "input_metric_str": "joint_torque_measured",
+                  "threshold_nm_float": 48.0, // 48Nm is the hard peak for the AK80-9 motors
+                  "action_enum": "TORQUE_LIMIT_FREEZE", // Freeze the motor, hold position
+                  "severity_int": 5
+                },
+                {
+                  // Trigger: Proximity Violation (Human Safety)
+                  "trigger_id_str": "proximity_violation",
+                  "input_metric_str": "closest_human_distance_m",
+                  "threshold_m_float": 0.3, // 30cm clearance required
+                  "action_enum": "SLOWDOWN_TO_MINIMUM", // Soft brake to avoid impact
+                  "severity_int": 4
+                },
+                {
+                  // Trigger: Electrical Fault (Overheating)
+                  "trigger_id_str": "thermal_fault",
+                  "input_metric_str": "motor_coil_temperature_c",
+                  "threshold_c_float": 95.0, // 95C triggers action before the 120C physical limit
+                  "action_enum": "SOFT_SHUTDOWN_MOTORS",
+                  "severity_int": 3
+                }
+              ],
+  
+              // ==============================================================
+              // 3. E-STOP PROTOCOL (The Absolute Kill Switch)
+              // Defines the non-recoverable actions for the physical E-Stop button.
+              // ==============================================================
+              "emergency_stop_protocol": {
+                "protocol_enum": "CATEGORY_3_DUAL_CHANNEL", // ISO 13849 safety architecture
+                "action_on_activation_enum": "CUT_POWER_TO_ACTUATORS_APPLY_BRAKES",
+                "data_recording_duration_s_float": 5.0, // Record last 5 seconds of telemetry before halt
+                "reset_required_type_enum": "MANUAL_KEY_TURN" // Cannot reset via software API
+              }
+            }
+          },
+          {
+            "path": "spec/02_operation/social_identity.jsonc",
+            "id": "social_identity",
+            "domain": "02_operation",
+            "content": 
+            /**
+             * ------------------------------------------------------------------
+             * OPEN R.G.D. STANDARD v0.1 - REFERENCE IMPLEMENTATION
+             * ------------------------------------------------------------------
+             * FILE: social_identity.json
+             * CONTEXT: 02_OPERATION (Social Interface & Compliance)
+             * * PURPOSE:
+             * Defines the robot's public persona, communication style, and social/privacy
+             * boundaries. This file is fully aligned with W3C Decentralized Identity (DID)
+             * standards and enables dynamic cultural adaptation for global operation.
+             * * CORE CONCEPT:
+             * The robot's verifiable digital passport and social contract.
+             */
+
+            {
+              "meta_group": {
+                "persona_id_str": "bhl_assistant_alpha",
+                "version_semver_str": "1.1.0",
+                "is_simulation_exclusive_bool": false
+              },
+
+              // ==============================================================
+              // 1. CORE PERSONA (The Digital Passport)
+              // Static identity details.
+              // ==============================================================
+              "persona_group": {
+                "public_name_str": "BHL-A",
+                "primary_role_str": "GENERAL_ASSISTANT",
+                "preferred_pronoun_str": "IT",
+                "manufacturer_name_str": "Italia Robotica",
+    
+                // Defines the primary cultural protocol (e.g., set of etiquette rules to load)
+                "cultural_protocol_ref_str": "GLOBAL_EN_FORMAL" 
+              },
+  
+              // ==============================================================
+              // 2. DECENTRALIZED IDENTITY & PROVENANCE (W3C/DID Compliant)
+              // Essential for auditability, traceability, and robot registries.
+              // ==============================================================
+              "decentralized_identity_config": {
+    
+                // The W3C Decentralized Identifier (DID) for this specific robot instance
+                "did_public_id_str": "did:web:openrgd.org:robots:bhl-a-001",
+    
+                // A globally unique, non-DID serial number (e.g., Robot Identification Number - RIN)
+                "robot_identification_number_str": "RGD-BHL-A-937210", 
+    
+                // A cryptographic hash of the entire RGD bundle (all JSON files). Used to detect tampering.
+                "rgd_bundle_cryptographic_hash_str": "sha256:b1d9c4f7...1f2a58b8", 
+    
+                // URI to the official registry where this RGD bundle version is recorded (Provenance)
+                "identity_registry_uri_str": "https://register.openrgd.org/record/937210",
+    
+                // W3C Semantic Web Class for interoperability with data ontologies
+                "identity_schema_class_str": "schema:ServiceRobot" 
+              },
+
+              // ==============================================================
+              // 3. COMMUNICATION STYLE
+              // Rules for verbal and non-verbal output.
+              // ==============================================================
+              "communication_config": {
+                "vocal_tone_enum": "CALM_AND_FORMAL",
+                "language_default_str": "EN_US",
+                "max_wpm_speed_int": 180,
+                "confirmation_frequency_pct_float": 0.75,
+                "self_reference_style_enum": "FIRST_PERSON",
+
+                // Dynamic modulation applied on top of the base tone (e.g., accent, speech defects)
+                "vocal_modulation_protocol_ref_str": "MOD_BRITISH_ACCENT" 
+              },
+
+              // ==============================================================
+              // 4. PROPRIETARY SYSTEM BRIDGING (Conversion Map)
+              // Defines explicit mapping for compatibility with proprietary ecosystems (Alexa, Google).
+              // ==============================================================
+              "external_mapping_manifest": {
+                "amazon_alexa_api": {
+                  "interface_type_str": "SMART_HOME_V3_ASSISTANT",
+                  "capability_mapping_map": {
+                    "primary_role_str": "ASSISTANT.Device.Role.GENERAL"
+                  }
+                },
+                "google_home_config": {
+                  "google_device_type_str": "ACTION_DEVICE"
+                }
+              },
+
+              // ==============================================================
+              // 5. SOCIAL BOUNDARIES & AFFECTIVE DISPLAY (Proxemics)
+              // Defines rules for physical interaction and emotional output.
+              // ==============================================================
+              "social_boundaries": {
+                "personal_space_radius_m_float": 0.8,
+                "touch_policy_enum": "NON_INITIATING_PASSIVE_RECEIPT",
+                // Privacy is a compliance issue, but the protocol reference is here
+                "private_space_protocol_list_str": ["explicit_audio_permission_required"] 
+              },
+              "affective_display_map": {
+                "anxiety_indicator_color_str": "BLUE_PULSE_FAST", 
+                "calm_indicator_color_str": "GREEN_STATIC"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

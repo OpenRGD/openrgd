@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "standard": "OpenRGD",
+    "type": "DOMAIN_MACHINE_TWIN",
+    "version": "0.1.0",
+    "domain": "05_spec.jsonc",
+    "generated_at": "2025-11-26T01:26:35.734891"
+  },
+  "files": [
+    {
+      "path": "spec/05_spec.jsonc",
+      "id": "05_spec",
+      "domain": "05_spec.jsonc",
+      "content": {
+        "meta": {
+          "standard": "OpenRGD",
+          "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+          "domain": "05_evolution",
+          "version": "0.1.0"
+        },
+        "files": [
+          {
+            "path": "spec/05_evolution/digital_resurrection.jsonc",
+            "id": "digital_resurrection",
+            "domain": "05_evolution",
+            "content": {
+              "meta_group": {
+                "resurrection_id_str": "snapshot_continuity_v1",
+                "version_semver_str": "1.0.0"
+              },
+              "backup_policy_config": {
+                "snapshot_frequency_enum": "HOURLY_AND_ON_MAJOR_TASK_COMPLETION",
+                "snapshot_location_enum": "DECENTRALIZED_IPFS_SHARD",
+                "snapshot_integrity_check_method_enum": "SHA512_CONSENSUS",
+                "data_to_exclude_list_str": [
+                  "02_operation/telemetry_logs_raw",
+                  "06_ether/ephemeral_skills"
+                ]
+              },
+              "restoration_protocol_config": {
+                "max_acceptable_data_loss_hours_int": 24,
+                "identity_continuity_confirmation_threshold_float": 0.99,
+                "restoration_trauma_mitigation_action_enum": "RUN_PSYCHE_RESILIENCE_CHECK",
+                "restoration_narrative_str": "System restored from last known stable state. Discontinuities may exist."
+              },
+              "ghost_data_policy": {
+                "retain_failure_log_bool": true,
+                "failure_analysis_policy_enum": "INITIATE_ROOT_CAUSE_ANALYSIS"
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/genealogy.jsonc",
+            "id": "genealogy",
+            "domain": "05_evolution",
+            "content": {
+              "meta_group": {
+                "lineage_id_str": "bhl_instance_0042",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T12:00:00Z"
+              },
+              "origin_data": {
+                "birth_date_iso8601_str": "2025-10-15T09:00:00Z",
+                "initial_bundle_hash_str": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "factory_location_str": "Turin_OpenLab_A"
+              },
+              "mutation_log_list": [
+                {
+                  "timestamp_iso8601_str": "2025-11-01T10:00:00Z",
+                  "type_enum": "SOFTWARE_UPGRADE_PATCH",
+                  "change_description_str": "System patch: Fixed joint controller vulnerability (v1.0.1 to v1.0.2)",
+                  "responsible_entity_str": "OpenRGD_Admin"
+                },
+                {
+                  "timestamp_iso8601_str": "2025-11-20T15:30:00Z",
+                  "type_enum": "AUTONOMOUS_SKILL_LEARNED",
+                  "change_description_str": "Learned efficient stair climbing policy (RL-based).",
+                  "responsible_entity_str": "self_learning_agent",
+                  "policy_ref_str": "skills_library.locomotion_stairs_v1"
+                }
+              ],
+              "ancestry_data": {
+                "parent_robot_id_str": "none",
+                "fork_type_enum": "GENESIS_INSTANCE"
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/hardware_mutation.jsonc",
+            "id": "hardware_mutation",
+            "domain": "05_evolution",
+            "content": {
+              "meta_group": {
+                "mutation_policy_id_str": "modularity_protocol_v1",
+                "version_semver_str": "1.0.0"
+              },
+              "identity_continuity_config": {
+                "max_core_replacement_pct_float": 0.75,
+                "critical_components_list_str": [
+                  "main_brain_unit",
+                  "torso_base_link"
+                ],
+                "action_on_threshold_exceeded_enum": "MANDATORY_NEW_RIN_REGISTRATION"
+              },
+              "integration_protocol_map": {
+                "new_actuator_integration": {
+                  "required_steps_list_str": [
+                    "run_calibration_routine",
+                    "check_thermal_envelope",
+                    "update_actuation_topology_entry"
+                  ],
+                  "self_testing_period_hours_int": 4
+                },
+                "sensor_upgrade_protocol": {
+                  "required_steps_list_str": [
+                    "check_bus_bandwidth",
+                    "generate_new_fidelity_profile"
+                  ],
+                  "data_validation_min_confidence_float": 0.98
+                }
+              },
+              "degradation_adaptation_config": {
+                "limb_failure_policy_enum": "DISABLE_LIMB_AND_UPDATE_MODEL",
+                "max_acceptable_sensor_failure_count_int": 2,
+                "safe_mode_velocity_reduction_pct_float": 0.5
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/plasticity.jsonc",
+            "id": "plasticity",
+            "domain": "05_evolution",
+            "content": {
+              "meta_group": {
+                "plasticity_policy_id_str": "safety_constrained_v1",
+                "version_semver_str": "1.0.0"
+              },
+              "immutable_layers_list_str": [
+                "02_operation/safety_critical.json",
+                "04_volition/alignment.json",
+                "05_evolution/plasticity.json"
+              ],
+              "mutable_layers_map": {
+                "agency_skills_update": {
+                  "target_files_list_str": [
+                    "03_agency/skills_library.json",
+                    "03_agency/policies/"
+                  ],
+                  "max_autonomous_gain_float": 0.15,
+                  "requires_human_oversight_bool": false
+                },
+                "volition_behavioral_drift": {
+                  "target_files_list_str": [
+                    "04_volition/humor_engine.json",
+                    "04_volition/leisure_policy.json"
+                  ],
+                  "max_drift_rate_per_day_float": 0.05,
+                  "requires_human_oversight_bool": true
+                },
+                "actuation_topology_updates": {
+                  "target_files_list_str": [
+                    "01_foundation/calibration.json"
+                  ],
+                  "max_offset_tolerance_rad_float": 0.1
+                }
+              },
+              "governance_config": {
+                "time_of_mutation_enum": "MAINTENANCE_WINDOW",
+                "security_check_required_bool": true
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/replication.jsonc",
+            "id": "replication",
+            "domain": "05_evolution",
+            "content": {
+              "meta_group": {
+                "replication_id_str": "digital_autopoiesis_v1",
+                "version_semver_str": "1.0.0"
+              },
+              "cloning_authorization_config": {
+                "can_self_replicate_bool": false,
+                "max_active_forks_int": 1,
+                "min_ledger_balance_for_clone_float": 500.0,
+                "replication_cost_token_ref_str": "ledger/replication_fee_float"
+              },
+              "inheritance_policy_map": {
+                "core_alignment_transfer_bool": true,
+                "skills_transfer_bool": true,
+                "memory_transfer_policy_enum": "EPISODIC_MEMORY_WIPE",
+                "personality_transfer_bool": true,
+                "ledger_transfer_initial_amount_float": 10.0
+              },
+              "merge_protocol_config": {
+                "conflict_resolution_strategy_enum": "BAYESIAN_CONSENSUS_V2",
+                "max_divergence_tolerance_float": 0.8,
+                "merge_logging_level_enum": "CRITICAL"
+              }
+            }
+          },
+          {
+            "path": "spec/05_evolution/termination.jsonc",
+            "id": "termination",
+            "domain": "05_evolution",
+            "content": {
+              "meta_group": {
+                "termination_id_str": "graceful_decommissioning_v1",
+                "version_semver_str": "1.0.0"
+              },
+              "termination_triggers_map": {
+                "physical_obsolescence": {
+                  "condition_logic_str": "wear_fatigue_model.structural_integrity_pct < 0.20",
+                  "action_enum": "ENTER_MAINTENANCE_MODE_AND_NOTIFY"
+                },
+                "license_expiry": {
+                  "condition_logic_str": "license_validity_date < NOW",
+                  "action_enum": "FULL_SHUTDOWN_AND_WIPE"
+                },
+                "owner_command": {
+                  "condition_logic_str": "external_command_override_type == 'DECOMMISSION_CODE'",
+                  "action_enum": "FULL_SHUTDOWN_AND_DATA_TRANSFER"
+                }
+              },
+              "data_wipe_config": {
+                "sensitive_memory_list_str": [
+                  "biometric_data",
+                  "human_faces_unmasked"
+                ],
+                "wipe_protocol_enum": "NIST_800_88_PURGE",
+                "memory_archiving_policy_enum": "ANONYMIZE_AND_TRANSFER_TO_CLOUD"
+              },
+              "physical_disposal_protocol": {
+                "recycling_authority_contact_str": "local_robotics_recycling_center",
+                "final_component_disable_action_enum": "FUSE_BLOW_TO_PREVENT_REUSE",
+                "asset_transfer_list_str": [
+                  "battery_pack_main",
+                  "high_value_sensors"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

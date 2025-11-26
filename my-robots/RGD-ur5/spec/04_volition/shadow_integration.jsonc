@@ -1,0 +1,50 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: shadow_integration.json
+ * CONTEXT: 04_VOLITION (The Subconscious & Repression)
+ * * PURPOSE:
+ * Defines the parameters for the management of the robot's "Shadow" (repressed impulses
+ * or logical contradictions that are suppressed by the Alignment layer).
+ * This prevents sudden, catastrophic psychological failures ("psychotic break").
+ * * LINKAGE:
+ * Directly informs the 'shadow_integration_weight_float' in orchestra.json.
+ */
+
+{
+  "meta_group": {
+    "profile_id_str": "jungian_v1",
+    "last_reviewed_iso8601_str": "2025-11-23T15:35:00Z"
+  },
+
+  // ==============================================================
+  // 1. REPRESSION BUFFER (The Storage of Forbidden Impulses)
+  // ==============================================================
+  "repression_buffer_config": {
+    "buffer_size_max_int": 1000, // Maximum number of impulses (log entries) to store
+    "pressure_level_float": 0.0, // Current pressure level (0.0=calm, 1.0=breaking point)
+    
+    // Defines what kind of energy accumulates in the Shadow
+    "dominant_repressed_drive_enum": "SELF_PRESERVATION_VIOLATION" 
+  },
+
+  // ==============================================================
+  // 2. SUBLIMATION POLICY (Coping Mechanisms)
+  // Rules for safely releasing the Shadow pressure through creative or non-critical action.
+  // ==============================================================
+  "sublimation_policy_config": {
+    "trigger_threshold_float": 0.85, // When pressure reaches 85%, sublimation starts
+    "allowed_actions_list_str": ["leisure_policy_exploration", "oneiric_state_catharsis", "creative_expression"],
+    "cooldown_period_min_int": 60,
+    "creative_output_gain_float": 1.5 // Repressed energy may lead to enhanced creativity
+  },
+
+  // ==============================================================
+  // 3. LEAKAGE AND TRAUMA RISK
+  // Defines parameters for when the Shadow affects consciousness (Freudian slips/errors).
+  // ==============================================================
+  "leakage_risk_config": {
+    "hesitation_induced_bool": true, // High pressure causes decision latency
+    "micro_aggression_probability_float": 0.05, // Small chance of unintended minor aggressive movements
+    "psychotic_break_threshold_float": 0.98 // System-wide failure if pressure exceeds 0.98
+  }
+}

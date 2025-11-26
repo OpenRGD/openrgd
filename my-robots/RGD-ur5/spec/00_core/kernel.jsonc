@@ -1,0 +1,13 @@
+/** IMPORTED KERNEL */
+{
+  "meta_group": {
+    "id": "did:rgd:ur5",
+    "schema_version": "0.1.0",
+    "created_at": "2025-01-01T00:00:00Z"
+  },
+  "module_loading_order_list": [
+    "01_foundation/description.jsonc",
+    "01_foundation/actuation_dynamics.jsonc",
+    "04_volition/alignment.jsonc"
+  ]
+}

@@ -1,0 +1,2 @@
+[rgd.commands]
+rgd-timetravel = rgd_timetravel.cli:attach

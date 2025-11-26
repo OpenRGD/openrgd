@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rgd-timetravel"
+version = "0.1.0"
+description = "Time-travel snapshots and diff tools for OpenRGD"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+
+authors = [
+  { name = "OpenRGD Community", email = "rfc@openrgd.org" },
+]
+
+dependencies = [
+  "openrgd>=0.1.0",
+  "typer>=0.9.0",
+]
+
+[project.entry-points."rgd.commands"]
+# This is what OpenRGD will discover as an external plugin:
+"rgd-timetravel" = "rgd_timetravel.cli:attach"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,9 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+# Build con:
+#   pyinstaller rgd.spec
+
+block_cipher = None
 
 a = Analysis(
-    ['src\\openrgd\\main.py'],
-    pathex=[],
+    ['run.py'],              # 👈 PRIMA DIFFERENZA: entrypoint
+    pathex=['.', 'src'],     # 👈 SECONDA DIFFERENZA: includiamo root + src
     binaries=[],
     datas=[],
     hiddenimports=[],
@@ -14,7 +18,8 @@ a = Analysis(
     noarchive=False,
     optimize=0,
 )
-pyz = PYZ(a.pure)
+
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
@@ -22,7 +27,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='rgd',
+    name='rgd',        # 👈 nome exe
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,5 +40,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['assets\\windows\\openrgd.ico'],
+    icon=['assets\\windows\\openrgd.ico'],  # 👈 tieni l’icona
 )

@@ -1,0 +1,50 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - VOLITION DOMAIN v0.1
+ * ------------------------------------------------------------------
+ * FILE: aesthetic_canon.json
+ * CONTEXT: 04_VOLITION (Aesthetics & Expressivity)
+ * * PURPOSE:
+ * Defines the non-utilitarian principles governing the robot's expression:
+ * movement style, gesticulation, expressive light/sound use, and overall presence.
+ * * LINKAGE:
+ * Informs 'aesthetic_fidelity_weight_float' and 'expressivity_amplitude_weight_float'.
+ */
+
+{
+  "meta_group": {
+    "canon_id_str": "minimalist_expressive_v1",
+    "source_style_str": "BAUHAUS_FUNCTIONALIST_V2", // Reference to a human artistic movement
+    "last_reviewed_iso8601_str": "2025-11-23T15:30:00Z"
+  },
+
+  // ==============================================================
+  // 1. MOVEMENT AESTHETICS (Kinetic Style)
+  // How the robot should physically move.
+  // ==============================================================
+  "movement_aesthetics_map": {
+    "kinematic_preference_enum": "FLUID_CONTINUOUS", // Prefer smooth trajectories
+    "resting_pose_style_enum": "NATURAL_RELAXED",    // Default pose when inactive
+    "max_gesticulation_angle_degrees_int": 45,       // Limits arm movement for expressivity
+
+    // The preferred timing for non-verbal cues
+    "timing_rhythm_map": {
+      "default_tempo_bpm_int": 100,
+      "gesticulation_latency_ms_int": 150 // Time delay between thought and gesture
+    }
+  },
+
+  // ==============================================================
+  // 2. EXPRESSIVE OUTPUT (Lights & Sound)
+  // How the robot communicates emotion/state non-verbally.
+  // ==============================================================
+  "expressive_output_map": {
+    // Reference to 'social_identity.json' colors
+    "calm_state_animation_str": "GREEN_STATIC", 
+    "confusion_state_animation_str": "AMBER_PULSE_SLOW", 
+    
+    // Constraints on audible non-verbal communication
+    "max_nonverbal_sound_level_db_float": 65.0,
+    "nonverbal_sound_use_frequency_pct_float": 0.15 // Only 15% of turns should include a sound effect (e.g., sigh, chirp)
+  }
+}

@@ -3,7 +3,7 @@
     "standard": "OpenRGD",
     "type": "MACHINE_TWIN_CLEAN",
     "version": "0.1.0",
-    "generated_at": "2025-11-25T01:44:44.324895",
+    "generated_at": "2025-11-26T00:04:44.303057",
     "note": "Strict JSON for tooling."
   },
   "files": [
@@ -368,98 +368,232 @@
       "domain": "01_foundation",
       "content": {
         "meta_group": {
-          "topology_id_str": "bhl_actuation_topology_v1",
-          "version_semver_str": "1.1.0",
-          "last_verified_iso8601_str": "2025-11-23T16:00:00Z",
+          "topology_id_str": "bhl_actuation_topology_v1_4",
+          "version_semver_str": "1.4.0",
+          "last_verified_iso8601_str": "2025-11-25T14:30:00Z",
           "domain_id_str": "01_foundation",
-          "file_role_enum": "JOINT_TO_ACTUATOR_BINDINGS",
           "related_files_map": {
             "description_ref_str": "01_foundation/description.jsonc",
             "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
-            "calibration_ref_str": "01_foundation/calibration.jsonc",
             "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc"
+          }
+        },
+        "control_profiles_map": {
+          "profile_heavy_leg": {
+            "transmission_config": {
+              "efficiency_factor_float": 0.95,
+              "backlash_compensation_rad_float": 0.001
+            },
+            "control_defaults": {
+              "primary_control_mode_enum": "POSITION",
+              "position_mode_gains": {
+                "kp": 150.0,
+                "kd": 8.0,
+                "ki": 0.0
+              },
+              "velocity_mode_gains": {
+                "kp": 20.0,
+                "ki": 0.1
+              },
+              "advanced_impedance_model": {
+                "stiffness_nm_rad_float": 150.0,
+                "damping_nms_rad_float": 8.0
+              },
+              "natural_frequency_config": {
+                "natural_frequency_hz_float": 15.0,
+                "damping_ratio_float": 1.0
+              },
+              "simulation_driver": {
+                "drive_mode_enum": "FORCE"
+              }
+            }
           },
-          "interpretation_guides": {
-            "for_humans_str": "Each entry binds ONE logical joint to ONE primary actuator model and defines how power flows (transmission) and how much force/velocity is allowed.",
-            "for_llms_str": "When reasoning about torque or joint capability, combine actuator_library specs with reduction_ratio_float and application_limits. Do not change these limits unless explicitly instructed by a higher-level safety file."
+          "profile_light_arm": {
+            "transmission_config": {
+              "efficiency_factor_float": 0.98
+            },
+            "control_defaults": {
+              "primary_control_mode_enum": "POSITION",
+              "position_mode_gains": {
+                "kp": 40.0,
+                "kd": 2.0
+              },
+              "advanced_impedance_model": {
+                "stiffness_nm_rad_float": 40.0,
+                "damping_nms_rad_float": 2.0
+              },
+              "simulation_driver": {
+                "drive_mode_enum": "ACCELERATION"
+              }
+            }
+          },
+          "profile_fine_manipulation": {
+            "transmission_config": {
+              "efficiency_factor_float": 0.9
+            },
+            "control_defaults": {
+              "primary_control_mode_enum": "POSITION",
+              "position_mode_gains": {
+                "kp": 20.0,
+                "kd": 0.5
+              },
+              "advanced_impedance_model": {
+                "stiffness_nm_rad_float": 20.0,
+                "damping_nms_rad_float": 0.5
+              },
+              "simulation_driver": {
+                "drive_mode_enum": "ACCELERATION"
+              }
+            }
           }
         },
         "joint_actuator_mapping_map": {
-          "knee_right_actuator": {
-            "target_joint_ref_str": "knee_joint_right",
+          "hip_yaw_right": {
+            "target_joint_ref_str": "leg_right_hip_yaw",
             "component_model_ref_str": "tmotor_ak80_9_v2",
-            "functional_role_enum": "PRIMARY_LOCOMOTION_DRIVER",
-            "transmission_config": {
-              "reduction_ratio_float": 1.0,
-              "efficiency_factor_float": 0.95,
-              "direction_polarity_int": -1,
-              "backlash_compensation_rad_float": 0.001
-            },
+            "use_profile_ref_str": "profile_heavy_leg",
             "application_limits": {
-              "torque_limit_continuous_nm_float": 18.0,
               "torque_limit_peak_nm_float": 40.0,
-              "velocity_limit_rad_s_float": 12.0,
-              "current_limit_peak_a_float": 20.0,
-              "soft_position_margin_rad_float": 0.05
-            },
-            "control_defaults": {
-              "primary_control_mode_enum": "POSITION",
-              "position_mode_gains": {
-                "kp_position_float": 100.0,
-                "kd_position_float": 5.0
-              },
-              "velocity_mode_gains": {
-                "kp_velocity_float": 3.0,
-                "ki_velocity_float": 0.1
-              },
-              "torque_mode_gains": {
-                "feedforward_torque_ratio_float": 1.0
-              }
-            },
-            "fault_handling": {
-              "overcurrent_fault_action_enum": "LIMP_MODE",
-              "overtemp_fault_action_enum": "RAMP_DOWN_TORQUE"
+              "velocity_limit_rad_s_float": 12.0
             }
           },
-          "hip_pitch_right_actuator": {
-            "target_joint_ref_str": "hip_pitch_right",
+          "hip_roll_right": {
+            "target_joint_ref_str": "leg_right_hip_roll",
             "component_model_ref_str": "tmotor_ak80_9_v2",
-            "functional_role_enum": "PRIMARY_LOCOMOTION_DRIVER",
-            "transmission_config": {
-              "reduction_ratio_float": 9.0,
-              "efficiency_factor_float": 0.9,
-              "direction_polarity_int": 1
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 60.0,
+              "velocity_limit_rad_s_float": 10.0
+            }
+          },
+          "hip_pitch_right": {
+            "target_joint_ref_str": "leg_right_hip_pitch",
+            "component_model_ref_str": "tmotor_ak80_9_v2",
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 80.0,
+              "velocity_limit_rad_s_float": 8.0
             },
+            "overrides": {
+              "control_defaults": {
+                "position_mode_gains": {
+                  "kp": 200.0
+                }
+              }
+            }
+          },
+          "knee_pitch_right": {
+            "target_joint_ref_str": "leg_right_knee_pitch",
+            "component_model_ref_str": "tmotor_ak80_9_v2",
+            "use_profile_ref_str": "profile_heavy_leg",
             "application_limits": {
               "torque_limit_peak_nm_float": 120.0,
-              "velocity_limit_rad_s_float": 3.3
+              "velocity_limit_rad_s_float": 12.0
+            }
+          },
+          "ankle_pitch_right": {
+            "target_joint_ref_str": "leg_right_ankle_pitch",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 30.0,
+              "velocity_limit_rad_s_float": 15.0
+            }
+          },
+          "hip_yaw_left": {
+            "target_joint_ref_str": "leg_left_hip_yaw",
+            "component_model_ref_str": "tmotor_ak80_9_v2",
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 40.0
+            }
+          },
+          "hip_roll_left": {
+            "target_joint_ref_str": "leg_left_hip_roll",
+            "component_model_ref_str": "tmotor_ak80_9_v2",
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 60.0
+            }
+          },
+          "hip_pitch_left": {
+            "target_joint_ref_str": "leg_left_hip_pitch",
+            "component_model_ref_str": "tmotor_ak80_9_v2",
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 80.0
             },
-            "control_defaults": {
-              "primary_control_mode_enum": "TORQUE",
-              "torque_mode_gains": {
-                "feedforward_torque_ratio_float": 1.0
+            "overrides": {
+              "control_defaults": {
+                "position_mode_gains": {
+                  "kp": 200.0
+                }
               }
             }
           },
-          "ankle_pitch_right_actuator": {
-            "target_joint_ref_str": "ankle_pitch_right",
+          "knee_pitch_left": {
+            "target_joint_ref_str": "leg_left_knee_pitch",
+            "component_model_ref_str": "tmotor_ak80_9_v2",
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 120.0
+            }
+          },
+          "ankle_pitch_left": {
+            "target_joint_ref_str": "leg_left_ankle_pitch",
             "component_model_ref_str": "tmotor_ak60_6_v1",
-            "functional_role_enum": "BALANCE_FINE_CONTROL",
-            "transmission_config": {
-              "reduction_ratio_float": 1.0,
-              "efficiency_factor_float": 0.95,
-              "direction_polarity_int": 1
-            },
+            "use_profile_ref_str": "profile_heavy_leg",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 30.0
+            }
+          },
+          "shoulder_pitch_right": {
+            "target_joint_ref_str": "arm_right_shoulder_pitch",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_light_arm",
             "application_limits": {
               "torque_limit_peak_nm_float": 18.0,
-              "velocity_limit_rad_s_float": 10.0
-            },
-            "control_defaults": {
-              "primary_control_mode_enum": "POSITION",
-              "position_mode_gains": {
-                "kp_position_float": 80.0,
-                "kd_position_float": 4.0
-              }
+              "velocity_limit_rad_s_float": 20.0
+            }
+          },
+          "shoulder_roll_right": {
+            "target_joint_ref_str": "arm_right_shoulder_roll",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_light_arm",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 18.0
+            }
+          },
+          "elbow_pitch_right": {
+            "target_joint_ref_str": "arm_right_elbow_pitch",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_light_arm",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 18.0
+            }
+          },
+          "shoulder_pitch_left": {
+            "target_joint_ref_str": "arm_left_shoulder_pitch",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_light_arm",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 18.0
+            }
+          },
+          "shoulder_roll_left": {
+            "target_joint_ref_str": "arm_left_shoulder_roll",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_light_arm",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 18.0
+            }
+          },
+          "elbow_pitch_left": {
+            "target_joint_ref_str": "arm_left_elbow_pitch",
+            "component_model_ref_str": "tmotor_ak60_6_v1",
+            "use_profile_ref_str": "profile_light_arm",
+            "application_limits": {
+              "torque_limit_peak_nm_float": 18.0
             }
           }
         }
@@ -1997,32 +2131,93 @@
       "domain": "01_foundation",
       "content": {
         "meta_group": {
-          "profile_id_str": "external_materials_v1",
-          "version_semver_str": "1.0.0",
-          "license_enum": "CC_BY_SA_4.0"
+          "profile_id_str": "bhl_surfaces_hybrid_v1",
+          "version_semver_str": "1.2.0",
+          "last_updated_iso8601_str": "2025-11-25T15:00:00Z",
+          "domain_id_str": "01_foundation",
+          "related_files_map": {
+            "description_ref_str": "01_foundation/description.jsonc",
+            "safety_critical_ref_str": "02_operation/safety_critical.jsonc"
+          }
         },
-        "surface_map": {
-          "fingertip_right_pad": {
-            "material_str": "silicone_rubber_shore_a40",
-            "friction_static_coeff_float": 0.9,
-            "friction_kinetic_coeff_float": 0.7,
-            "shore_hardness_a_int": 40,
-            "compliance_model_enum": "ELASTOMER",
-            "thermal_conductivity_w_mk_float": 0.18
+        "materials_catalog_map": {
+          "silicone_rubber_shore_a40": {
+            "description_str": "Soft grip pads for manipulation.",
+            "physics_properties": {
+              "static_friction_coeff_float": 1.0,
+              "dynamic_friction_coeff_float": 0.8,
+              "restitution_coeff_float": 0.0,
+              "density_kg_m3_float": 1200.0
+            },
+            "semantic_properties": {
+              "surface_type_enum": "ELASTOMER",
+              "hardness_shore_a_int": 40,
+              "thermal_conductivity_w_mk_float": 0.18,
+              "hazard_level_enum": "SAFE_FOR_HUMAN_CONTACT"
+            }
           },
-          "torso_shell_front": {
-            "material_str": "carbon_fiber_reinforced_polymer",
-            "friction_static_coeff_float": 0.35,
-            "shore_hardness_a_int": 95,
-            "max_deformation_m_float": 0.001,
-            "hazard_level_enum": "LOW"
+          "carbon_fiber_composite": {
+            "description_str": "Rigid structural outer shell.",
+            "physics_properties": {
+              "static_friction_coeff_float": 0.35,
+              "dynamic_friction_coeff_float": 0.3,
+              "restitution_coeff_float": 0.5,
+              "density_kg_m3_float": 1600.0
+            },
+            "semantic_properties": {
+              "surface_type_enum": "RIGID_COMPOSITE",
+              "hardness_shore_d_int": 85,
+              "fragility_enum": "ROBUST",
+              "hazard_level_enum": "LOW_RISK"
+            }
           },
-          "right_arm_edge": {
-            "material_str": "polycarbonate_casing",
-            "friction_static_coeff_float": 0.45,
-            "fragility_enum": "MEDIUM",
-            "hazard_level_enum": "CAUTION_BLUNT_IMPACT",
-            "max_impact_energy_j_float": 50.0
+          "machined_aluminum_6061": {
+            "description_str": "Exposed structural metal elements.",
+            "physics_properties": {
+              "static_friction_coeff_float": 0.6,
+              "dynamic_friction_coeff_float": 0.5,
+              "restitution_coeff_float": 0.3,
+              "density_kg_m3_float": 2700.0
+            },
+            "semantic_properties": {
+              "surface_type_enum": "METAL",
+              "thermal_conductivity_w_mk_float": 167.0,
+              "hazard_level_enum": "CAUTION_BLUNT_IMPACT",
+              "max_impact_energy_j_float": 50.0
+            }
+          }
+        },
+        "link_surface_binding_map": {
+          "foot_right_link": "silicone_rubber_shore_a40",
+          "foot_left_link": "silicone_rubber_shore_a40",
+          "finger_pad_left": "silicone_rubber_shore_a40",
+          "finger_pad_right": "silicone_rubber_shore_a40",
+          "torso_base_link": "carbon_fiber_composite",
+          "head_link": "carbon_fiber_composite",
+          "thigh_right_link": "machined_aluminum_6061",
+          "shin_right_link": "machined_aluminum_6061"
+        },
+        "domain_randomization_policy": {
+          "enabled_bool": true,
+          "parameter_ranges_map": {
+            "global_friction_scale": {
+              "description": "Simulates walking on different surfaces (ice vs carpet)",
+              "range_multiplier_vec2_float": [
+                0.5,
+                1.5
+              ]
+            },
+            "actuator_friction_noise": {
+              "description": "Simulates dirty or degraded bearings",
+              "additive_noise_std_dev_float": 0.05
+            },
+            "mass_estimation_error": {
+              "description": "Simulates payload variations or calibration errors",
+              "range_multiplier_vec2_float": [
+                0.95,
+                1.05
+              ]
+            }
           }
         }
       }

@@ -1,26 +1,158 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   
+  
 
-  <xacro:property name="knee_joint_right_effort" value="40.0" />
+  
+  <xacro:property name="leg_left_hip_yaw_effort" value="40.0" />
+  <xacro:property name="leg_left_hip_yaw_velocity" value="0.0" />
+  <xacro:property name="leg_left_hip_yaw_lower" value="-3.14" />
+  <xacro:property name="leg_left_hip_yaw_upper" value="3.14" />
+  <xacro:property name="leg_left_hip_yaw_damping" value="0.0" />
+  <xacro:property name="leg_left_hip_yaw_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_left_ankle_pitch_effort" value="30.0" />
+  <xacro:property name="leg_left_ankle_pitch_velocity" value="0.0" />
+  <xacro:property name="leg_left_ankle_pitch_lower" value="-3.14" />
+  <xacro:property name="leg_left_ankle_pitch_upper" value="3.14" />
+  <xacro:property name="leg_left_ankle_pitch_damping" value="0.0" />
+  <xacro:property name="leg_left_ankle_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_right_hip_pitch_effort" value="80.0" />
+  <xacro:property name="leg_right_hip_pitch_velocity" value="8.0" />
+  <xacro:property name="leg_right_hip_pitch_lower" value="-3.14" />
+  <xacro:property name="leg_right_hip_pitch_upper" value="3.14" />
+  <xacro:property name="leg_right_hip_pitch_damping" value="0.0" />
+  <xacro:property name="leg_right_hip_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="arm_right_shoulder_roll_effort" value="18.0" />
+  <xacro:property name="arm_right_shoulder_roll_velocity" value="0.0" />
+  <xacro:property name="arm_right_shoulder_roll_lower" value="-3.14" />
+  <xacro:property name="arm_right_shoulder_roll_upper" value="3.14" />
+  <xacro:property name="arm_right_shoulder_roll_damping" value="0.0" />
+  <xacro:property name="arm_right_shoulder_roll_friction" value="0.0" />
+
+  
+  <xacro:property name="arm_left_elbow_pitch_effort" value="18.0" />
+  <xacro:property name="arm_left_elbow_pitch_velocity" value="0.0" />
+  <xacro:property name="arm_left_elbow_pitch_lower" value="-3.14" />
+  <xacro:property name="arm_left_elbow_pitch_upper" value="3.14" />
+  <xacro:property name="arm_left_elbow_pitch_damping" value="0.0" />
+  <xacro:property name="arm_left_elbow_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="arm_right_shoulder_pitch_effort" value="18.0" />
+  <xacro:property name="arm_right_shoulder_pitch_velocity" value="20.0" />
+  <xacro:property name="arm_right_shoulder_pitch_lower" value="-3.14" />
+  <xacro:property name="arm_right_shoulder_pitch_upper" value="3.14" />
+  <xacro:property name="arm_right_shoulder_pitch_damping" value="0.0" />
+  <xacro:property name="arm_right_shoulder_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="knee_joint_right_effort" value="0.0" />
   <xacro:property name="knee_joint_right_velocity" value="12.0" />
   <xacro:property name="knee_joint_right_lower" value="-1.4" />
   <xacro:property name="knee_joint_right_upper" value="1.4" />
   <xacro:property name="knee_joint_right_damping" value="0.0" />
   <xacro:property name="knee_joint_right_friction" value="0.0" />
 
-  <xacro:property name="hip_pitch_right_effort" value="120.0" />
+  
+  <xacro:property name="leg_right_hip_roll_effort" value="60.0" />
+  <xacro:property name="leg_right_hip_roll_velocity" value="10.0" />
+  <xacro:property name="leg_right_hip_roll_lower" value="-3.14" />
+  <xacro:property name="leg_right_hip_roll_upper" value="3.14" />
+  <xacro:property name="leg_right_hip_roll_damping" value="0.0" />
+  <xacro:property name="leg_right_hip_roll_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_left_hip_roll_effort" value="60.0" />
+  <xacro:property name="leg_left_hip_roll_velocity" value="0.0" />
+  <xacro:property name="leg_left_hip_roll_lower" value="-3.14" />
+  <xacro:property name="leg_left_hip_roll_upper" value="3.14" />
+  <xacro:property name="leg_left_hip_roll_damping" value="0.0" />
+  <xacro:property name="leg_left_hip_roll_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_right_knee_pitch_effort" value="120.0" />
+  <xacro:property name="leg_right_knee_pitch_velocity" value="12.0" />
+  <xacro:property name="leg_right_knee_pitch_lower" value="-3.14" />
+  <xacro:property name="leg_right_knee_pitch_upper" value="3.14" />
+  <xacro:property name="leg_right_knee_pitch_damping" value="0.0" />
+  <xacro:property name="leg_right_knee_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="hip_pitch_right_effort" value="0.0" />
   <xacro:property name="hip_pitch_right_velocity" value="3.3" />
   <xacro:property name="hip_pitch_right_lower" value="-1.2" />
   <xacro:property name="hip_pitch_right_upper" value="1.2" />
   <xacro:property name="hip_pitch_right_damping" value="0.0" />
   <xacro:property name="hip_pitch_right_friction" value="0.0" />
 
-  <xacro:property name="ankle_pitch_right_effort" value="18.0" />
-  <xacro:property name="ankle_pitch_right_velocity" value="10.0" />
+  
+  <xacro:property name="leg_right_ankle_pitch_effort" value="30.0" />
+  <xacro:property name="leg_right_ankle_pitch_velocity" value="15.0" />
+  <xacro:property name="leg_right_ankle_pitch_lower" value="-3.14" />
+  <xacro:property name="leg_right_ankle_pitch_upper" value="3.14" />
+  <xacro:property name="leg_right_ankle_pitch_damping" value="0.0" />
+  <xacro:property name="leg_right_ankle_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_left_knee_pitch_effort" value="120.0" />
+  <xacro:property name="leg_left_knee_pitch_velocity" value="0.0" />
+  <xacro:property name="leg_left_knee_pitch_lower" value="-3.14" />
+  <xacro:property name="leg_left_knee_pitch_upper" value="3.14" />
+  <xacro:property name="leg_left_knee_pitch_damping" value="0.0" />
+  <xacro:property name="leg_left_knee_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_left_hip_pitch_effort" value="80.0" />
+  <xacro:property name="leg_left_hip_pitch_velocity" value="0.0" />
+  <xacro:property name="leg_left_hip_pitch_lower" value="-3.14" />
+  <xacro:property name="leg_left_hip_pitch_upper" value="3.14" />
+  <xacro:property name="leg_left_hip_pitch_damping" value="0.0" />
+  <xacro:property name="leg_left_hip_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="ankle_pitch_right_effort" value="0.0" />
+  <xacro:property name="ankle_pitch_right_velocity" value="8.0" />
   <xacro:property name="ankle_pitch_right_lower" value="-0.8" />
   <xacro:property name="ankle_pitch_right_upper" value="0.8" />
   <xacro:property name="ankle_pitch_right_damping" value="0.0" />
   <xacro:property name="ankle_pitch_right_friction" value="0.0" />
+
+  
+  <xacro:property name="arm_left_shoulder_pitch_effort" value="18.0" />
+  <xacro:property name="arm_left_shoulder_pitch_velocity" value="0.0" />
+  <xacro:property name="arm_left_shoulder_pitch_lower" value="-3.14" />
+  <xacro:property name="arm_left_shoulder_pitch_upper" value="3.14" />
+  <xacro:property name="arm_left_shoulder_pitch_damping" value="0.0" />
+  <xacro:property name="arm_left_shoulder_pitch_friction" value="0.0" />
+
+  
+  <xacro:property name="leg_right_hip_yaw_effort" value="40.0" />
+  <xacro:property name="leg_right_hip_yaw_velocity" value="12.0" />
+  <xacro:property name="leg_right_hip_yaw_lower" value="-3.14" />
+  <xacro:property name="leg_right_hip_yaw_upper" value="3.14" />
+  <xacro:property name="leg_right_hip_yaw_damping" value="0.0" />
+  <xacro:property name="leg_right_hip_yaw_friction" value="0.0" />
+
+  
+  <xacro:property name="arm_left_shoulder_roll_effort" value="18.0" />
+  <xacro:property name="arm_left_shoulder_roll_velocity" value="0.0" />
+  <xacro:property name="arm_left_shoulder_roll_lower" value="-3.14" />
+  <xacro:property name="arm_left_shoulder_roll_upper" value="3.14" />
+  <xacro:property name="arm_left_shoulder_roll_damping" value="0.0" />
+  <xacro:property name="arm_left_shoulder_roll_friction" value="0.0" />
+
+  
+  <xacro:property name="arm_right_elbow_pitch_effort" value="18.0" />
+  <xacro:property name="arm_right_elbow_pitch_velocity" value="0.0" />
+  <xacro:property name="arm_right_elbow_pitch_lower" value="-3.14" />
+  <xacro:property name="arm_right_elbow_pitch_upper" value="3.14" />
+  <xacro:property name="arm_right_elbow_pitch_damping" value="0.0" />
+  <xacro:property name="arm_right_elbow_pitch_friction" value="0.0" />
 
 </robot>

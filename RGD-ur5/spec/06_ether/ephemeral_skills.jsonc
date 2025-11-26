@@ -1,0 +1,182 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - EPHEMERAL SKILLS v0.1
+ * ------------------------------------------------------------------
+ * CONTEXT: 06_ETHER (Neural Skill Streaming & Temporary Competence)
+ *
+ * PURPOSE:
+ * Allows an agent to temporarily load high-complexity skills
+ * (policies, controllers, perception modules) into RAM for
+ * short-term use. This reduces onboard storage and enables
+ * dynamic adaptation, similar to "download a skill, execute it,
+ * forget it" (Matrix-style).
+ *
+ * HUMAN SUMMARY:
+ * - Skills are not owned permanently.
+ * - They are streamed, used, and wiped.
+ * - Safety remains guaranteed by alignment and latency constraints.
+ *
+ * LLM SUMMARY:
+ * - Think: dynamic model injection with strict time, safety,
+ *   and trust constraints.
+ */
+
+{
+  "meta_group": {
+    "ephemeral_skills_id_str": "core_ephemeral_skills_v1",
+    "version_semver_str": "1.0.0",
+    "last_updated_iso8601_str": "2025-11-23T19:10:00Z",
+    "license_enum": "MIT_OPEN_AICOG",
+
+    "governance": {
+      "stewardship_organization_str": "OpenRGD Consortium",
+      "lead_maintainer_str": "Pasquale Ranieri",
+      "maintainer_role_enum": "SKILLSTREAM_ARCHITECT",
+      "contact_uri_str": "mailto:skills@openrgd.org"
+    }
+  },
+
+  // ============================================================
+  // A. DEVICE CAPABILITIES
+  // Hardware limits that determine how many and which skills can
+  // be temporarily loaded. This prevents overload.
+  // ============================================================
+  "device_capabilities": {
+    "max_ram_buffer_gb_float": 16.0,
+    "max_concurrent_ephemeral_skills_int": 3,
+    "max_skill_size_mb_float": 500.0,
+    "max_allowed_latency_ms_int": 5,        // If network latency exceeds this, skill deactivates
+    "allow_local_compilation_bool": true    // Can compile ONNX?TensorRT locally if needed
+  },
+
+  // ============================================================
+  // B. SKILL STREAMING SOURCES
+  // Marketplaces or peers where skills can be downloaded from.
+  // ============================================================
+  "streaming_sources_list": [
+    {
+      "source_id_str": "global_skill_market_v1",
+      "uri_wss_str": "wss://skills.robotica.global/stream",
+      "auth_required_bool": true,
+      "signature_verification_enum": "MANDATORY"     // Must check cryptographic signatures
+    },
+    {
+      "source_id_str": "local_peer_skillstream",
+      "uri_mesh_str": "mesh://swarm/skills",
+      "auth_required_bool": false,
+      "signature_verification_enum": "RECOMMENDED"
+    }
+  ],
+
+  // ============================================================
+  // C. SKILL BUNDLE METADATA (WHAT A SKILL IS)
+  // Every skill streamed MUST contain these metadata files.
+  // ============================================================
+  "required_bundle_components": {
+    "policy_file_enum": "ONNX_OR_TENSORRT",
+    "safety_guard_file_enum": "SAFETY_RULESET",
+    "metadata_file_enum": "JSON",
+    "fallback_policy_enum": "ALLOWED"     // Optional but recommended
+  },
+
+  // ============================================================
+  // D. SAFETY & ALIGNMENT CONSTRAINTS
+  // A skill can only be loaded if it passes alignment + safety.
+  // ============================================================
+  "safety_validation": {
+    "require_signature_validation_bool": true,
+    "max_skill_runtime_minutes_int": 30,  // Cannot use ephemeral skill longer than this
+    "auto_unload_on_anomaly_bool": true,
+    "alignment_policy_ref": {
+      "profile_id_str": "core_safety_alignment_v1",
+      "defined_in_file_str": "04_volition/alignment.json"
+    },
+    "anomaly_detection_policy": {
+      "enable_realtime_monitoring_bool": true,
+      "anomaly_threshold_float": 0.4,      // Probability of anomaly above this ? unload
+      "log_anomalies_bool": true
+    }
+  },
+
+  // ============================================================
+  // E. SKILL LIFECYCLE POLICIES
+  // The full lifecycle: request ? load ? validate ? execute ? wipe.
+  // ============================================================
+  "skill_lifecycle_policy": {
+    "request_timeout_ms_int": 300,
+    "max_retry_attempts_int": 2,
+    "load_validation_sequence_list": [
+      "CHECK_SIGNATURE",
+      "CHECK_ALIGNMENT",
+      "CHECK_SAFETY_GUARD",
+      "VERIFY_LATENCY",
+      "ALLOCATE_RAM"
+    ],
+    "execution_policy": {
+      "allow_partial_failures_bool": false,
+      "deactivate_on_latency_spike_bool": true,
+      "latency_spike_threshold_ms_int": 10
+    },
+    "unload_policy": {
+      "cache_policy_enum": "WIPE_AFTER_USE",  // Other: TEMP_CACHE, NEVER_CACHE
+      "secure_memory_wipe_bool": true,
+      "wipe_method_enum": "MULTI_PASS_RANDOM" // Prevent memory forensics
+    }
+  },
+
+  // ============================================================
+  // F. LICENSING & ECONOMICS
+  // How temporary skills are "paid for" or limited.
+  // ============================================================
+  "licensing_and_economics": {
+    "license_types_list": [
+      "TIME_LIMITED",
+      "USAGE_LIMITED",
+      "TASK_SPECIFIC"
+    ],
+    "max_token_cost_per_download_float": 0.002,
+    "free_skills_for_trusted_swarm_bool": true,
+    "trust_requirement_for_free_skills_float": 0.9,   // From reputation_graph.json
+    "linked_revenue_split_policy": {
+      "enable_revenue_split_bool": true,
+      "host_reward_ratio_float": 0.3,   // If skill hosted by a peer in the swarm
+      "market_fee_ratio_float": 0.1
+    }
+  },
+
+  // ============================================================
+  // G. RUNTIME LOGGING
+  // Tracks which ephemeral skills were used, for accountability.
+  // ============================================================
+  "logging_policy": {
+    "log_channel_str": "ledger://ephemeral_skill_usage",
+    "log_fields_list": [
+      "skill_id",
+      "source_id",
+      "tokens_spent",
+      "execution_time_ms",
+      "success_bool"
+    ],
+    "max_log_retention_days_int": 180
+  },
+
+  // ============================================================
+  // H. RUNTIME INTERPRETATION
+  // How agents should apply this file.
+  //
+  // LLM:
+  // - When asked if a robot may load a skill:
+  //   check storage, latency, alignment, security, cost.
+  //
+  // HUMAN:
+  // - This is the blueprint for on-demand competence.
+  // ============================================================
+  "runtime_interpretation": {
+    "used_by_components_list": [
+      "03_agency/skils_library.json",
+      "06_ether/compute_federation.json",
+      "04_volition/orchestra.json"
+    ],
+    "semantic_notes_str": "Ephemeral skills provide temporary competence. They must always be reversible, auditable and safe. The agent must assume no long-term memory or skill retention after unload."
+  }
+}

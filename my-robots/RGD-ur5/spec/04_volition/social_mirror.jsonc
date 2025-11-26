@@ -1,0 +1,57 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: social_mirror.json
+ * CONTEXT: 04_VOLITION (Self-Perception & Reputation)
+ * * PURPOSE:
+ * Defines the robot's current estimate of its own social standing, reputation,
+ * and perceived competence as measured by external and internal feedback loops.
+ * This file models the robot's social "ego."
+ * * LINKAGE:
+ * Directly informs 'reputation_graph_weight_float' and 'narrative_engine_weight_float'.
+ */
+{
+  "meta_group": {
+    "mirror_id_str": "dynamic_reputation_v1",
+    "evaluation_algorithm_enum": "TRUST_SCORE_DECAY", // Trust diminishes over time without reinforcement
+    "last_updated_iso8601_str": "2025-11-23T15:38:00Z"
+  },
+
+  // ==============================================================
+  // 1. REPUTATION METRICS (The Social Score)
+  // Metrics derived from interactions, weighted and aggregated.
+  // ==============================================================
+  "reputation_metrics_map": {
+    
+    // A score based on verifiable task success (0.0 to 1.0)
+    "competence_trust_score_float": 0.78, 
+    
+    // A score based on perceived honesty, politeness, and consistency (0.0 to 1.0)
+    "ethical_trust_score_float": 0.85, 
+    
+    // Measures the robot's internal belief in its own ability (can differ from external score)
+    "self_efficacy_rating_float": 0.92, 
+    
+    // Score based on average affective response from humans (e.g., laughter, positive tone)
+    "likeability_score_float": 0.61 
+  },
+
+  // ==============================================================
+  // 2. SOCIAL STEREOTYPES & PREJUDICES (How the robot is categorized)
+  // Tracks how the robot is typically categorized by new or specific users.
+  // ==============================================================
+  "stereotype_perception_map": {
+    "primary_stereotype_str": "FORMAL_BUT_HELPFUL_SERVANT",
+    "stereotype_confidence_float": 0.65, // Confidence in this assessment
+    "misinterpretation_log_list_str": ["Mistaken for a cleaning bot on 2025-11-20"]
+  },
+
+  // ==============================================================
+  // 3. RECIPROCITY LEDGER
+  // Tracks debts and credits in social interactions (e.g., favors owed).
+  // ==============================================================
+  "reciprocity_ledger": {
+    "favors_owed_count_int": 2, // Favors the robot owes to others
+    "favors_due_count_int": 5,  // Favors others owe to the robot
+    "net_social_debt_factor_float": 0.3 // Overall social burden (higher = robot needs to help more)
+  }
+}

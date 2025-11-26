@@ -12,8 +12,24 @@ controller_manager:
 forward_position_controller:
   ros__parameters:
     joints:
-      - knee_joint_right
-      - hip_pitch_right
       - ankle_pitch_right
+      - arm_left_elbow_pitch
+      - arm_left_shoulder_pitch
+      - arm_left_shoulder_roll
+      - arm_right_elbow_pitch
+      - arm_right_shoulder_pitch
+      - arm_right_shoulder_roll
+      - hip_pitch_right
+      - knee_joint_right
+      - leg_left_ankle_pitch
+      - leg_left_hip_pitch
+      - leg_left_hip_roll
+      - leg_left_hip_yaw
+      - leg_left_knee_pitch
+      - leg_right_ankle_pitch
+      - leg_right_hip_pitch
+      - leg_right_hip_roll
+      - leg_right_hip_yaw
+      - leg_right_knee_pitch
 
     gains:

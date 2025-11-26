@@ -1,0 +1,2352 @@
+{
+  "meta": {
+    "standard": "OpenRGD",
+    "type": "DOMAIN_MACHINE_TWIN",
+    "version": "0.1.0",
+    "domain": "01_spec.jsonc",
+    "generated_at": "2025-11-26T01:26:34.897971"
+  },
+  "files": [
+    {
+      "path": "spec/01_spec.jsonc",
+      "id": "01_spec",
+      "domain": "01_spec.jsonc",
+      "content": {
+        "meta": {
+          "standard": "OpenRGD",
+          "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+          "domain": "01_spec.jsonc",
+          "version": "0.1.0"
+        },
+        "files": [
+          {
+            "path": "spec/01_spec.jsonc",
+            "id": "01_spec",
+            "domain": "01_spec.jsonc",
+            "content": {
+              "meta": {
+                "standard": "OpenRGD",
+                "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+                "domain": "01_foundation",
+                "version": "0.1.0"
+              },
+              "files": [
+                {
+                  "path": "spec/01_foundation/actuation_dynamics.jsonc",
+                  "id": "actuation_dynamics",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "dynamics_profile_id_str": "bhl_actuation_dynamics_v1",
+                      "version_semver_str": "1.0.0",
+                      "last_updated_iso8601_str": "2025-11-23T18:40:00Z",
+                      "domain_id_str": "01_foundation",
+                      "file_role_enum": "ACTUATION_DYNAMICS_MODEL",
+                      "related_files_map": {
+                        "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+                        "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+                        "calibration_ref_str": "01_foundation/calibration.jsonc",
+                        "compute_topology_ref_str": "01_foundation/compute_topology.jsonc",
+                        "runtime_validation_ref_str": "02_operation/runtime_validation.jsonc"
+                      },
+                      "interpretation_guides": {
+                        "for_humans_str": "Use this file to understand the true dynamic capacity of each actuator and joint, beyond catalog torque values.",
+                        "for_llms_str": "When planning motion or designing controllers, combine: actuation_library (static specs) + actuation_topology (mounting) + actuation_dynamics (inertia/friction/envelopes) + calibration (deltas)."
+                      }
+                    },
+                    "actuator_model_dynamics_map": {
+                      "tmotor_ak80_9_v2": {
+                        "base_component_ref_str": "tmotor_ak80_9_v2",
+                        "electrical_model": {
+                          "phase_resistance_ohm_float": 0.125,
+                          "phase_inductance_h_float": 3.6e-05,
+                          "back_emf_constant_kev_v_per_rad_s_float": 0.095,
+                          "torque_constant_kt_nm_a_float": 0.095
+                        },
+                        "rotor_dynamics": {
+                          "rotor_inertia_kgm2_float": 0.00045,
+                          "viscous_friction_nm_s_per_rad_float": 0.02,
+                          "coulomb_friction_nm_float": 0.05
+                        },
+                        "torque_speed_curve_points_list": [
+                          {
+                            "speed_rad_s_float": 0.0,
+                            "available_torque_nm_float": 48.0
+                          },
+                          {
+                            "speed_rad_s_float": 10.0,
+                            "available_torque_nm_float": 40.0
+                          },
+                          {
+                            "speed_rad_s_float": 20.0,
+                            "available_torque_nm_float": 28.0
+                          },
+                          {
+                            "speed_rad_s_float": 30.0,
+                            "available_torque_nm_float": 0.0
+                          }
+                        ],
+                        "efficiency_model": {
+                          "peak_efficiency_pct_float": 0.85,
+                          "nominal_efficiency_pct_float": 0.78
+                        },
+                        "saturation_model": {
+                          "max_commandable_torque_nm_float": 48.0,
+                          "max_commandable_speed_rad_s_float": 30.0,
+                          "thermal_derating_enabled_bool": true
+                        }
+                      },
+                      "dynamixel_xm430_w350": {
+                        "base_component_ref_str": "dynamixel_xm430_w350",
+                        "electrical_model": {
+                          "input_voltage_nominal_v_float": 12.0,
+                          "back_emf_constant_kev_v_per_rad_s_float": 0.06,
+                          "torque_constant_kt_nm_a_float": 0.08
+                        },
+                        "rotor_dynamics": {
+                          "rotor_inertia_kgm2_float": 1e-05,
+                          "viscous_friction_nm_s_per_rad_float": 0.01,
+                          "coulomb_friction_nm_float": 0.02
+                        },
+                        "torque_speed_curve_points_list": [
+                          {
+                            "speed_rad_s_float": 0.0,
+                            "available_torque_nm_float": 4.1
+                          },
+                          {
+                            "speed_rad_s_float": 3.0,
+                            "available_torque_nm_float": 2.5
+                          },
+                          {
+                            "speed_rad_s_float": 5.0,
+                            "available_torque_nm_float": 0.0
+                          }
+                        ],
+                        "efficiency_model": {
+                          "peak_efficiency_pct_float": 0.7,
+                          "nominal_efficiency_pct_float": 0.6
+                        },
+                        "saturation_model": {
+                          "max_commandable_torque_nm_float": 4.1,
+                          "max_commandable_speed_rad_s_float": 5.0,
+                          "thermal_derating_enabled_bool": true
+                        }
+                      }
+                    },
+                    "joint_dynamics_map": {
+                      "knee_right_actuator": {
+                        "target_joint_ref_str": "knee_joint_right",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "inertia_model": {
+                          "reflected_inertia_kgm2_float": 0.12,
+                          "link_inertia_kgm2_float": 0.1,
+                          "motor_contrib_kgm2_float": 0.02
+                        },
+                        "friction_model": {
+                          "viscous_friction_nm_s_per_rad_float": 0.15,
+                          "coulomb_friction_nm_float": 0.4,
+                          "backlash_hysteresis_rad_float": 0.005
+                        },
+                        "compliance_model": {
+                          "joint_stiffness_nm_rad_float": 1200.0,
+                          "joint_damping_nm_s_per_rad_float": 40.0,
+                          "series_elastic_element_bool": false
+                        },
+                        "joint_limits": {
+                          "soft_min_position_rad_float": -1.4,
+                          "soft_max_position_rad_float": 1.4,
+                          "hard_stop_margin_rad_float": 0.1,
+                          "max_velocity_rad_s_float": 12.0,
+                          "max_acceleration_rad_s2_float": 80.0,
+                          "max_jerk_rad_s3_float": 600.0
+                        },
+                        "behavior_presets": {
+                          "walking_mode": {
+                            "preferred_impedance_stiffness_nm_rad_float": 900.0,
+                            "preferred_impedance_damping_nm_s_per_rad_float": 35.0
+                          },
+                          "balancing_mode": {
+                            "preferred_impedance_stiffness_nm_rad_float": 1400.0,
+                            "preferred_impedance_damping_nm_s_per_rad_float": 50.0
+                          }
+                        }
+                      },
+                      "hip_pitch_right_actuator": {
+                        "target_joint_ref_str": "hip_pitch_right",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "inertia_model": {
+                          "reflected_inertia_kgm2_float": 0.32,
+                          "link_inertia_kgm2_float": 0.25,
+                          "motor_contrib_kgm2_float": 0.07
+                        },
+                        "friction_model": {
+                          "viscous_friction_nm_s_per_rad_float": 0.25,
+                          "coulomb_friction_nm_float": 0.7,
+                          "backlash_hysteresis_rad_float": 0.008
+                        },
+                        "compliance_model": {
+                          "joint_stiffness_nm_rad_float": 1500.0,
+                          "joint_damping_nm_s_per_rad_float": 60.0,
+                          "series_elastic_element_bool": false
+                        },
+                        "joint_limits": {
+                          "soft_min_position_rad_float": -1.2,
+                          "soft_max_position_rad_float": 1.2,
+                          "hard_stop_margin_rad_float": 0.08,
+                          "max_velocity_rad_s_float": 3.3,
+                          "max_acceleration_rad_s2_float": 40.0,
+                          "max_jerk_rad_s3_float": 200.0
+                        },
+                        "behavior_presets": {
+                          "walking_mode": {
+                            "preferred_impedance_stiffness_nm_rad_float": 1200.0,
+                            "preferred_impedance_damping_nm_s_per_rad_float": 50.0
+                          },
+                          "lift_mode": {
+                            "preferred_impedance_stiffness_nm_rad_float": 1600.0,
+                            "preferred_impedance_damping_nm_s_per_rad_float": 65.0
+                          }
+                        }
+                      },
+                      "ankle_pitch_right_actuator": {
+                        "target_joint_ref_str": "ankle_pitch_right",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "inertia_model": {
+                          "reflected_inertia_kgm2_float": 0.06,
+                          "link_inertia_kgm2_float": 0.045,
+                          "motor_contrib_kgm2_float": 0.015
+                        },
+                        "friction_model": {
+                          "viscous_friction_nm_s_per_rad_float": 0.08,
+                          "coulomb_friction_nm_float": 0.25,
+                          "backlash_hysteresis_rad_float": 0.004
+                        },
+                        "compliance_model": {
+                          "joint_stiffness_nm_rad_float": 900.0,
+                          "joint_damping_nm_s_per_rad_float": 30.0,
+                          "series_elastic_element_bool": false
+                        },
+                        "joint_limits": {
+                          "soft_min_position_rad_float": -0.8,
+                          "soft_max_position_rad_float": 0.8,
+                          "hard_stop_margin_rad_float": 0.06,
+                          "max_velocity_rad_s_float": 8.0,
+                          "max_acceleration_rad_s2_float": 60.0,
+                          "max_jerk_rad_s3_float": 400.0
+                        },
+                        "behavior_presets": {
+                          "walking_mode": {
+                            "preferred_impedance_stiffness_nm_rad_float": 800.0,
+                            "preferred_impedance_damping_nm_s_per_rad_float": 28.0
+                          },
+                          "terrain_adaptation_mode": {
+                            "preferred_impedance_stiffness_nm_rad_float": 650.0,
+                            "preferred_impedance_damping_nm_s_per_rad_float": 22.0
+                          }
+                        }
+                      }
+                    },
+                    "safety_envelopes_map": {
+                      "default_leg_envelope": {
+                        "applies_to_actuators_list_str": [
+                          "knee_right_actuator",
+                          "hip_pitch_right_actuator",
+                          "ankle_pitch_right_actuator"
+                        ],
+                        "max_torque_nm_float": 120.0,
+                        "max_power_w_float": 800.0,
+                        "max_mechanical_work_j_float": 2500.0,
+                        "thermal_derating_curve": {
+                          "start_derate_ratio_float": 0.8,
+                          "full_derate_ratio_float": 0.95,
+                          "min_derated_torque_fraction_float": 0.2
+                        }
+                      }
+                    },
+                    "simulation_backend_overrides_map": {
+                      "isaac_sim": {
+                        "use_implicit_timestep_bool": true,
+                        "default_timestep_s_float": 0.002,
+                        "solver_iterations_int": 8
+                      },
+                      "mujoco": {
+                        "default_timestep_s_float": 0.002,
+                        "solver_iterations_int": 10,
+                        "constraint_softness_float": 0.001
+                      }
+                    },
+                    "llm_guidance": {
+                      "when_generating_controllers": {
+                        "prefer_impedance_control_bool": true,
+                        "avoid_exceeding_joint_limits_bool": true,
+                        "must_respect_safety_envelopes_bool": true,
+                        "hint_str": "Use impedance-like control with stiffness/damping from behavior_presets when in doubt."
+                      },
+                      "when_generating_simulation_configs": {
+                        "do_not_increase_torque_beyond_envelope_bool": true,
+                        "align_mass_inertia_with_description_and_calibration_bool": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/actuation_library.jsonc",
+                  "id": "actuation_library",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "library_id_str": "core_actuators_lib_v1",
+                      "version_semver_str": "1.1.0",
+                      "last_updated_iso8601_str": "2025-11-23T16:30:00Z",
+                      "license_enum": "MIT_OPEN_HARDWARE",
+                      "domain_id_str": "01_foundation",
+                      "file_role_enum": "ACTUATION_COMPONENT_CATALOG",
+                      "governance": {
+                        "stewardship_organization_str": "Italia Robotica",
+                        "lead_maintainer_str": "Pasquale Ranieri",
+                        "maintainer_role_enum": "STANDARDS_ARCHITECT",
+                        "contact_uri_str": "mailto:standards@italiarobotica.it",
+                        "citation_text_str": "Ranieri, P., et al. (2025). OpenRGD Core Actuator Library."
+                      },
+                      "related_files_map": {
+                        "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "compute_topology_ref_str": "01_foundation/compute_topology.jsonc"
+                      },
+                      "interpretation_guides": {
+                        "for_humans_str": "Use this catalog to choose which physical actuator model to mount on a joint. Joint-specific gearboxes and safety limits are configured in actuation_topology.jsonc.",
+                        "for_llms_str": "When asked about torque, power or inertia of an actuator, read from this file. Do not assume any particular joint: the same component_model_ref_str can be reused in multiple joints with different transmissions."
+                      }
+                    },
+                    "component_catalog_map": {
+                      "tmotor_ak80_9_v2": {
+                        "type_enum": "BLDC_ACTUATOR_INTEGRATED",
+                        "manufacturer_str": "T-Motor",
+                        "description_str": "High-torque density actuator with integrated planetary gear.",
+                        "product_page_uri_str": "https://store.t-motor.com/ak80_9_v2",
+                        "electrical_specs": {
+                          "kv_rating_rpm_v_float": 100.0,
+                          "phase_resistance_ohm_float": 0.125,
+                          "phase_inductance_h_float": 3.6e-05,
+                          "input_voltage_nominal_v_float": 24.0,
+                          "input_voltage_max_v_float": 48.0,
+                          "peak_current_a_float": 24.0
+                        },
+                        "performance_limits": {
+                          "peak_torque_nm_float": 48.0,
+                          "continuous_torque_nm_float": 18.0,
+                          "max_speed_rad_s_float": 30.0,
+                          "torque_constant_kt_nm_a_float": 0.095
+                        },
+                        "thermal_properties": {
+                          "thermal_mass_j_k_float": 900.0,
+                          "thermal_resistance_housing_c_w_float": 0.8,
+                          "max_coil_temp_c_float": 120.0,
+                          "warning_temp_c_float": 85.0
+                        },
+                        "mechanical_properties": {
+                          "rotor_inertia_kgm2_float": 0.00045,
+                          "weight_kg_float": 0.485,
+                          "gear_ratio_internal_float": 9.0
+                        },
+                        "assets_uri_map": {
+                          "usd_uri_str": "assets/components/tmotor/ak80_9_v2.usd",
+                          "urdf_uri_str": "assets/components/tmotor/ak80_9_v2.urdf",
+                          "datasheet_pdf_uri_str": "assets/datasheets/tmotor/ak80_9_v2.pdf"
+                        }
+                      },
+                      "dynamixel_xm430_w350": {
+                        "type_enum": "SMART_SERVO_SERIES",
+                        "manufacturer_str": "Robotis",
+                        "description_str": "Compact smart servo with integrated control and feedback.",
+                        "product_page_uri_str": "https://emanual.robotis.com/docs/en/dxl/x/xm430-w350/",
+                        "electrical_specs": {
+                          "input_voltage_nominal_v_float": 12.0,
+                          "input_voltage_max_v_float": 14.8,
+                          "peak_current_a_float": 2.3
+                        },
+                        "performance_limits": {
+                          "peak_torque_nm_float": 4.1,
+                          "continuous_torque_nm_float": 2.2,
+                          "max_speed_rad_s_float": 5.0,
+                          "backlash_arcmin_float": 15.0
+                        },
+                        "thermal_properties": {
+                          "max_coil_temp_c_float": 80.0
+                        },
+                        "mechanical_properties": {
+                          "rotor_inertia_kgm2_float": 1e-05,
+                          "weight_kg_float": 0.082
+                        },
+                        "assets_uri_map": {
+                          "usd_uri_str": "assets/components/dynamixel/xm430_w350.usd",
+                          "urdf_uri_str": "assets/components/dynamixel/xm430_w350.urdf"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/actuation_topology.jsonc",
+                  "id": "actuation_topology",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "topology_id_str": "bhl_actuation_topology_v1_4",
+                      "version_semver_str": "1.4.0",
+                      "last_verified_iso8601_str": "2025-11-25T14:30:00Z",
+                      "domain_id_str": "01_foundation",
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+                        "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc"
+                      }
+                    },
+                    "control_profiles_map": {
+                      "profile_heavy_leg": {
+                        "transmission_config": {
+                          "efficiency_factor_float": 0.95,
+                          "backlash_compensation_rad_float": 0.001
+                        },
+                        "control_defaults": {
+                          "primary_control_mode_enum": "POSITION",
+                          "position_mode_gains": {
+                            "kp": 150.0,
+                            "kd": 8.0,
+                            "ki": 0.0
+                          },
+                          "velocity_mode_gains": {
+                            "kp": 20.0,
+                            "ki": 0.1
+                          },
+                          "advanced_impedance_model": {
+                            "stiffness_nm_rad_float": 150.0,
+                            "damping_nms_rad_float": 8.0
+                          },
+                          "natural_frequency_config": {
+                            "natural_frequency_hz_float": 15.0,
+                            "damping_ratio_float": 1.0
+                          },
+                          "simulation_driver": {
+                            "drive_mode_enum": "FORCE"
+                          }
+                        }
+                      },
+                      "profile_light_arm": {
+                        "transmission_config": {
+                          "efficiency_factor_float": 0.98
+                        },
+                        "control_defaults": {
+                          "primary_control_mode_enum": "POSITION",
+                          "position_mode_gains": {
+                            "kp": 40.0,
+                            "kd": 2.0
+                          },
+                          "advanced_impedance_model": {
+                            "stiffness_nm_rad_float": 40.0,
+                            "damping_nms_rad_float": 2.0
+                          },
+                          "simulation_driver": {
+                            "drive_mode_enum": "ACCELERATION"
+                          }
+                        }
+                      },
+                      "profile_fine_manipulation": {
+                        "transmission_config": {
+                          "efficiency_factor_float": 0.9
+                        },
+                        "control_defaults": {
+                          "primary_control_mode_enum": "POSITION",
+                          "position_mode_gains": {
+                            "kp": 20.0,
+                            "kd": 0.5
+                          },
+                          "advanced_impedance_model": {
+                            "stiffness_nm_rad_float": 20.0,
+                            "damping_nms_rad_float": 0.5
+                          },
+                          "simulation_driver": {
+                            "drive_mode_enum": "ACCELERATION"
+                          }
+                        }
+                      }
+                    },
+                    "joint_actuator_mapping_map": {
+                      "hip_yaw_right": {
+                        "target_joint_ref_str": "leg_right_hip_yaw",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 40.0,
+                          "velocity_limit_rad_s_float": 12.0
+                        }
+                      },
+                      "hip_roll_right": {
+                        "target_joint_ref_str": "leg_right_hip_roll",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 60.0,
+                          "velocity_limit_rad_s_float": 10.0
+                        }
+                      },
+                      "hip_pitch_right": {
+                        "target_joint_ref_str": "leg_right_hip_pitch",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 80.0,
+                          "velocity_limit_rad_s_float": 8.0
+                        },
+                        "overrides": {
+                          "control_defaults": {
+                            "position_mode_gains": {
+                              "kp": 200.0
+                            }
+                          }
+                        }
+                      },
+                      "knee_pitch_right": {
+                        "target_joint_ref_str": "leg_right_knee_pitch",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 120.0,
+                          "velocity_limit_rad_s_float": 12.0
+                        }
+                      },
+                      "ankle_pitch_right": {
+                        "target_joint_ref_str": "leg_right_ankle_pitch",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 30.0,
+                          "velocity_limit_rad_s_float": 15.0
+                        }
+                      },
+                      "hip_yaw_left": {
+                        "target_joint_ref_str": "leg_left_hip_yaw",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 40.0
+                        }
+                      },
+                      "hip_roll_left": {
+                        "target_joint_ref_str": "leg_left_hip_roll",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 60.0
+                        }
+                      },
+                      "hip_pitch_left": {
+                        "target_joint_ref_str": "leg_left_hip_pitch",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 80.0
+                        },
+                        "overrides": {
+                          "control_defaults": {
+                            "position_mode_gains": {
+                              "kp": 200.0
+                            }
+                          }
+                        }
+                      },
+                      "knee_pitch_left": {
+                        "target_joint_ref_str": "leg_left_knee_pitch",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 120.0
+                        }
+                      },
+                      "ankle_pitch_left": {
+                        "target_joint_ref_str": "leg_left_ankle_pitch",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_heavy_leg",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 30.0
+                        }
+                      },
+                      "shoulder_pitch_right": {
+                        "target_joint_ref_str": "arm_right_shoulder_pitch",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_light_arm",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 18.0,
+                          "velocity_limit_rad_s_float": 20.0
+                        }
+                      },
+                      "shoulder_roll_right": {
+                        "target_joint_ref_str": "arm_right_shoulder_roll",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_light_arm",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 18.0
+                        }
+                      },
+                      "elbow_pitch_right": {
+                        "target_joint_ref_str": "arm_right_elbow_pitch",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_light_arm",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 18.0
+                        }
+                      },
+                      "shoulder_pitch_left": {
+                        "target_joint_ref_str": "arm_left_shoulder_pitch",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_light_arm",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 18.0
+                        }
+                      },
+                      "shoulder_roll_left": {
+                        "target_joint_ref_str": "arm_left_shoulder_roll",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_light_arm",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 18.0
+                        }
+                      },
+                      "elbow_pitch_left": {
+                        "target_joint_ref_str": "arm_left_elbow_pitch",
+                        "component_model_ref_str": "tmotor_ak60_6_v1",
+                        "use_profile_ref_str": "profile_light_arm",
+                        "application_limits": {
+                          "torque_limit_peak_nm_float": 18.0
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/calibration.jsonc",
+                  "id": "calibration",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "robot_serial_number_str": "BHL_UNIT_0042",
+                      "calibration_profile_id_str": "default_factory_profile_v1",
+                      "domain_id_str": "01_foundation",
+                      "file_role_enum": "CALIBRATION_DELTA_INSTANCE",
+                      "last_calibrated_iso8601_str": "2025-11-23T14:30:00Z",
+                      "calibration_method_enum": "AUTOMATED_VISUAL_MARKERS",
+                      "technician_id_str": "auto_calib_routine_v2.1",
+                      "target_description_ref_str": "01_foundation/description.jsonc",
+                      "target_description_hash_str": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "calibration_confidence_score_float": 0.92,
+                      "calibration_health_status_enum": "GREEN_OK",
+                      "interpretation_guides": {
+                        "for_humans_str": "Apply these deltas on top of the ideal description to reconstruct the real robot geometry and dynamics.",
+                        "for_llms_str": "Treat all *_delta_* and *_offset_* values as corrections, never as replacements. When reasoning about reality, mentally compose ideal + delta."
+                      }
+                    },
+                    "kinematic_offsets_map": {
+                      "knee_joint_right": {
+                        "zero_point_offset_rad_float": 0.021,
+                        "backlash_hysteresis_rad_float": 0.005
+                      },
+                      "hip_pitch_right": {
+                        "zero_point_offset_rad_float": -0.015,
+                        "backlash_hysteresis_rad_float": 0.002
+                      }
+                    },
+                    "sensor_extrinsics_delta_map": {
+                      "head_camera_main": {
+                        "mount_delta_xyz_m_vec3_float": [
+                          0.001,
+                          -0.002,
+                          0.0
+                        ],
+                        "mount_delta_rpy_rad_vec3_float": [
+                          0.0,
+                          0.0087,
+                          0.0
+                        ]
+                      },
+                      "torso_imu": {
+                        "mount_delta_rpy_rad_vec3_float": [
+                          0.001,
+                          0.001,
+                          0.0
+                        ]
+                      }
+                    },
+                    "sensor_intrinsics_map": {
+                      "head_camera_main": {
+                        "distortion_model_enum": "PLUMB_BOB",
+                        "distortion_coeffs_vec5_float": [
+                          -0.2,
+                          0.05,
+                          0.001,
+                          0.0,
+                          0.0
+                        ],
+                        "camera_matrix_k_vec9_float": [
+                          520.1,
+                          0.0,
+                          320.5,
+                          0.0,
+                          520.1,
+                          240.5,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      }
+                    },
+                    "dynamics_correction_map": {
+                      "knee_joint_right": {
+                        "friction_scale_factor_float": 1.2,
+                        "damping_scale_factor_float": 1.1
+                      },
+                      "global_body": {
+                        "total_mass_delta_kg_float": 0.05,
+                        "center_of_mass_shift_xyz_m_vec3_float": [
+                          0.005,
+                          0.0,
+                          0.0
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/compute_topology.jsonc",
+                  "id": "compute_topology",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "topology_id_str": "bhl_compute_stack_v2_iso_compliant",
+                      "version_semver_str": "1.2.0",
+                      "last_verified_iso8601_str": "2025-11-23T12:00:00Z",
+                      "domain_id_str": "01_foundation",
+                      "file_role_enum": "COMPUTE_HARDWARE_TOPOLOGY",
+                      "governance": {
+                        "stewardship_organization_str": "Italia Robotica",
+                        "lead_architect_str": "Pasquale Ranieri",
+                        "contact_uri_str": "mailto:engineering@italiarobotica.it"
+                      },
+                      "related_files_map": {
+                        "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
+                        "safety_policies_ref_str": "02_operation/safety_critical.jsonc",
+                        "compute_federation_ref_str": "06_ether/compute_federation.jsonc",
+                        "swarm_protocol_ref_str": "06_ether/swarm_protocol.jsonc"
+                      },
+                      "interpretation_guides": {
+                        "for_humans_str": "Describes on-board compute resources, buses, and timing constraints. Use it to check if planned behaviors are compatible with hardware limits.",
+                        "for_llms_str": "Treat these values as HARD constraints for safety and latency. If a requested behavior exceeds ai_processing_budget_max_us_int or safety_loop_frequency_min_hz_int, suggest using reflex-level control or offloading according to compute_federation.jsonc."
+                      }
+                    },
+                    "compute_nodes_map": {
+                      "main_brain_unit": {
+                        "role_enum": "HIGH_LEVEL_PLANNER",
+                        "hardware_model_str": "NVIDIA Jetson Orin Nano 8GB",
+                        "architecture_enum": "ARM64_AARCH64",
+                        "performance_specs": {
+                          "cpu_cores_count_int": 6,
+                          "ai_inference_int8_tops_float": 40.0,
+                          "gpu_cuda_cores_count_int": 1024
+                        },
+                        "memory_specs": {
+                          "ram_capacity_gb_float": 8.0,
+                          "is_unified_memory_bool": true
+                        },
+                        "logical_hosting_capabilities": {
+                          "can_host_llm_planner_bool": true,
+                          "max_recommended_llm_context_tokens_int": 16384,
+                          "supports_realtime_control_loops_bool": false
+                        }
+                      },
+                      "spinal_cord_mcu": {
+                        "role_enum": "REALTIME_CONTROLLER",
+                        "hardware_model_str": "STM32H7",
+                        "architecture_enum": "ARM_CORTEX_M7",
+                        "performance_specs": {
+                          "cpu_clock_max_mhz_float": 480.0,
+                          "control_loop_max_frequency_hz_float": 20000.0
+                        },
+                        "safety_certified_bool": true,
+                        "logical_hosting_capabilities": {
+                          "can_host_llm_planner_bool": false,
+                          "supports_reflex_policies_bool": true
+                        }
+                      },
+                      "safety_monitor_fpga": {
+                        "role_enum": "SAFETY_CORE_CHANNEL_A",
+                        "hardware_model_str": "Dedicated_Safety_FPGA",
+                        "architecture_enum": "SIL_3_CERTIFIED",
+                        "redundancy_channel_int": 1
+                      },
+                      "diagnostics_check_unit": {
+                        "role_enum": "DIAGNOSTIC_CORE_CHANNEL_B",
+                        "hardware_model_str": "Lockstep_MCU",
+                        "redundancy_channel_int": 2
+                      }
+                    },
+                    "communication_buses_map": {
+                      "vision_pipeline_bus": {
+                        "type_enum": "MIPI_CSI_2",
+                        "connected_nodes_list_str": [
+                          "head_camera_main",
+                          "main_brain_unit"
+                        ],
+                        "specs": {
+                          "bandwidth_gbps_float": 10.0,
+                          "latency_roundtrip_us_float": 50.0
+                        }
+                      },
+                      "locomotion_can_bus": {
+                        "type_enum": "CAN_FD",
+                        "connected_nodes_list_str": [
+                          "spinal_cord_mcu",
+                          "leg_actuators_group"
+                        ],
+                        "specs": {
+                          "latency_worst_case_us_float": 500.0
+                        }
+                      },
+                      "inter_process_link": {
+                        "type_enum": "USB_SERIAL_HIGH_SPEED",
+                        "connected_nodes_list_str": [
+                          "main_brain_unit",
+                          "spinal_cord_mcu"
+                        ],
+                        "specs": {
+                          "latency_roundtrip_us_float": 1000.0
+                        }
+                      }
+                    },
+                    "timing_constraints": {
+                      "sensor_to_actuator_max_latency_us_int": 50000,
+                      "safety_loop_frequency_min_hz_int": 200,
+                      "ai_processing_budget_max_us_int": 10000,
+                      "safety_architecture_enum": "DUAL_CHANNEL_CAT3"
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/description.jsonc",
+                  "id": "description",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "model_id_str": "bhl_humanoid_lite_v2",
+                      "species_name_str": "BHL_Lite",
+                      "manufacturer_str": "Berkeley_Open_Robotics",
+                      "license_enum": "MIT_OPEN_HARDWARE",
+                      "version_semver_str": "0.2.0",
+                      "release_date_iso8601_str": "2025-11-23",
+                      "total_mass_ideal_kg_float": 12.5,
+                      "dof_active_count_int": 20,
+                      "ideal_power_budget_w_float": 350.0,
+                      "related_files_map": {
+                        "calibration_ref_str": "01_foundation/calibration.jsonc",
+                        "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+                        "actuation_dynamics_ref_str": "01_foundation/actuation_dynamics.jsonc",
+                        "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
+                        "firmware_manifest_ref_str": "01_foundation/firmware_manifest.jsonc"
+                      }
+                    },
+                    "embodiment_config": {
+                      "up_axis_enum": "Z_UP",
+                      "forward_axis_enum": "X_FORWARD",
+                      "unit_system_enum": "SI_METRIC",
+                      "root_link_ref_str": "torso_base_link",
+                      "assets_manifest": {
+                        "visual_usd_uri_str": "assets/visual/bhl_v2.usd",
+                        "collision_usd_uri_str": "assets/collision/bhl_v2_collision.usd",
+                        "mesh_scale_vec3_float": [
+                          1.0,
+                          1.0,
+                          1.0
+                        ]
+                      }
+                    },
+                    "kinematic_chain_list": [
+                      {
+                        "link_id_str": "torso_base_link",
+                        "semantic_tag_enum": "TORSO",
+                        "inertial_properties": {
+                          "mass_kg_float": 4.2,
+                          "center_of_mass_xyz_m_vec3_float": [
+                            0.0,
+                            0.0,
+                            0.15
+                          ],
+                          "inertia_tensor_xx_yy_zz_xy_xz_yz_kgm2_vec6_float": [
+                            0.05,
+                            0.05,
+                            0.02,
+                            0.0,
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "collision_geometry": {
+                          "primitive_type_enum": "BOX",
+                          "dimensions_xyz_m_vec3_float": [
+                            0.25,
+                            0.15,
+                            0.4
+                          ]
+                        }
+                      },
+                      {
+                        "link_id_str": "thigh_right_link",
+                        "semantic_tag_enum": "UPPER_LEG_RIGHT",
+                        "inertial_properties": {
+                          "mass_kg_float": 1.8,
+                          "center_of_mass_xyz_m_vec3_float": [
+                            0.0,
+                            0.0,
+                            -0.15
+                          ],
+                          "inertia_tensor_xx_yy_zz_xy_xz_yz_kgm2_vec6_float": [
+                            0.01,
+                            0.01,
+                            0.002,
+                            0.0,
+                            0.0,
+                            0.0
+                          ]
+                        }
+                      },
+                      {
+                        "link_id_str": "shin_right_link",
+                        "semantic_tag_enum": "LOWER_LEG_RIGHT",
+                        "inertial_properties": {
+                          "mass_kg_float": 1.0,
+                          "center_of_mass_xyz_m_vec3_float": [
+                            0.0,
+                            0.0,
+                            -0.18
+                          ],
+                          "inertia_tensor_xx_yy_zz_xy_xz_yz_kgm2_vec6_float": [
+                            0.008,
+                            0.008,
+                            0.0015,
+                            0.0,
+                            0.0,
+                            0.0
+                          ]
+                        }
+                      },
+                      {
+                        "link_id_str": "foot_right_link",
+                        "semantic_tag_enum": "FOOT_RIGHT",
+                        "inertial_properties": {
+                          "mass_kg_float": 0.4,
+                          "center_of_mass_xyz_m_vec3_float": [
+                            0.02,
+                            0.0,
+                            -0.02
+                          ]
+                        },
+                        "contact_points_list": [
+                          {
+                            "label_str": "toe",
+                            "local_pos_vec3_float": [
+                              0.1,
+                              0.0,
+                              -0.02
+                            ]
+                          },
+                          {
+                            "label_str": "heel",
+                            "local_pos_vec3_float": [
+                              -0.05,
+                              0.0,
+                              -0.02
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "joint_topology_map": {
+                      "knee_joint_right": {
+                        "type_enum": "REVOLUTE",
+                        "semantic_label_str": "right_knee_flexion",
+                        "connectivity": {
+                          "parent_link_ref_str": "thigh_right_link",
+                          "child_link_ref_str": "shin_right_link"
+                        },
+                        "geometry_ideal": {
+                          "origin_xyz_m_vec3_float": [
+                            0.0,
+                            0.0,
+                            -0.35
+                          ],
+                          "origin_rpy_rad_vec3_float": [
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "axis_xyz_vec3_float": [
+                            0.0,
+                            1.0,
+                            0.0
+                          ]
+                        },
+                        "limits_ideal": {
+                          "position_lower_rad_float": -2.618,
+                          "position_upper_rad_float": 0.0,
+                          "velocity_max_rad_s_float": 12.0,
+                          "effort_max_nm_float": 45.0
+                        },
+                        "dynamics_ideal": {
+                          "damping_nms_rad_float": 0.1
+                        }
+                      }
+                    },
+                    "sensors_mounting_map": {
+                      "torso_imu": {
+                        "device_type_enum": "IMU_6DOF",
+                        "parent_frame_ref_str": "torso_base_link",
+                        "mount_pose_xyz_m_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "mount_pose_rpy_rad_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "update_rate_hz_float": 1000.0
+                      },
+                      "head_camera_main": {
+                        "device_type_enum": "RGBD_CAMERA",
+                        "parent_frame_ref_str": "head_link",
+                        "mount_pose_xyz_m_vec3_float": [
+                          0.08,
+                          0.0,
+                          0.05
+                        ],
+                        "mount_pose_rpy_rad_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "resolution_wh_vec2_int": [
+                          1920,
+                          1080
+                        ],
+                        "fov_horizontal_rad_float": 1.5707
+                      },
+                      "head_mic_array": {
+                        "device_type_enum": "MICROPHONE_ARRAY",
+                        "channels_count_int": 4,
+                        "parent_frame_ref_str": "head_link",
+                        "mount_pose_xyz_m_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "mount_pose_rpy_rad_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ]
+                      },
+                      "chest_lidar": {
+                        "device_type_enum": "LIDAR_SOLID_STATE",
+                        "parent_frame_ref_str": "torso_base_link",
+                        "mount_pose_xyz_m_vec3_float": [
+                          0.1,
+                          0.0,
+                          -0.1
+                        ],
+                        "mount_pose_rpy_rad_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "range_max_m_float": 12.0
+                      },
+                      "wifi_rf_module": {
+                        "device_type_enum": "RF_TRANSCEIVER",
+                        "parent_frame_ref_str": "torso_base_link",
+                        "capabilities_map": {
+                          "wifi_csi_sensing_bool": true,
+                          "ble_sniffing_bool": true
+                        }
+                      }
+                    },
+                    "actuators_topology_map": {
+                      "knee_right_actuator": {
+                        "drives_joint_ref_str": "knee_joint_right",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "mount_pose_xyz_m_vec3_float": [
+                          0.0,
+                          -0.02,
+                          -0.25
+                        ],
+                        "mount_pose_rpy_rad_vec3_float": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "mechanical_reduction_ratio_float": 10.0,
+                        "direction_polarity_int": -1
+                      }
+                    },
+                    "capabilities_manifest": {
+                      "teleoperation_supported_bool": true,
+                      "object_manipulation_bool": true,
+                      "terrain_navigation_bool": true,
+                      "human_safe_interaction_bool": false
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/firmware_mapping.jsonc",
+                  "id": "firmware_mapping",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "firmware_spec_version_str": "0.2.0",
+                      "last_updated_iso8601_str": "2025-11-23T17:40:00Z",
+                      "stewardship_org_str": "OpenRGD Consortium",
+                      "compatibility_policy_enum": "STRICT_SEMVER"
+                    },
+                    "firmware_catalog_map": {
+                      "tmotor_ak80_series_firmware_v3": {
+                        "device_class_enum": "ACTUATOR_ESC",
+                        "manufacturer_str": "T-Motor",
+                        "supported_hardware_models_list_str": [
+                          "AK80-9_v2",
+                          "AK60-6_v1"
+                        ],
+                        "api_semantic_level_str": "MOTOR_API_LEVEL_2",
+                        "firmware_version_semver_str": "3.1.0",
+                        "firmware_sha256_str": "sha256:8f223a...f9a1c9",
+                        "capabilities": {
+                          "supports_torque_control_bool": true,
+                          "supports_position_control_bool": true,
+                          "supports_velocity_control_bool": true,
+                          "supports_temperature_stream_bool": true,
+                          "supports_joint_impedance_mode_bool": false
+                        },
+                        "safety_invariants": {
+                          "max_allowed_torque_nm_float": 60.0,
+                          "overtemp_shutdown_c_float": 105.0,
+                          "watchdog_period_ms_int": 20
+                        },
+                        "update_policy": {
+                          "supports_ota_bool": true,
+                          "requires_robot_immobilization_bool": true,
+                          "rollback_on_failure_bool": true
+                        }
+                      },
+                      "stm32h7_reflex_firmware_v5": {
+                        "device_class_enum": "MCU_REALTIME",
+                        "manufacturer_str": "STMicroelectronics",
+                        "hardware_model_str": "STM32H743",
+                        "api_semantic_level_str": "REFLEX_API_LEVEL_3",
+                        "firmware_version_semver_str": "5.4.2",
+                        "firmware_sha256_str": "sha256:993cd4...7cf20e",
+                        "capabilities": {
+                          "supports_estop_bool": true,
+                          "supports_realtime_gait_safety_bool": true,
+                          "supports_low_latency_can_routing_bool": true,
+                          "max_control_loop_freq_hz_int": 20000
+                        },
+                        "safety_invariants": {
+                          "sil_level_enum": "SIL3",
+                          "dual_channel_lockstep_required_bool": true,
+                          "latency_budget_us_int": 1000
+                        },
+                        "update_policy": {
+                          "supports_ota_bool": false,
+                          "requires_robot_immobilization_bool": true,
+                          "rollback_on_failure_bool": false
+                        }
+                      },
+                      "sony_imx219_isp_fw_v2": {
+                        "device_class_enum": "VISION_SENSOR",
+                        "manufacturer_str": "Sony",
+                        "hardware_model_str": "IMX219",
+                        "api_semantic_level_str": "CAMERA_API_LEVEL_1",
+                        "firmware_version_semver_str": "2.0.1",
+                        "firmware_sha256_str": "sha256:bd8ef1...cc14e7",
+                        "capabilities": {
+                          "supports_auto_exposure_bool": true,
+                          "supports_auto_gain_bool": true,
+                          "supports_multiframe_hdr_bool": false
+                        },
+                        "safety_invariants": {
+                          "max_temperature_c_float": 90.0
+                        },
+                        "update_policy": {
+                          "supports_ota_bool": false,
+                          "requires_robot_immobilization_bool": false
+                        }
+                      }
+                    },
+                    "device_firmware_map": {
+                      "knee_right_actuator": {
+                        "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+                        "hardware_uid_str": "AK80-RIGHT-KNEE-0017",
+                        "last_verified_iso8601_str": "2025-11-23T10:02:00Z",
+                        "compatibility_status_enum": "COMPATIBLE"
+                      },
+                      "hip_pitch_right_actuator": {
+                        "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+                        "hardware_uid_str": "AK80-RIGHT-HIP-0021",
+                        "compatibility_status_enum": "COMPATIBLE"
+                      },
+                      "spinal_cord_mcu": {
+                        "firmware_ref_str": "stm32h7_reflex_firmware_v5",
+                        "hardware_uid_str": "STM32-REFLEX-0009",
+                        "compatibility_status_enum": "CRITICAL_COMPONENT"
+                      },
+                      "head_camera_main": {
+                        "firmware_ref_str": "sony_imx219_isp_fw_v2",
+                        "hardware_uid_str": "IMX219-HEADCAM-0032",
+                        "compatibility_status_enum": "COMPATIBLE"
+                      }
+                    },
+                    "compatibility_graph": {
+                      "enforce_semver_strict_bool": true,
+                      "invalid_combinations_list": [
+                        {
+                          "device_class_enum": "ACTUATOR_ESC",
+                          "api_semantic_level_str": "MOTOR_API_LEVEL_1",
+                          "reason_str": "Level 1 cannot execute torque or impedance modes required by actuation_topology.jsonc"
+                        }
+                      ]
+                    },
+                    "update_rules": {
+                      "allow_swarm_batch_update_bool": true,
+                      "max_parallel_updates_int": 2,
+                      "require_quorum_for_ota_bool": false,
+                      "signed_firmware_only_bool": true,
+                      "allowed_signing_authorities_list_str": [
+                        "Italia Robotica Root CA",
+                        "OpenRGD Maintainers CA"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/hal_mapping.jsonc",
+                  "id": "hal_mapping",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "mapping_id_str": "bhl_ros2_hal_v3",
+                      "version_semver_str": "1.3.0",
+                      "last_updated_iso8601_str": "2025-11-23T18:05:00Z",
+                      "interface_protocol_str": "ROS2_HUMBLE"
+                    },
+                    "actuator_drivers_map": {
+                      "knee_right_actuator": {
+                        "logical_actuator_ref_str": "knee_right_actuator",
+                        "communication_protocol_enum": "CAN_BUS_FD",
+                        "bus_interface_str": "can0",
+                        "device_node_id_int": 12,
+                        "baud_rate_mbps_float": 5.0,
+                        "driver_plugin_str": "odrive_can_controller/ODriveCANInterface",
+                        "ros2_control_interface_list_enum": [
+                          "position",
+                          "velocity",
+                          "effort"
+                        ],
+                        "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+                        "hardware_uid_str": "AK80-RIGHT-KNEE-0017",
+                        "qos_profile_ref_str": "profile_safety_command"
+                      },
+                      "ankle_pitch_right_actuator": {
+                        "logical_actuator_ref_str": "ankle_pitch_right_actuator",
+                        "communication_protocol_enum": "RS485_DYNAMIXEL",
+                        "bus_interface_str": "/dev/ttyUSB0",
+                        "device_node_id_int": 5,
+                        "driver_plugin_str": "dynamixel_hardware_interface/DynamixelInterface",
+                        "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+                        "hardware_uid_str": "AK80-ANKLE-0002",
+                        "qos_profile_ref_str": "profile_safety_command"
+                      }
+                    },
+                    "sensor_drivers_map": {
+                      "head_camera_main": {
+                        "logical_sensor_ref_str": "head_camera_main",
+                        "communication_protocol_enum": "ROS2_TOPIC",
+                        "data_type_str": "sensor_msgs/Image",
+                        "update_frequency_hz_float": 30.0,
+                        "stream_uri_str": "/camera/main/image_raw",
+                        "firmware_ref_str": "sony_imx219_isp_fw_v2",
+                        "hardware_uid_str": "IMX219-HEADCAM-0032",
+                        "qos_profile_ref_str": "profile_sensor_high_frequency"
+                      },
+                      "torso_imu": {
+                        "logical_sensor_ref_str": "torso_imu",
+                        "communication_protocol_enum": "ROS2_TOPIC",
+                        "data_type_str": "sensor_msgs/Imu",
+                        "update_frequency_hz_float": 500.0,
+                        "stream_uri_str": "/imu/data_raw",
+                        "firmware_ref_str": "imu_generic_fw_v1",
+                        "hardware_uid_str": "IMU-TORSO-0014",
+                        "qos_profile_ref_str": "profile_sensor_high_frequency"
+                      },
+                      "wifi_rf_monitor": {
+                        "logical_sensor_ref_str": "wifi_rf_monitor",
+                        "communication_protocol_enum": "LOCAL_SOCKET",
+                        "data_type_str": "rgd_msgs/RssiSignal",
+                        "stream_uri_str": "/rgd/network/rssi_data",
+                        "firmware_ref_str": "esp32_wifi_stack_fw_v4",
+                        "hardware_uid_str": "ESP32-NET-8821",
+                        "qos_profile_ref_str": "profile_logging_low_priority"
+                      }
+                    },
+                    "qos_profiles_map": {
+                      "profile_sensor_high_frequency": {
+                        "description_str": "High-rate, non-critical sensor data.",
+                        "reliability_enum": "BEST_EFFORT",
+                        "durability_enum": "VOLATILE",
+                        "history_enum": "KEEP_LAST",
+                        "depth_int": 5
+                      },
+                      "profile_safety_command": {
+                        "description_str": "Critical motor commands (E-Stop, torque, position).",
+                        "reliability_enum": "RELIABLE",
+                        "durability_enum": "TRANSIENT_LOCAL",
+                        "history_enum": "KEEP_LAST",
+                        "depth_int": 1
+                      },
+                      "profile_logging_low_priority": {
+                        "description_str": "Telemetry/logging with low delivery guarantees.",
+                        "reliability_enum": "BEST_EFFORT",
+                        "durability_enum": "VOLATILE",
+                        "history_enum": "KEEP_LAST",
+                        "depth_int": 20
+                      }
+                    },
+                    "non_kinematic_actuators_map": {
+                      "status_led_array": {
+                        "logical_output_ref_str": "system_status_leds",
+                        "communication_protocol_enum": "GPIO_SERIAL",
+                        "driver_plugin_str": "gpio_led_interface/LEDManager",
+                        "supported_states_list_str": [
+                          "STANDBY_PULSE",
+                          "ERROR_RED_SOLID",
+                          "ACTIVE_GREEN_BREATH"
+                        ],
+                        "firmware_ref_str": "generic_gpio_driver_fw_v1",
+                        "hardware_uid_str": "GPIO-LED-1008"
+                      },
+                      "emergency_buzzer_speaker": {
+                        "logical_output_ref_str": "safety_critical_buzzer",
+                        "communication_protocol_enum": "PWM_SIGNAL",
+                        "driver_plugin_str": "mcu_pwm_buzzer",
+                        "supported_tones_list_str": [
+                          "HIGH_PITCH_ALERT",
+                          "LOW_BATTERY_BEPP"
+                        ],
+                        "firmware_ref_str": "pwm_buzzer_fw_v1",
+                        "hardware_uid_str": "BUZZER-PCM-3321"
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/physics_solver_overrides.jsonc",
+                  "id": "physics_solver_overrides",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "profile_id_str": "solver_alignment_v2",
+                      "required_rgd_version_str": "0.2.0",
+                      "last_updated_iso8601_str": "2025-11-23T18:00:00Z",
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "calibration_ref_str": "01_foundation/calibration.jsonc",
+                        "actuation_dynamics_ref_str": "01_foundation/actuation_dynamics.jsonc"
+                      }
+                    },
+                    "mujoco_solver_map": {
+                      "general_defaults": {
+                        "time_step_s_float": 0.002,
+                        "solver_iterations_int": 50,
+                        "enable_warmstart_bool": true
+                      },
+                      "contact_config": {
+                        "solref_damping_float": 0.02,
+                        "solref_stiffness_float": 1.0,
+                        "solimp_tolerance_float": 0.001,
+                        "friction_model_enum": "PYRAMIDAL"
+                      },
+                      "material_friction_overrides_map": {
+                        "rubber_foot": {
+                          "mu_static_float": 1.0,
+                          "mu_dynamic_float": 0.8
+                        },
+                        "plastic_shell": {
+                          "mu_static_float": 0.4,
+                          "mu_dynamic_float": 0.3
+                        }
+                      }
+                    },
+                    "physx_solver_map": {
+                      "general_defaults": {
+                        "simulation_type_enum": "GPU_BASED_PBD",
+                        "enable_ccd_bool": true,
+                        "enable_gpu_determinism_bool": true
+                      },
+                      "collision_config": {
+                        "contact_offset_m_float": 0.005,
+                        "rest_offset_m_float": 0.001,
+                        "max_depenetration_velocity_m_s_float": 1.0,
+                        "enable_enhanced_determinism_bool": true
+                      },
+                      "joint_projection": {
+                        "projection_tolerance_m_float": 0.01,
+                        "projection_angle_rad_float": 0.05
+                      },
+                      "soft_body_solver_config": {
+                        "solver_iterations_int": 20,
+                        "max_gpu_memory_gb_float": 4.0,
+                        "volume_conservation_bool": true
+                      }
+                    },
+                    "isaac_4x_solver_map": {
+                      "engine_id_enum": "ISAAC_SIM_4_X",
+                      "general_overrides": {
+                        "use_gpu_pipeline_bool": true,
+                        "enable_stabilization_bool": true,
+                        "substeps_int": 2
+                      },
+                      "collision_overrides": {
+                        "contact_offset_m_float": 0.007,
+                        "rest_offset_m_float": 0.0005,
+                        "max_depenetration_velocity_m_s_float": 0.7
+                      },
+                      "joint_overrides": {
+                        "projection_tolerance_m_float": 0.008,
+                        "projection_angle_rad_float": 0.04,
+                        "enable_joint_stabilization_bool": true
+                      },
+                      "profiling_hints": {
+                        "recommended_timestep_s_float": 0.002,
+                        "recommended_solver_iterations_int": 8,
+                        "note_str": "For bipedal robots in Isaac 4.x, use 2 substeps and 8+ iterations to minimize knee jitter."
+                      }
+                    },
+                    "isaac_5x_solver_map": {
+                      "engine_id_enum": "ISAAC_SIM_5_X",
+                      "general_overrides": {
+                        "use_gpu_pipeline_bool": true,
+                        "enable_stabilization_bool": true,
+                        "substeps_int": 1,
+                        "enable_async_streams_bool": true
+                      },
+                      "collision_overrides": {
+                        "contact_offset_m_float": 0.005,
+                        "rest_offset_m_float": 0.0005,
+                        "max_depenetration_velocity_m_s_float": 1.0
+                      },
+                      "joint_overrides": {
+                        "projection_tolerance_m_float": 0.008,
+                        "projection_angle_rad_float": 0.04,
+                        "enable_joint_stabilization_bool": true
+                      },
+                      "profiling_hints": {
+                        "recommended_timestep_s_float": 0.002,
+                        "recommended_solver_iterations_int": 6,
+                        "note_str": "Isaac 5.x GPU pipeline is generally more stable; prefer fewer substeps and tune iterations per scenario."
+                      }
+                    },
+                    "bullet_solver_map": {
+                      "general_defaults": {
+                        "erp_float": 0.2,
+                        "cfm_float": 0.001
+                      },
+                      "contact_config": {
+                        "friction_direction_iterations_int": 10
+                      }
+                    },
+                    "ode_solver_map": {
+                      "global_parameters": {
+                        "erp_float": 0.2,
+                        "cfm_float": 1e-05
+                      }
+                    },
+                    "engine_negotiation_protocol": {
+                      "required_capabilities_list_enum": [
+                        "STABLE_CONTACTS",
+                        "WARMSTARTING",
+                        "JOINT_LIMITS",
+                        "FIRM_SOLVER_ITERATIONS"
+                      ],
+                      "fallback_strategy_enum": "USE_CLOSEST_ENGINE_BEHAVIOR",
+                      "unsupported_feature_behaviour_enum": "WARN_AND_CLAMP"
+                    },
+                    "external_unit_conversions": {
+                      "ros2_compatibility": {
+                        "joint_limits_in_radians_bool": true,
+                        "base_frame_convention_enum": "X_FORWARD_Z_UP"
+                      },
+                      "fallback_angular_unit_enum": "RADIANS",
+                      "fallback_linear_unit_enum": "METERS"
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/power_distribution.jsonc",
+                  "id": "power_distribution",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "power_architecture_id_str": "bhl_power_stack_v2",
+                      "version_semver_str": "1.2.0",
+                      "last_updated_iso8601_str": "2025-11-23T18:20:00Z",
+                      "related_files_map": {
+                        "compute_topology_ref_str": "01_foundation/compute_topology.jsonc",
+                        "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
+                        "safety_critical_ref_str": "04_volition/safety_critical.jsonc",
+                        "ledger_ref_str": "04_volition/ledger.jsonc"
+                      }
+                    },
+                    "primary_energy_source": {
+                      "battery_model_str": "Custom_LiPo_12S",
+                      "chemistry_enum": "LITHIUM_POLYMER",
+                      "capacity_wh_float": 500.0,
+                      "nominal_voltage_v_float": 44.4,
+                      "max_discharge_current_a_float": 100.0,
+                      "internal_resistance_ohm_float": 0.005,
+                      "temp_limit_c_float": 55.0,
+                      "bms_spec": {
+                        "supports_cell_balancing_bool": true,
+                        "balancing_algorithm_enum": "DELTA_V_ACTIVE",
+                        "cell_count_int": 12,
+                        "telemetry_update_rate_hz_float": 5.0,
+                        "communication_protocol_enum": "CAN_BUS_FD"
+                      }
+                    },
+                    "voltage_rails_map": {
+                      "motor_actuation_rail": {
+                        "voltage_v_float": 48.0,
+                        "priority_enum": "HIGH",
+                        "max_current_a_float": 120.0,
+                        "powered_components_list_str": [
+                          "leg_actuator_group",
+                          "arm_actuator_group"
+                        ]
+                      },
+                      "logic_sensor_rail": {
+                        "voltage_v_float": 12.0,
+                        "priority_enum": "CRITICAL",
+                        "max_current_a_float": 20.0,
+                        "powered_components_list_str": [
+                          "main_brain_unit",
+                          "spinal_cord_mcu",
+                          "perception_sensors"
+                        ]
+                      },
+                      "low_power_logic_rail": {
+                        "voltage_v_float": 5.0,
+                        "priority_enum": "CRITICAL",
+                        "powered_components_list_str": [
+                          "tts_driver",
+                          "status_led_array",
+                          "rf_modems"
+                        ]
+                      }
+                    },
+                    "rail_routing_policy": {
+                      "brownout_priority_order_list_enum": [
+                        "low_power_logic_rail",
+                        "logic_sensor_rail",
+                        "motor_actuation_rail"
+                      ],
+                      "load_shedding_rules": {
+                        "max_total_current_a_float": 140.0,
+                        "shed_strategy_enum": "DISABLE_NONESSENTIAL_ACTUATORS",
+                        "shutdown_threshold_voltage_v_float": 40.0
+                      }
+                    },
+                    "protection_config": {
+                      "system_fuse_rating_a_float": 120.0,
+                      "software_shutdown_voltage_v_float": 40.0,
+                      "thermal_monitoring_map": {
+                        "sensors_list_str": [
+                          "battery_pack_center",
+                          "power_bus_main",
+                          "motor_controller_group"
+                        ],
+                        "update_rate_hz_float": 10.0
+                      },
+                      "fault_response_policies": {
+                        "overcurrent_response_enum": "GRACEFUL_SHUTDOWN",
+                        "overtemp_response_enum": "THROTTLE_AND_COOL",
+                        "bms_fault_enum": "IMMEDIATE_CUTOFF"
+                      }
+                    },
+                    "regeneration_spec": {
+                      "regenerative_braking_efficiency_pct_float": 0.15,
+                      "regen_enabled_bool": true,
+                      "regen_safety_limits": {
+                        "max_regen_current_a_float": 20.0,
+                        "min_battery_temperature_c_float": 5.0,
+                        "max_battery_voltage_v_float": 50.4
+                      }
+                    },
+                    "charging_spec": {
+                      "charging_protocol_enum": "SMART_BMS",
+                      "max_charge_rate_w_float": 500.0,
+                      "supported_charging_methods_map": {
+                        "direct_dc_fast_charge": {
+                          "supported_bool": true,
+                          "max_voltage_v_float": 50.4,
+                          "max_current_a_float": 12.0
+                        },
+                        "wireless_inductive_charge": {
+                          "supported_bool": true,
+                          "max_power_w_float": 100.0,
+                          "alignment_tolerance_cm_float": 5.0
+                        }
+                      }
+                    },
+                    "power_introspection": {
+                      "telemetry_stream_uri_str": "/rgd/power/telemetry",
+                      "telemetry_update_rate_hz_float": 10.0,
+                      "exposed_metrics_list_str": [
+                        "battery_soc_pct",
+                        "battery_voltage_v",
+                        "rail_currents_a",
+                        "rail_status_flags",
+                        "thermal_warnings"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/sensor_fidelity.jsonc",
+                  "id": "sensor_fidelity",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "fidelity_profile_id_str": "high_fidelity_v2",
+                      "version_semver_str": "1.2.0",
+                      "last_updated_iso8601_str": "2025-11-23T18:40:00Z",
+                      "target_simulators_list_enum": [
+                        "ISAAC_LAB_RTX_5_X",
+                        "ISAAC_SIM_4_X",
+                        "MUJOCO_3_X"
+                      ],
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "calibration_ref_str": "01_foundation/calibration.jsonc",
+                        "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
+                        "runtime_validation_ref_str": "01_foundation/runtime_validation.jsonc"
+                      }
+                    },
+                    "domain_randomization_policy": {
+                      "enabled_bool": true,
+                      "contexts_map": {
+                        "train": {
+                          "noise_scale_multiplier_float": 1.0,
+                          "enable_fault_injection_bool": true
+                        },
+                        "eval": {
+                          "noise_scale_multiplier_float": 0.5,
+                          "enable_fault_injection_bool": false
+                        }
+                      }
+                    },
+                    "sensor_error_profiles_map": {
+                      "head_camera_main": {
+                        "type_enum": "CAMERA_RGBD",
+                        "noise_model_rgb_enum": "POISSON_GAUSSIAN",
+                        "parameters_rgb": {
+                          "noise_std_dev_float": 0.005,
+                          "rolling_shutter_enabled_bool": true,
+                          "motion_blur_shutter_s_float": 0.01
+                        },
+                        "noise_model_depth_enum": "GAUSSIAN",
+                        "parameters_depth": {
+                          "range_noise_m_float": 0.01,
+                          "ir_dropout_rate_pct_float": 0.15
+                        },
+                        "bias_systematic": {
+                          "thermal_drift_per_c_m_float": 0.0001
+                        },
+                        "fault_injection": {
+                          "permanent_failure_rate_per_hour_float": 1e-05,
+                          "temporary_glitch_rate_per_min_float": 0.01,
+                          "glitch_duration_s_float": 0.5
+                        },
+                        "randomization_bounds": {
+                          "noise_std_dev_float_range": [
+                            0.003,
+                            0.01
+                          ],
+                          "range_noise_m_float_range": [
+                            0.005,
+                            0.02
+                          ],
+                          "ir_dropout_rate_pct_float_range": [
+                            0.05,
+                            0.25
+                          ]
+                        }
+                      },
+                      "torso_imu": {
+                        "type_enum": "IMU_6DOF",
+                        "noise_model_gyro_enum": "WHITE_NOISE_RANDOM_WALK",
+                        "parameters_gyro": {
+                          "angular_rate_std_dev_rad_s_float": 0.005,
+                          "bias_random_walk_rad_s_sqrt_float": 0.0001
+                        },
+                        "parameters_accel": {
+                          "accel_std_dev_m_s2_float": 0.02,
+                          "bias_random_walk_m_s2_sqrt_float": 0.0005
+                        },
+                        "cross_modal_bias": {
+                          "motor_coupling_max_rad_s_float": 0.008,
+                          "coupling_source_str": "actuator_motor_noise_bus"
+                        },
+                        "randomization_bounds": {
+                          "angular_rate_std_dev_rad_s_range": [
+                            0.003,
+                            0.01
+                          ],
+                          "accel_std_dev_m_s2_range": [
+                            0.01,
+                            0.05
+                          ]
+                        }
+                      },
+                      "right_wrist_ft": {
+                        "type_enum": "FORCE_TORQUE_6DOF",
+                        "noise_model_enum": "QUANTIZATION_NOISE",
+                        "parameters": {
+                          "zero_offset_drift_n_per_c_float": 0.01,
+                          "quantization_bits_int": 16
+                        },
+                        "bias_systematic": {
+                          "pre_load_offset_n_float": 5.0,
+                          "pre_load_drift_per_c_float": 0.002
+                        },
+                        "randomization_bounds": {
+                          "pre_load_offset_n_float_range": [
+                            2.0,
+                            8.0
+                          ],
+                          "zero_offset_drift_n_per_c_range": [
+                            0.005,
+                            0.02
+                          ]
+                        }
+                      },
+                      "chest_lidar": {
+                        "type_enum": "LIDAR_2D_SOLID_STATE",
+                        "noise_model_enum": "UNIFORM_GAUSSIAN",
+                        "parameters": {
+                          "range_noise_m_float": 0.005,
+                          "max_range_error_threshold_m_float": 0.05,
+                          "max_angular_jitter_rad_float": 0.001
+                        },
+                        "performance_degradation": {
+                          "intensity_scaling_loss_pct_float": 0.1,
+                          "low_reflectivity_dropout_rate_pct_float": 0.25
+                        },
+                        "randomization_bounds": {
+                          "range_noise_m_float_range": [
+                            0.003,
+                            0.015
+                          ],
+                          "low_reflectivity_dropout_rate_pct_float_range": [
+                            0.15,
+                            0.35
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/sensor_health_monitor.jsonc",
+                  "id": "sensor_health_monitor",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "health_profile_id_str": "default_sensor_health_v1",
+                      "version_semver_str": "1.0.0",
+                      "last_updated_iso8601_str": "2025-11-23T19:00:00Z",
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "sensor_fidelity_ref_str": "01_foundation/sensor_fidelity.jsonc",
+                        "runtime_validation_ref_str": "01_foundation/runtime_validation.jsonc",
+                        "safety_critical_ref_str": "04_volition/safety_critical.jsonc"
+                      }
+                    },
+                    "health_state_definitions": {
+                      "HEALTHY": {
+                        "description_str": "Sensor operating within expected noise and bias bounds.",
+                        "allowed_for_control_bool": true,
+                        "allowed_for_mapping_bool": true
+                      },
+                      "DEGRADED": {
+                        "description_str": "Sensor data is noisy or biased but still usable with caution.",
+                        "allowed_for_control_bool": false,
+                        "allowed_for_mapping_bool": true
+                      },
+                      "FAILED": {
+                        "description_str": "Sensor is considered unreliable; its data MUST NOT be used.",
+                        "allowed_for_control_bool": false,
+                        "allowed_for_mapping_bool": false
+                      }
+                    },
+                    "sensor_health_policies_map": {
+                      "head_camera_main": {
+                        "sensor_type_enum": "CAMERA_RGBD",
+                        "basic_checks": {
+                          "no_data_timeout_s_float": 0.5,
+                          "max_nan_ratio_pct_float": 10.0,
+                          "hard_fault_nan_ratio_pct_float": 40.0
+                        },
+                        "consistency_checks": {
+                          "max_frame_drop_rate_pct_float": 20.0,
+                          "max_timestamp_jitter_ms_float": 30.0
+                        },
+                        "drift_checks": {
+                          "max_pose_drift_m_float": 0.01,
+                          "max_pose_drift_rad_float": 0.01,
+                          "max_brightness_shift_pct_float": 25.0
+                        },
+                        "health_transition_rules": {
+                          "to_degraded_conditions": [
+                            "no_data_timeout_s > 0.5",
+                            "nan_ratio_pct > max_nan_ratio_pct_float",
+                            "frame_drop_rate_pct > max_frame_drop_rate_pct_float"
+                          ],
+                          "to_failed_conditions": [
+                            "nan_ratio_pct > hard_fault_nan_ratio_pct_float",
+                            "camera_link_lost_bool == true"
+                          ]
+                        },
+                        "failover_policy": {
+                          "on_degraded_enum": "USE_SENSOR_WITH_WEIGHTED_CONFIDENCE",
+                          "on_failed_enum": "DISABLE_VISION_FOR_CONTROL_USE_FUSION_ONLY",
+                          "notify_channels_list_str": [
+                            "04_volition/ledger.jsonc",
+                            "06_ether/consensus_reality.jsonc"
+                          ]
+                        }
+                      },
+                      "torso_imu": {
+                        "sensor_type_enum": "IMU_6DOF",
+                        "basic_checks": {
+                          "no_data_timeout_s_float": 0.1,
+                          "max_nan_ratio_pct_float": 1.0
+                        },
+                        "consistency_checks": {
+                          "max_gyro_bias_rad_s_float": 0.05,
+                          "max_accel_bias_m_s2_float": 0.3,
+                          "max_variance_deviation_factor_float": 3.0
+                        },
+                        "health_transition_rules": {
+                          "to_degraded_conditions": [
+                            "variance_factor > max_variance_deviation_factor_float",
+                            "gyro_bias_rad_s > max_gyro_bias_rad_s_float"
+                          ],
+                          "to_failed_conditions": [
+                            "no_data_timeout_s > 0.1",
+                            "nan_ratio_pct > max_nan_ratio_pct_float * 5.0"
+                          ]
+                        },
+                        "failover_policy": {
+                          "on_degraded_enum": "FALLBACK_TO_FUSED_STATE_ESTIMATOR",
+                          "on_failed_enum": "ENTER_SAFE_BALANCE_MODE",
+                          "notify_channels_list_str": [
+                            "04_volition/safety_critical.jsonc"
+                          ]
+                        }
+                      },
+                      "right_wrist_ft": {
+                        "sensor_type_enum": "FORCE_TORQUE_6DOF",
+                        "basic_checks": {
+                          "no_data_timeout_s_float": 0.2,
+                          "max_nan_ratio_pct_float": 1.0
+                        },
+                        "consistency_checks": {
+                          "max_preload_offset_n_float": 10.0,
+                          "max_noise_std_dev_n_float": 5.0
+                        },
+                        "health_transition_rules": {
+                          "to_degraded_conditions": [
+                            "preload_offset_n > max_preload_offset_n_float",
+                            "noise_std_dev_n > max_noise_std_dev_n_float"
+                          ],
+                          "to_failed_conditions": [
+                            "no_data_timeout_s > 0.2",
+                            "nan_ratio_pct > max_nan_ratio_pct_float * 3.0"
+                          ]
+                        },
+                        "failover_policy": {
+                          "on_degraded_enum": "LIMIT_CONTACT_FORCE_AND_SLOW_MOTION",
+                          "on_failed_enum": "DISABLE_FORCE_CONTROL_USE_POSITION_ONLY",
+                          "notify_channels_list_str": [
+                            "04_volition/safety_critical.jsonc",
+                            "04_volition/ledger.jsonc"
+                          ]
+                        }
+                      },
+                      "chest_lidar": {
+                        "sensor_type_enum": "LIDAR_2D_SOLID_STATE",
+                        "basic_checks": {
+                          "no_data_timeout_s_float": 0.2,
+                          "max_nan_ratio_pct_float": 5.0
+                        },
+                        "consistency_checks": {
+                          "max_range_noise_m_float": 0.03,
+                          "min_effective_points_ratio_pct_float": 40.0
+                        },
+                        "health_transition_rules": {
+                          "to_degraded_conditions": [
+                            "range_noise_m > max_range_noise_m_float",
+                            "effective_points_ratio_pct < min_effective_points_ratio_pct_float"
+                          ],
+                          "to_failed_conditions": [
+                            "no_data_timeout_s > 0.2",
+                            "nan_ratio_pct > max_nan_ratio_pct_float * 4.0"
+                          ]
+                        },
+                        "failover_policy": {
+                          "on_degraded_enum": "REDUCE_SPEED_AND_INCREASE_CLEARANCE",
+                          "on_failed_enum": "STOP_LOCOMOTION_IF_NO_ALTERNATIVE_SENSORS",
+                          "notify_channels_list_str": [
+                            "06_ether/consensus_reality.jsonc"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/soft_body_dynamics.jsonc",
+                  "id": "soft_body_dynamics",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "profile_id_str": "bio_synthetic_v2",
+                      "version_semver_str": "1.1.0",
+                      "last_updated_iso8601_str": "2025-11-23T19:30:00Z",
+                      "solver_requirements_map": {
+                        "requires_soft_body_bool": true,
+                        "requires_fluid_sim_bool": true,
+                        "recommended_timestep_s_float": 0.0001,
+                        "recommended_substeps_int": 4,
+                        "target_solvers_list_enum": [
+                          "PHYSX_5_X",
+                          "ISAAC_SIM_4_X",
+                          "ISAAC_SIM_5_X",
+                          "MUJOCO_3_X_FEM"
+                        ]
+                      },
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "soft_materials_library_ref_str": "01_foundation/soft_materials_library.jsonc",
+                        "power_distribution_ref_str": "01_foundation/power_distribution.jsonc",
+                        "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc"
+                      }
+                    },
+                    "deformable_components_map": {
+                      "hand_gripper_pads_array": {
+                        "type_enum": "ACTIVE_RIGIDITY_PAD",
+                        "material_ref_str": "electro_jamming_polymer",
+                        "attachment_config": {
+                          "parent_link_ref_str": "hand_right_link",
+                          "contact_surface_tag_str": "fingerpads_array",
+                          "coverage_area_cm2_float": 25.0
+                        },
+                        "passive_response_model": {
+                          "youngs_modulus_soft_pa_float": 50000.0,
+                          "poisson_ratio_float": 0.49,
+                          "max_strain_pct_float": 80.0,
+                          "damping_coefficient_ns_m_float": 150.0
+                        },
+                        "active_control_model": {
+                          "rigidity_control_range_pa_vec2_float": [
+                            50000.0,
+                            5000000.0
+                          ],
+                          "control_signal_ref_str": "hand_pad_rigidity_command",
+                          "transition_time_ms_int": 20,
+                          "energy_cost_w_float": 8.0
+                        },
+                        "simulation_overrides": {
+                          "solver_hint_enum": "SOFT_BODY_PBD",
+                          "mesh_resolution_hint_enum": "MEDIUM",
+                          "enable_self_collision_bool": false,
+                          "contact_friction_multiplier_float": 1.5
+                        }
+                      },
+                      "chassis_protective_skin": {
+                        "type_enum": "SELF_HEALING_POLYMER",
+                        "material_ref_str": "self_healing_polymer",
+                        "coverage_config": {
+                          "covered_links_list_str": [
+                            "torso_base_link",
+                            "thigh_right_link",
+                            "thigh_left_link"
+                          ],
+                          "average_thickness_m_float": 0.003
+                        },
+                        "damage_model": {
+                          "damage_threshold_j_float": 5.0,
+                          "abrasion_sensitivity_enum": "MEDIUM",
+                          "max_cumulative_damage_j_float": 50.0
+                        },
+                        "healing_model": {
+                          "healing_rate_per_s_float": 0.0001,
+                          "requires_energy_input_w_float": 10.0,
+                          "repair_factor_thermal_dep_float": 1.5,
+                          "healing_activation_policy_enum": "TRIGGER_ON_DAMAGE_AND_IDLE"
+                        },
+                        "ledger_integration": {
+                          "energy_cost_credit_per_joule_float": 1.0,
+                          "log_healing_events_bool": true
+                        },
+                        "simulation_overrides": {
+                          "solver_hint_enum": "SURFACE_DEFORMATION_ONLY",
+                          "max_substeps_int": 2
+                        }
+                      },
+                      "bicep_hydro_actuator": {
+                        "type_enum": "PNEUMATIC_FLUIDIC_MUSCLE",
+                        "material_ref_str": "kevlar_reinforced_silicone",
+                        "simulation_method_enum": "FINITE_ELEMENT_METHOD",
+                        "mounting_config": {
+                          "parent_link_ref_str": "upper_arm_right_link",
+                          "child_link_ref_str": "forearm_right_link",
+                          "anchor_points_local_vec3_list": [
+                            [
+                              0.0,
+                              0.03,
+                              0.0
+                            ],
+                            [
+                              0.0,
+                              0.02,
+                              -0.18
+                            ]
+                          ],
+                          "rest_length_m_float": 0.22
+                        },
+                        "fluidic_params": {
+                          "fluid_pressure_limits_kpa_vec2_float": [
+                            0.0,
+                            300.0
+                          ],
+                          "volume_change_max_pct_float": 40.0,
+                          "nominal_response_time_ms_int": 50
+                        },
+                        "pressure_source_ref_str": "pump_unit_01",
+                        "control_channel_ref_str": "bicep_hydro_command",
+                        "safety_limits": {
+                          "max_safe_pressure_kpa_float": 280.0,
+                          "burst_risk_threshold_pct_float": 90.0,
+                          "max_duty_cycle_pct_float": 70.0
+                        },
+                        "simulation_overrides": {
+                          "solver_hint_enum": "FEM_COUPLED_WITH_RIGID",
+                          "max_solver_iterations_int": 25,
+                          "enable_internal_pressure_visualization_bool": true
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/soft_materials_library.jsonc",
+                  "id": "soft_materials_library",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "materials_library_id_str": "soft_materials_core_v1",
+                      "version_semver_str": "1.0.0",
+                      "last_updated_iso8601_str": "2025-11-23T19:15:00Z",
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "soft_body_dynamics_ref_str": "01_foundation/soft_body_dynamics.jsonc",
+                        "physics_solver_overrides_ref_str": "01_foundation/physics_solver_overrides.jsonc"
+                      }
+                    },
+                    "material_catalog_map": {
+                      "electro_jamming_polymer": {
+                        "class_enum": "ACTIVE_RIGIDITY_MEDIA",
+                        "short_description_str": "Granular / polymer matrix that stiffens under electric or vacuum stimulus.",
+                        "mechanical_properties": {
+                          "youngs_modulus_soft_pa_float": 50000.0,
+                          "youngs_modulus_stiff_pa_float": 5000000.0,
+                          "poisson_ratio_float": 0.49,
+                          "density_kg_m3_float": 1200.0
+                        },
+                        "control_channel_spec": {
+                          "activation_mode_enum": "ELECTRO_OR_VACUUM",
+                          "nominal_activation_voltage_v_float": 24.0,
+                          "activation_latency_ms_float": 15.0,
+                          "deactivation_latency_ms_float": 25.0
+                        },
+                        "thermal_properties": {
+                          "operating_temp_range_c_vec2_float": [
+                            -10.0,
+                            60.0
+                          ],
+                          "max_safe_temp_c_float": 70.0
+                        }
+                      },
+                      "self_healing_polymer": {
+                        "class_enum": "SELF_HEALING_SKIN",
+                        "short_description_str": "Elastomeric skin with microcapsule-based self-repair chemistry.",
+                        "mechanical_properties": {
+                          "youngs_modulus_pa_float": 1000000.0,
+                          "poisson_ratio_float": 0.48,
+                          "density_kg_m3_float": 1100.0,
+                          "max_strain_pct_float": 150.0
+                        },
+                        "healing_properties": {
+                          "baseline_healing_rate_per_s_float": 0.0001,
+                          "thermal_acceleration_factor_float": 1.5,
+                          "max_damage_energy_j_float": 10.0
+                        },
+                        "energy_cost_model": {
+                          "healing_power_draw_w_float": 10.0,
+                          "min_healing_temp_c_float": 5.0
+                        }
+                      },
+                      "kevlar_reinforced_silicone": {
+                        "class_enum": "SOFT_ACTUATION_ENVELOPE",
+                        "short_description_str": "Silicone matrix with Kevlar fibers for high-pressure fluidic muscles.",
+                        "mechanical_properties": {
+                          "youngs_modulus_pa_float": 3000000.0,
+                          "poisson_ratio_float": 0.47,
+                          "density_kg_m3_float": 1300.0,
+                          "burst_pressure_kpa_float": 500.0
+                        },
+                        "fluidic_compatibility": {
+                          "compatible_fluids_list_enum": [
+                            "AIR",
+                            "WATER_GLYCOL_MIX"
+                          ],
+                          "max_operating_pressure_kpa_float": 300.0,
+                          "recommended_safety_factor_float": 1.5
+                        },
+                        "thermal_properties": {
+                          "operating_temp_range_c_vec2_float": [
+                            -20.0,
+                            80.0
+                          ],
+                          "max_safe_temp_c_float": 90.0
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/surface_properties.jsonc",
+                  "id": "surface_properties",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "profile_id_str": "bhl_surfaces_hybrid_v1",
+                      "version_semver_str": "1.2.0",
+                      "last_updated_iso8601_str": "2025-11-25T15:00:00Z",
+                      "domain_id_str": "01_foundation",
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "safety_critical_ref_str": "02_operation/safety_critical.jsonc"
+                      }
+                    },
+                    "materials_catalog_map": {
+                      "silicone_rubber_shore_a40": {
+                        "description_str": "Soft grip pads for manipulation.",
+                        "physics_properties": {
+                          "static_friction_coeff_float": 1.0,
+                          "dynamic_friction_coeff_float": 0.8,
+                          "restitution_coeff_float": 0.0,
+                          "density_kg_m3_float": 1200.0
+                        },
+                        "semantic_properties": {
+                          "surface_type_enum": "ELASTOMER",
+                          "hardness_shore_a_int": 40,
+                          "thermal_conductivity_w_mk_float": 0.18,
+                          "hazard_level_enum": "SAFE_FOR_HUMAN_CONTACT"
+                        }
+                      },
+                      "carbon_fiber_composite": {
+                        "description_str": "Rigid structural outer shell.",
+                        "physics_properties": {
+                          "static_friction_coeff_float": 0.35,
+                          "dynamic_friction_coeff_float": 0.3,
+                          "restitution_coeff_float": 0.5,
+                          "density_kg_m3_float": 1600.0
+                        },
+                        "semantic_properties": {
+                          "surface_type_enum": "RIGID_COMPOSITE",
+                          "hardness_shore_d_int": 85,
+                          "fragility_enum": "ROBUST",
+                          "hazard_level_enum": "LOW_RISK"
+                        }
+                      },
+                      "machined_aluminum_6061": {
+                        "description_str": "Exposed structural metal elements.",
+                        "physics_properties": {
+                          "static_friction_coeff_float": 0.6,
+                          "dynamic_friction_coeff_float": 0.5,
+                          "restitution_coeff_float": 0.3,
+                          "density_kg_m3_float": 2700.0
+                        },
+                        "semantic_properties": {
+                          "surface_type_enum": "METAL",
+                          "thermal_conductivity_w_mk_float": 167.0,
+                          "hazard_level_enum": "CAUTION_BLUNT_IMPACT",
+                          "max_impact_energy_j_float": 50.0
+                        }
+                      }
+                    },
+                    "link_surface_binding_map": {
+                      "foot_right_link": "silicone_rubber_shore_a40",
+                      "foot_left_link": "silicone_rubber_shore_a40",
+                      "finger_pad_left": "silicone_rubber_shore_a40",
+                      "finger_pad_right": "silicone_rubber_shore_a40",
+                      "torso_base_link": "carbon_fiber_composite",
+                      "head_link": "carbon_fiber_composite",
+                      "thigh_right_link": "machined_aluminum_6061",
+                      "shin_right_link": "machined_aluminum_6061"
+                    },
+                    "domain_randomization_policy": {
+                      "enabled_bool": true,
+                      "parameter_ranges_map": {
+                        "global_friction_scale": {
+                          "description": "Simulates walking on different surfaces (ice vs carpet)",
+                          "range_multiplier_vec2_float": [
+                            0.5,
+                            1.5
+                          ]
+                        },
+                        "actuator_friction_noise": {
+                          "description": "Simulates dirty or degraded bearings",
+                          "additive_noise_std_dev_float": 0.05
+                        },
+                        "mass_estimation_error": {
+                          "description": "Simulates payload variations or calibration errors",
+                          "range_multiplier_vec2_float": [
+                            0.95,
+                            1.05
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "path": "spec/01_foundation/wear_fatigue_model.jsonc",
+                  "id": "wear_fatigue_model",
+                  "domain": "01_foundation",
+                  "content": {
+                    "meta_group": {
+                      "wear_model_profile_id_str": "mechanical_degradation_v1",
+                      "version_semver_str": "1.0.1",
+                      "last_validated_iso8601_str": "2025-11-23T20:00:00Z",
+                      "related_files_map": {
+                        "description_ref_str": "01_foundation/description.jsonc",
+                        "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
+                        "power_distribution_ref_str": "01_foundation/power_distribution.jsonc",
+                        "ledger_ref_str": "04_volition/ledger.jsonc",
+                        "immunology_ref_str": "04_volition/immunology.jsonc"
+                      }
+                    },
+                    "fatigue_models_map": {
+                      "actuator_tmotor_ak80": {
+                        "component_type_enum": "MOTOR_SERVO",
+                        "component_model_ref_str": "tmotor_ak80_9_v2",
+                        "lifespan_base_cycles_int": 5000000,
+                        "unit_of_wear_enum": "REVOLUTION_COUNT",
+                        "stress_penalty_model": {
+                          "model_type_enum": "RAINFLOW_COUNTING",
+                          "high_load_threshold_nm_float": 40.0,
+                          "high_load_multiplier_float": 3.0,
+                          "overload_cutoff_nm_float": 60.0,
+                          "severe_overload_multiplier_float": 10.0
+                        },
+                        "thermal_fatigue": {
+                          "temp_threshold_c_float": 90.0,
+                          "temp_impact_multiplier_float": 2.0,
+                          "catastrophic_temp_c_float": 120.0,
+                          "thermal_cycles_penalty_factor_float": 1.2
+                        },
+                        "friction_ageing_model": {
+                          "base_friction_increase_pct_over_life_float": 30.0,
+                          "backlash_increase_factor_over_life_float": 2.0
+                        },
+                        "failure_symptoms_list_str": [
+                          "increase_backlash_error",
+                          "spike_in_static_friction",
+                          "unexpected_noise_signature",
+                          "overtemp_events_frequency_increase"
+                        ]
+                      },
+                      "battery_main_pack": {
+                        "component_type_enum": "CHEMICAL_CELLS",
+                        "component_model_ref_str": "main_battery_pack_v1",
+                        "lifespan_base_cycles_int": 1000,
+                        "unit_of_wear_enum": "DISCHARGE_CYCLE_COUNT",
+                        "discharge_penalty_model": {
+                          "dod_below_10pct_multiplier_float": 2.5,
+                          "dod_above_90pct_multiplier_float": 1.5,
+                          "calendar_aging_factor_pct_per_year_float": 5.0
+                        },
+                        "thermal_penalty_model": {
+                          "high_temp_threshold_c_float": 45.0,
+                          "high_temp_multiplier_float": 1.8,
+                          "low_temp_threshold_c_float": 0.0,
+                          "low_temp_multiplier_float": 1.3
+                        },
+                        "performance_degradation_type_enum": "CAPACITY_LOSS",
+                        "end_of_life_criteria": {
+                          "remaining_capacity_pct_threshold_float": 70.0,
+                          "internal_resistance_increase_pct_threshold_float": 100.0
+                        }
+                      },
+                      "structural_bearings_hips": {
+                        "component_type_enum": "BEARING_JOINT",
+                        "lifespan_base_hours_float": 10000.0,
+                        "unit_of_wear_enum": "OPERATIONAL_HOURS",
+                        "load_penalty_model": {
+                          "nominal_load_nm_float": 40.0,
+                          "overload_factor_threshold_float": 1.5,
+                          "overload_multiplier_float": 2.0
+                        },
+                        "contamination_risk_enum": "MEDIUM",
+                        "recommended_replacement_policy_enum": "REPLACE_AT_80_PERCENT_LIFE"
+                      },
+                      "fasteners_main_chassis": {
+                        "component_type_enum": "FASTENER_JOINT",
+                        "inspection_interval_hours_int": 500,
+                        "max_reuse_cycles_int": 5,
+                        "unit_of_wear_enum": "MAINTENANCE_EVENTS",
+                        "criticality_level_enum": "SAFETY_CRITICAL",
+                        "inspection_symptoms_list_str": [
+                          "visible_looseness",
+                          "corrosion_spots",
+                          "elongated_holes_or_play"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

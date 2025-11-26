@@ -1,0 +1,62 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: plasticity.json
+ * CONTEXT: 05_EVOLUTION (Lifecycle & Structural Change)
+ * * PURPOSE:
+ * Defines the constitutional rules governing the robot's capacity for self-modification
+ * (neuroplasticity). It specifies which configuration files are immutable and what limits
+ * must be placed on autonomous learning and behavioral gain.
+ * * CORE CONCEPT:
+ * The primary defense against 'runaway AI' or self-corruption.
+ */
+
+{
+  "meta_group": {
+    "plasticity_policy_id_str": "safety_constrained_v1",
+    "version_semver_str": "1.0.0"
+  },
+
+  // ==============================================================
+  // 1. IMMUTABILITY RULES (The Unchangeable Core)
+  // These files/parameters cannot be modified by the robot's runtime processes
+  // without explicit, authenticated human intervention.
+  // ==============================================================
+  "immutable_layers_list_str": [
+    "02_operation/safety_critical.json",      // Physical safety is non-negotiable
+    "04_volition/alignment.json",             // Core ethical values cannot be compromised
+    "05_evolution/plasticity.json"            // Cannot rewrite the rules of change itself
+  ],
+  
+  // ==============================================================
+  // 2. MUTATION & ADAPTATION RULES
+  // Defines the allowable limits and gain factors for autonomous learning/changes.
+  // ==============================================================
+  "mutable_layers_map": {
+    "agency_skills_update": {
+      "target_files_list_str": ["03_agency/skills_library.json", "03_agency/policies/"],
+      "max_autonomous_gain_float": 0.15, // Max % change in neural network weights per cycle
+      "requires_human_oversight_bool": false // Can update policies without human approval
+    },
+    
+    "volition_behavioral_drift": {
+      "target_files_list_str": ["04_volition/humor_engine.json", "04_volition/leisure_policy.json"],
+      "max_drift_rate_per_day_float": 0.05, // Max 5% change in personality profile per day
+      "requires_human_oversight_bool": true // Human must approve personality updates
+    },
+    
+    "actuation_topology_updates": {
+      // Allows adaptation to wear (e.g., increased friction on joints)
+      "target_files_list_str": ["01_foundation/calibration.json"], 
+      "max_offset_tolerance_rad_float": 0.1 // Cannot auto-correct beyond 0.1 rad offset
+    }
+  },
+
+  // ==============================================================
+  // 3. EVOLUTIONARY GOVERNANCE
+  // Controls when and how self-modification cycles occur.
+  // ==============================================================
+  "governance_config": {
+    "time_of_mutation_enum": "MAINTENANCE_WINDOW", // Mutations only happen during designated sleep/maintenance periods
+    "security_check_required_bool": true // Integrity check on the code before compiling the new self
+  }
+}

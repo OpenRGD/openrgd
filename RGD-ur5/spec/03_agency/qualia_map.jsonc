@@ -1,0 +1,85 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: qualia_map.json
+ * CONTEXT: 03_AGENCY (Cognitive Capacity)
+ * * PURPOSE:
+ * Defines the functional psychological states (qualia) of the robot. This file translates
+ * complex internal metrics (e.g., prediction error, resource deficit) into simple,
+ * high-level 'lived experiences' (e.g., Anxiety, Flow, Boredom) for use in Volition and Narrative modules.
+ * * CORE PRINCIPLE:
+ * Provides a unified vocabulary for the robot's internal emotional/cognitive state.
+ */
+
+{
+  "meta_group": {
+    "qualia_model_id_str": "psychological_functional_v1",
+    "version_semver_str": "1.0.0",
+    "intensity_scale_map": { // Defines the global scale for state intensity
+      "min_float": 0.0,
+      "max_float": 1.0,
+      "default_unit_str": "normalized_intensity"
+    }
+  },
+
+  "experiential_states_list": [
+    
+    // ========================================================
+    // STATE A: ANXIETY (Driven by uncertainty and risk)
+    // ========================================================
+    {
+      "label_str": "anxiety",
+      "state_description_str": "A state of high cognitive load and uncertainty caused by prediction failures or external threats.",
+      "intensity_float": 0.0, // Runtime variable: updated live
+      
+      "trigger_rules_list": [
+        "03_agency/world_model:prediction_error > 0.7", // High error rate in predicting physics
+        "06_ether/reputation_graph:trust_score < 0.4",  // Social rejection/low trust
+        "04_volition/ledger:survival_threshold_breached_bool" // Economic stress (running out of money/battery)
+      ],
+      
+      "systemic_effects_map": {
+        "clock_speed_adjustment_float": 1.2, // Process faster to find a solution (panic processing)
+        "risk_tolerance_adjustment_float": -0.8, // Becomes very cautious (reduces risk margin)
+        "communication_style_ref_str": "social_identity.anxiety_protocol" // Activates anxiety voice tone
+      }
+    },
+    
+    // ========================================================
+    // STATE B: FLOW (Optimal engagement and success)
+    // ========================================================
+    {
+      "label_str": "flow",
+      "state_description_str": "A state of deep, effortless engagement in a task where skills match challenge.",
+      "intensity_float": 0.0,
+      
+      "trigger_rules_list": [
+        "03_agency/skills_library:execution_success_rate > 0.95",
+        "04_volition/aspirations:progress_velocity > 0.8" // Making rapid progress on long-term goals
+      ],
+      
+      "systemic_effects_map": {
+        "creativity_temperature_adjustment_float": 1.5, // Boost creativity (more novel solutions)
+        "energy_consumption_factor_float": 0.9, // Higher efficiency (less energy wasted)
+        "learning_gain_multiplier_float": 2.0 // Learns twice as fast in this state
+      }
+    },
+    
+    // ========================================================
+    // STATE C: BOREDOM (Driver for exploration)
+    // ========================================================
+    {
+      "label_str": "boredom",
+      "state_description_str": "A state of low cognitive load and absence of immediate critical tasks.",
+      "intensity_float": 0.0,
+      
+      "trigger_rules_list": [
+        "04_volition/leisure_policy:idle_time_min > 10.0" 
+      ],
+      
+      "systemic_effects_map": {
+        "exploration_drive_boost_float": 2.0, // Activates leisure policy immediately
+        "attention_focus_reduction_float": 0.5 // Allows mind-wandering
+      }
+    }
+  ]
+}

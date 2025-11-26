@@ -5,8 +5,80 @@
     <hardware>
       <plugin>odrive_can_controller/ODriveCANInterface</plugin>
     </hardware>
+    <joint name="leg_left_hip_yaw">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_left_ankle_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_right_hip_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_right_shoulder_roll">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_left_elbow_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_right_shoulder_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
     <joint name="knee_joint_right">
       <param name="can_id">12</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_right_hip_roll">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_left_hip_roll">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_right_knee_pitch">
+      <param name="can_id">0</param>
       <param name="bus">can0</param>
       <command_interface name="position"/>
       <state_interface name="position"/>
@@ -21,9 +93,65 @@
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
+    <joint name="leg_right_ankle_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_left_knee_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_left_hip_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
     <joint name="ankle_pitch_right">
       <param name="can_id">5</param>
       <param name="bus">/dev/ttyUSB0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_left_shoulder_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="leg_right_hip_yaw">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_left_shoulder_roll">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_right_elbow_pitch">
+      <param name="can_id">0</param>
+      <param name="bus">can0</param>
       <command_interface name="position"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>

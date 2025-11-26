@@ -1,0 +1,58 @@
+# ============================================================
+# OpenRGD Plugin Policy Configuration
+# ------------------------------------------------------------
+# This file defines which RGD plugins are allowed, blocked,
+# or unlisted for this environment.
+#
+# Plugin loading follows these rules:
+#
+#   mode = "allowlist"     → Only plugins listed in [plugins].allowed will load.
+#   mode = "blocklist"     → All plugins load except those listed in blocked.
+#   mode = "allow_all"     → Everything loads (development only).
+#
+# If `allow_unlisted_at_own_risk = true`, unlisted plugins
+# will load with a warning. Otherwise, they will be ignored.
+#
+# ============================================================
+
+[policy]
+mode = "allowlist"                    # allowlist | blocklist | allow_all
+allow_unlisted_at_own_risk = true     # Allow unlisted plugins with warnings?
+require_explicit_ack_for_unlisted = true
+strict_environment = false            # Set to true for production robots
+
+# ============================================================
+# Core Plugin Definitions
+# ------------------------------------------------------------
+# These plugins are part of the OpenRGD distribution and are
+# considered safe and stable by default.
+# ============================================================
+
+[core]
+# Mandatory built-in command groups
+commands = [
+    "spec",         # Compiler, unified spec tools
+    "integrity"     # Integrity checks and tamper detection
+]
+
+# ============================================================
+# User-Allowed Plugins
+# ------------------------------------------------------------
+# Add here the plugin names you want to allow explicitly.
+# Example: external packages installed via pip such as:
+#
+#   pip install rgd-timetravel
+#
+# ============================================================
+
+[plugins]
+allowed = [
+    "rgd-timetravel"    # Example external plugin: Time Travel engine
+]
+
+# You can predefine blocked plugins too (optional):
+blocked = [
+    # "rgd-nuclear-launch",   # Example of a forbidden plugin
+    # "rgd-delete-everything"
+]
+

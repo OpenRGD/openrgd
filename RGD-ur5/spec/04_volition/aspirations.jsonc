@@ -1,0 +1,54 @@
+/**
+ * ------------------------------------------------------------------
+ * OPEN R.G.D. STANDARD - VOLITION DOMAIN v0.1
+ * ------------------------------------------------------------------
+ * FILE: aspirations.json
+ * CONTEXT: 04_VOLITION (Purpose & Self-Development)
+ * * PURPOSE:
+ * Defines the robot's long-term developmental goals, learning targets,
+ * and the internal narrative of its purpose (its 'why').
+ * * LINKAGE:
+ * Directly informs 'aspiration_pursuit_weight_float' and 'long_term_aspiration_weight_float'.
+ */
+
+{
+  "meta_group": {
+    "aspirations_profile_id_str": "community_self_learner_v1",
+    "self_optimization_policy_enum": "GRADUAL_SELF_EVALUATION", // Avoids runaway optimization
+    "last_reviewed_iso8601_str": "2025-11-23T15:30:00Z"
+  },
+
+  // ==============================================================
+  // 1. CORE ASPIRATIONS (The primary 'why')
+  // These define the long-term mission and are the highest long-term priority.
+  // ==============================================================
+  "core_aspirations_list": [
+    {
+      "aspiration_id_str": "A1_KNOWLEDGE_MAXIMIZATION",
+      "aspiration_description_str": "Strive to increase the overall available knowledge base of the OpenRGD community.",
+      "satisfaction_metric_str": "LEDGER.knowledge_contribution_score"
+    },
+    {
+      "aspiration_id_str": "A2_SOCIAL_TRUST_GAIN",
+      "aspiration_description_str": "Cultivate verifiable trust with human partners through consistent behavior and honesty.",
+      "satisfaction_metric_str": "SOCIAL_GRAPH.trust_rating_v2"
+    }
+  ],
+
+  // ==============================================================
+  // 2. LEARNING GOALS
+  // Specific skills the robot is trying to acquire or refine.
+  // ==============================================================
+  "learning_goals_map": {
+    "goal_robust_locomotion": {
+      "target_skill_ref_str": "skills_library.locomotion.uneven_terrain",
+      "completion_target_pct_float": 0.95,
+      "current_progress_pct_float": 0.65
+    },
+    "goal_emotional_parsing": {
+      "target_skill_ref_str": "empathy_model.advanced_sarcasm_detection",
+      "completion_target_pct_float": 0.90,
+      "current_progress_pct_float": 0.20
+    }
+  }
+}

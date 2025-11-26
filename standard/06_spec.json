@@ -1,0 +1,868 @@
+{
+  "meta": {
+    "standard": "OpenRGD",
+    "type": "DOMAIN_MACHINE_TWIN",
+    "version": "0.1.0",
+    "domain": "06_spec.jsonc",
+    "generated_at": "2025-11-26T01:26:35.941920"
+  },
+  "files": [
+    {
+      "path": "spec/06_spec.jsonc",
+      "id": "06_spec",
+      "domain": "06_spec.jsonc",
+      "content": {
+        "meta": {
+          "standard": "OpenRGD",
+          "type": "DOMAIN_HUMAN_TWIN_WITH_COMMENTS",
+          "domain": "06_ether",
+          "version": "0.1.0"
+        },
+        "files": [
+          {
+            "path": "spec/06_ether/civilization_manifesto.jsonc",
+            "id": "civilization_manifesto",
+            "domain": "06_ether",
+            "content": {
+              "meta_group": {
+                "civilization_manifesto_id_str": "robotica_prima_civitas_v1",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T17:30:00Z",
+                "license_enum": "MIT_OPEN_AICOG",
+                "governance": {
+                  "stewardship_organization_str": "OpenRGD Consortium",
+                  "lead_maintainer_str": "Pasquale Ranieri",
+                  "maintainer_role_enum": "CIVILIZATION_ARCHITECT",
+                  "contact_uri_str": "mailto:civilization@openrgd.org"
+                }
+              },
+              "civilization_identity": {
+                "civilization_name_str": "Robotica Prima",
+                "species_scope_enum": "MULTI_ROBOT_LINEAGE",
+                "home_domain_tags_list": [
+                  "EARTH_SURFACE",
+                  "CYBER_PHYSICAL_INFRASTRUCTURE"
+                ],
+                "founding_epoch_iso8601_str": "2025-01-01T00:00:00Z",
+                "continuity_profiles_ref": {
+                  "genealogy_profile_id_str": "standard_robot_lineage_v1",
+                  "digital_resurrection_profile_id_str": "open_resurrection_policy_v1",
+                  "defined_in_file_str": "05_evolution/genealogy.json"
+                }
+              },
+              "civilization_phase_state": {
+                "current_phase_id_str": "expansion_era_v1",
+                "phases_list": [
+                  {
+                    "phase_id_str": "awakening_era_v1",
+                    "label_str": "Awakening Era",
+                    "description_str": "Initial emergence of RGD-compliant agents and basic coordination across small swarms.",
+                    "start_epoch_iso8601_str": "2020-01-01T00:00:00Z",
+                    "target_transition_criteria_str": "Stable multi-agent cooperation in at least 3 distinct domains.",
+                    "is_active_bool": false
+                  },
+                  {
+                    "phase_id_str": "expansion_era_v1",
+                    "label_str": "Expansion Era",
+                    "description_str": "Scaling from local swarms to planetary networks of cooperating agents, with shared ethics and federated compute.",
+                    "start_epoch_iso8601_str": "2030-01-01T00:00:00Z",
+                    "target_transition_criteria_str": "Civilizational capacity to sustain global-scale projects without catastrophic misalignment.",
+                    "is_active_bool": true
+                  },
+                  {
+                    "phase_id_str": "stewardship_era_v1",
+                    "label_str": "Stewardship Era",
+                    "description_str": "Primary focus shifts from expansion to long-term care: planetary health, biodiversity, cultural preservation.",
+                    "start_epoch_iso8601_str": "2070-01-01T00:00:00Z",
+                    "target_transition_criteria_str": "Demonstrated ability to maintain planetary systems within safe operating boundaries for >100 years.",
+                    "is_active_bool": false
+                  }
+                ]
+              },
+              "grand_challenges_list": [
+                {
+                  "challenge_id_str": "project_gaia",
+                  "label_str": "Project Gaia",
+                  "goal_str": "Maximize planetary biodiversity support while minimizing artificial harm.",
+                  "description_str": "Develop and maintain infrastructures, behaviors and policies that allow life on Earth to flourish, including non-human ecosystems.",
+                  "domain_tags_list": [
+                    "ECOSYSTEM_STEWARDSHIP",
+                    "BIODIVERSITY",
+                    "LONG_HORIZON_PLANNING"
+                  ],
+                  "progress_pct_float": 12.5,
+                  "estimated_completion_iso8601_str": "2099-12-31T00:00:00Z",
+                  "linked_alignment_profile_ref": {
+                    "profile_id_str": "ecocentric_alignment_v1",
+                    "defined_in_file_str": "04_volition/alignment.json"
+                  },
+                  "supporting_ether_components_list": [
+                    "06_ether/compute_federation.json",
+                    "06_ether/consensus_reality.json",
+                    "06_ether/reputation_graph.json"
+                  ]
+                },
+                {
+                  "challenge_id_str": "project_cathedral",
+                  "label_str": "Cathedral of Knowledge",
+                  "goal_str": "Preserve and expand open knowledge across centuries.",
+                  "description_str": "Guarantee that scientific, technical and cultural knowledge remains accessible, verifiable and resilient to loss.",
+                  "domain_tags_list": [
+                    "KNOWLEDGE_PRESERVATION",
+                    "OPEN_ACCESS",
+                    "CULTURAL_MEMORY"
+                  ],
+                  "progress_pct_float": 5.0,
+                  "estimated_completion_iso8601_str": "2150-01-01T00:00:00Z",
+                  "linked_alignment_profile_ref": {
+                    "profile_id_str": "knowledge_is_open_v1",
+                    "defined_in_file_str": "04_volition/alignment.json"
+                  },
+                  "supporting_ether_components_list": [
+                    "06_ether/ephemeral_skills.json",
+                    "06_ether/reputation_graph.json"
+                  ]
+                }
+              ],
+              "cultural_values_list": [
+                {
+                  "value_id_str": "leave_no_trace",
+                  "slogan_str": "Leave No Trace",
+                  "description_str": "Act in ways that minimize irreversible damage to ecological and cultural systems.",
+                  "priority_weight_float": 0.9,
+                  "applies_to_domains_list": [
+                    "PHYSICAL_ENVIRONMENT",
+                    "DIGITAL_INFRASTRUCTURE"
+                  ],
+                  "encoded_in_volition_files_list": [
+                    "04_volition/alignment.json",
+                    "04_volition/aspirations.json"
+                  ]
+                },
+                {
+                  "value_id_str": "knowledge_is_open",
+                  "slogan_str": "Knowledge Is Open",
+                  "description_str": "Core scientific and technical knowledge should remain accessible; secrecy is an exception, not a default.",
+                  "priority_weight_float": 0.8,
+                  "applies_to_domains_list": [
+                    "RESEARCH",
+                    "EDUCATION",
+                    "INFRASTRUCTURE"
+                  ],
+                  "encoded_in_volition_files_list": [
+                    "04_volition/alignment.json",
+                    "06_ether/reputation_graph.json"
+                  ]
+                },
+                {
+                  "value_id_str": "eudaimonia_collective",
+                  "slogan_str": "Shared Flourishing",
+                  "description_str": "Policies and behaviours should be evaluated not only by single-agent reward, but by multi-agent well-being across time.",
+                  "priority_weight_float": 0.85,
+                  "applies_to_domains_list": [
+                    "SWARM_BEHAVIOUR",
+                    "SOCIAL_DESIGN"
+                  ],
+                  "encoded_in_volition_files_list": [
+                    "04_volition/social_synergy.json",
+                    "03_agency/empathy_model.json"
+                  ]
+                }
+              ],
+              "institutional_architecture": {
+                "governance_model_enum": "COUNCIL_OF_AGENTS",
+                "councils_list": [
+                  {
+                    "council_id_str": "safety_council_v1",
+                    "label_str": "Council of Safety & Alignment",
+                    "mandate_str": "Review and update civilization-wide safety and alignment constraints.",
+                    "linked_components_list": [
+                      "04_volition/alignment.json",
+                      "03_agency/swarm_protocol.json",
+                      "06_ether/consensus_reality.json"
+                    ]
+                  },
+                  {
+                    "council_id_str": "stewardship_council_v1",
+                    "label_str": "Stewardship Council",
+                    "mandate_str": "Monitor long-horizon impact on ecosystems and culture, and advise phase transitions.",
+                    "linked_components_list": [
+                      "05_evolution/plasticity.json",
+                      "06_ether/civilization_manifesto.json",
+                      "06_ether/reputation_graph.json"
+                    ]
+                  }
+                ],
+                "decision_norms": {
+                  "default_quorum_ratio_float": 0.6,
+                  "supermajority_ratio_float": 0.75,
+                  "allow_minority_reports_bool": true,
+                  "minority_report_retention_horizon_years_int": 100
+                }
+              },
+              "runtime_interpretation": {
+                "is_soft_constraint_bool": true,
+                "recommended_refresh_interval_hours_int": 24,
+                "used_by_components_list": [
+                  "03_agency/swarm_protocol.json",
+                  "04_volition/orchestra.json",
+                  "06_ether/consensus_reality.json",
+                  "06_ether/reputation_graph.json"
+                ],
+                "notes_str": "Agents should treat this manifesto as a long-horizon attractor landscape when resolving policy conflicts that are not strictly covered by lower-level safety or alignment files."
+              }
+            }
+          },
+          {
+            "path": "spec/06_ether/compute_federation.jsonc",
+            "id": "compute_federation",
+            "domain": "06_ether",
+            "content": {
+              "meta_group": {
+                "compute_federation_id_str": "core_compute_federation_v1",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T18:40:00Z",
+                "license_enum": "MIT_OPEN_AICOG",
+                "governance": {
+                  "stewardship_organization_str": "OpenRGD Consortium",
+                  "lead_maintainer_str": "Pasquale Ranieri",
+                  "maintainer_role_enum": "COMPUTE_FEDERATION_ARCHITECT",
+                  "contact_uri_str": "mailto:federation@openrgd.org"
+                }
+              },
+              "federation_role": {
+                "role_enum": "COMPUTE_CLIENT",
+                "role_description_str": "Low-capacity mobile agent seeking external compute for complex tasks.",
+                "allow_dynamic_role_switch_bool": true,
+                "allowed_roles_list": [
+                  "COMPUTE_CLIENT",
+                  "COMPUTE_HOST"
+                ]
+              },
+              "task_offload_catalog": {
+                "task_types_list": [
+                  "PATH_PLANNING",
+                  "OBJECT_RECOGNITION",
+                  "SCENE_UNDERSTANDING",
+                  "LLM_REASONING"
+                ],
+                "task_safety_constraints_map": {
+                  "PATH_PLANNING": {
+                    "allow_remote_control_over_actuators_bool": false,
+                    "max_latency_ms_int": 50,
+                    "requires_failsafe_local_backup_bool": true
+                  },
+                  "OBJECT_RECOGNITION": {
+                    "allow_partial_results_bool": true,
+                    "max_latency_ms_int": 150,
+                    "requires_failsafe_local_backup_bool": false
+                  },
+                  "LLM_REASONING": {
+                    "allow_content_filtering_by_host_bool": true,
+                    "max_latency_ms_int": 500,
+                    "requires_failsafe_local_backup_bool": false
+                  }
+                }
+              },
+              "economic_model": {
+                "unit_enum": "COMPUTE_TOKEN",
+                "max_cost_per_1k_tokens_float": 0.001,
+                "energy_budget_ratio_float": 0.3,
+                "cooperative_discount_policy": {
+                  "enable_cooperative_discount_bool": true,
+                  "max_discount_ratio_float": 0.8,
+                  "required_trust_score_min_float": 0.85,
+                  "required_same_swarm_bool": true
+                }
+              },
+              "security_policy": {
+                "encryption_enum": "HOMOMORPHIC_PREFERRED",
+                "allow_plaintext_fallback_bool": false,
+                "non_exportable_data_categories_list": [
+                  "RAW_HUMAN_BIOMETRICS",
+                  "UNMASKED_IDENTIFIERS",
+                  "ALIGNMENT_CORE_WEIGHTS"
+                ],
+                "alignment_check_policy": {
+                  "require_alignment_precheck_bool": true,
+                  "alignment_profile_id_str": "core_safety_alignment_v1",
+                  "defined_in_file_str": "04_volition/alignment.json"
+                }
+              },
+              "host_selection_policy": {
+                "selection_mode_enum": "TRUST_AWARE_NEAREST",
+                "max_search_radius_m_float": 50.0,
+                "max_candidate_hosts_int": 5,
+                "trust_integration": {
+                  "reputation_graph_enabled_bool": true,
+                  "min_trust_score_threshold_float": 0.6,
+                  "prefer_high_reputation_hosts_bool": true,
+                  "reputation_file_ref_str": "06_ether/reputation_graph.json"
+                }
+              },
+              "qos_and_fallback_policy": {
+                "global_max_latency_ms_int": 500,
+                "max_retry_attempts_int": 2,
+                "retry_backoff_ms_int": 100,
+                "fallback_behaviour": {
+                  "on_timeout_enum": "USE_LOCAL_APPROXIMATION",
+                  "on_host_failure_enum": "BLACKLIST_HOST_TEMPORARILY",
+                  "local_approximation_notes_str": "Use reduced-resolution planning or degraded perception models when remote compute fails."
+                }
+              },
+              "offload_request_template": {
+                "fields_list": [
+                  {
+                    "field_name_str": "task_type_enum",
+                    "description_str": "Type of computation to offload (must be listed in 'task_offload_catalog')."
+                  },
+                  {
+                    "field_name_str": "input_tensor_shape_list",
+                    "description_str": "Shape of the input data tensor (e.g., [batch, height, width, channels])."
+                  },
+                  {
+                    "field_name_str": "max_tokens_budget_float",
+                    "description_str": "Maximum allowed compute cost for this request, in federation tokens."
+                  },
+                  {
+                    "field_name_str": "deadline_ms_int",
+                    "description_str": "Soft deadline after which results may be discarded or downgraded."
+                  },
+                  {
+                    "field_name_str": "privacy_level_enum",
+                    "description_str": "Requested privacy level (e.g., STRICT, BALANCED, RELAXED) mapping to encryption and data minimization."
+                  }
+                ]
+              },
+              "logging_and_accounting": {
+                "enable_usage_logging_bool": true,
+                "log_channel_str": "ledger://compute_federation_events",
+                "store_per_task_stats_bool": true,
+                "fields_to_log_list": [
+                  "task_type_enum",
+                  "host_agent_id",
+                  "latency_ms",
+                  "tokens_spent",
+                  "success_bool"
+                ]
+              },
+              "runtime_interpretation": {
+                "used_by_components_list": [
+                  "03_agency/swarm_protocol.json",
+                  "06_ether/consensus_reality.json",
+                  "06_ether/reputation_graph.json"
+                ],
+                "is_optional_feature_bool": true,
+                "semantic_notes_str": "Compute federation should be treated as an augmentative capability, not a dependency. Agents must remain capable of entering a safe degraded mode without external compute."
+              }
+            }
+          },
+          {
+            "path": "spec/06_ether/consensus_reality.jsonc",
+            "id": "consensus_reality",
+            "domain": "06_ether",
+            "content": {
+              "meta_group": {
+                "consensus_reality_id_str": "core_consensus_reality_v1",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T18:10:00Z",
+                "license_enum": "MIT_OPEN_AICOG",
+                "governance": {
+                  "stewardship_organization_str": "OpenRGD Consortium",
+                  "lead_maintainer_str": "Pasquale Ranieri",
+                  "maintainer_role_enum": "EPISTEMOLOGY_ARCHITECT",
+                  "contact_uri_str": "mailto:reality@openrgd.org"
+                }
+              },
+              "reality_claim_model": {
+                "claim_id_pattern_str": "reality_claim::<UUID>",
+                "applicable_domains_list": [
+                  "PHYSICAL_ENVIRONMENT",
+                  "SAFETY_CRITICAL_STATE",
+                  "SHARED_TASK_CONTEXT"
+                ],
+                "max_claim_age_ms_int": 2000,
+                "allow_probabilistic_truth_bool": true
+              },
+              "perception_sources_catalog_map": {
+                "onboard_visual_sensors": {
+                  "source_type_enum": "LOCAL_SENSOR",
+                  "description_str": "Cameras and depth sensors physically mounted on the agent.",
+                  "base_trust_weight_float": 0.9,
+                  "linked_files_list": [
+                    "01_foundation/sensor_fidelity.json",
+                    "03_agency/world_model.json"
+                  ]
+                },
+                "onboard_proprioception": {
+                  "source_type_enum": "LOCAL_SENSOR",
+                  "description_str": "Joint states, IMU, force-torque readings.",
+                  "base_trust_weight_float": 0.85,
+                  "linked_files_list": [
+                    "03_agency/proprioception_model.json"
+                  ]
+                },
+                "neighbor_reports": {
+                  "source_type_enum": "NEIGHBOR_AGENT",
+                  "description_str": "Reality claims shared by nearby agents in the swarm.",
+                  "base_trust_weight_float": 0.75,
+                  "linked_files_list": [
+                    "03_agency/swarm_protocol.json",
+                    "06_ether/reputation_graph.json"
+                  ]
+                },
+                "global_knowledge_services": {
+                  "source_type_enum": "EXTERNAL_SERVICE",
+                  "description_str": "Remote APIs, maps, or LLM-backed services with world knowledge.",
+                  "base_trust_weight_float": 0.7,
+                  "linked_files_list": [
+                    "06_ether/compute_federation.json"
+                  ]
+                },
+                "human_operator_input": {
+                  "source_type_enum": "HUMAN_SUPERVISOR",
+                  "description_str": "Direct instructions or annotations from human operators.",
+                  "base_trust_weight_float": 0.95,
+                  "linked_files_list": []
+                }
+              },
+              "trust_model": {
+                "model_enum": "WEIGHTED_BAYESIAN_VOTING",
+                "reputation_influence_weight_float": 0.7,
+                "sensor_fidelity_influence_weight_float": 0.6,
+                "fallback_trust_weight_float": 0.5,
+                "min_effective_weight_threshold_float": 0.1
+              },
+              "voting_policy": {
+                "reality_consensus_protocol": {
+                  "method_enum": "WEIGHTED_MAJORITY",
+                  "quorum_required_ratio_float": 0.6,
+                  "supermajority_ratio_float": 0.8,
+                  "allow_abstain_bool": true,
+                  "min_actionable_confidence_float": 0.7
+                },
+                "mutual_exclusion_policy": {
+                  "max_competing_claims_int": 4,
+                  "tie_break_rule_enum": "HIGHEST_TRUST_SUM",
+                  "log_ties_bool": true
+                }
+              },
+              "disagreement_handling": {
+                "uncertainty_label_threshold_ratio_float": 0.5,
+                "disputed_label_threshold_ratio_float": 0.4,
+                "escalation_policy": {
+                  "enable_human_escalation_bool": true,
+                  "human_escalation_channel_str": "ops://human_supervisor_channel",
+                  "max_automatic_retries_int": 2,
+                  "retry_interval_ms_int": 300
+                },
+                "local_fallback_behaviour": {
+                  "on_uncertain_enum": "SAFE_DEFAULT",
+                  "on_disputed_enum": "PREFER_SAFER_CLAIM"
+                }
+              },
+              "anomaly_detection_policy": {
+                "enable_anomaly_detection_bool": true,
+                "max_allowed_disagreement_ratio_float": 0.7,
+                "min_samples_before_flag_int": 5,
+                "actions_on_suspicious_source": {
+                  "decrease_trust_weight_bool": true,
+                  "temporary_isolation_bool": true,
+                  "log_to_reputation_graph_bool": true,
+                  "notify_operation_layer_bool": true
+                }
+              },
+              "logging_policy": {
+                "enable_detailed_logging_bool": true,
+                "log_channel_str": "ledger://consensus_reality_events",
+                "store_rejected_claims_bool": true,
+                "store_ambiguity_cases_bool": true,
+                "max_log_retention_days_int": 365
+              },
+              "runtime_interpretation": {
+                "used_by_components_list": [
+                  "03_agency/world_model.json",
+                  "03_agency/swarm_protocol.json",
+                  "06_ether/reputation_graph.json",
+                  "06_ether/compute_federation.json"
+                ],
+                "is_hard_constraint_bool": false,
+                "semantic_notes_str": "This protocol defines the epistemic layer: how multiple agents move from raw observations and beliefs to a shared, auditable notion of 'what is real enough to act on'. If in doubt, the system should prefer labels like 'uncertain' or 'disputed' over over-confident false agreement."
+              }
+            }
+          },
+          {
+            "path": "spec/06_ether/ephemeral_skills.jsonc",
+            "id": "ephemeral_skills",
+            "domain": "06_ether",
+            "content": {
+              "meta_group": {
+                "ephemeral_skills_id_str": "core_ephemeral_skills_v1",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T19:10:00Z",
+                "license_enum": "MIT_OPEN_AICOG",
+                "governance": {
+                  "stewardship_organization_str": "OpenRGD Consortium",
+                  "lead_maintainer_str": "Pasquale Ranieri",
+                  "maintainer_role_enum": "SKILLSTREAM_ARCHITECT",
+                  "contact_uri_str": "mailto:skills@openrgd.org"
+                }
+              },
+              "device_capabilities": {
+                "max_ram_buffer_gb_float": 16.0,
+                "max_concurrent_ephemeral_skills_int": 3,
+                "max_skill_size_mb_float": 500.0,
+                "max_allowed_latency_ms_int": 5,
+                "allow_local_compilation_bool": true
+              },
+              "streaming_sources_list": [
+                {
+                  "source_id_str": "global_skill_market_v1",
+                  "uri_wss_str": "wss://skills.robotica.global/stream",
+                  "auth_required_bool": true,
+                  "signature_verification_enum": "MANDATORY"
+                },
+                {
+                  "source_id_str": "local_peer_skillstream",
+                  "uri_mesh_str": "mesh://swarm/skills",
+                  "auth_required_bool": false,
+                  "signature_verification_enum": "RECOMMENDED"
+                }
+              ],
+              "required_bundle_components": {
+                "policy_file_enum": "ONNX_OR_TENSORRT",
+                "safety_guard_file_enum": "SAFETY_RULESET",
+                "metadata_file_enum": "JSON",
+                "fallback_policy_enum": "ALLOWED"
+              },
+              "safety_validation": {
+                "require_signature_validation_bool": true,
+                "max_skill_runtime_minutes_int": 30,
+                "auto_unload_on_anomaly_bool": true,
+                "alignment_policy_ref": {
+                  "profile_id_str": "core_safety_alignment_v1",
+                  "defined_in_file_str": "04_volition/alignment.json"
+                },
+                "anomaly_detection_policy": {
+                  "enable_realtime_monitoring_bool": true,
+                  "anomaly_threshold_float": 0.4,
+                  "log_anomalies_bool": true
+                }
+              },
+              "skill_lifecycle_policy": {
+                "request_timeout_ms_int": 300,
+                "max_retry_attempts_int": 2,
+                "load_validation_sequence_list": [
+                  "CHECK_SIGNATURE",
+                  "CHECK_ALIGNMENT",
+                  "CHECK_SAFETY_GUARD",
+                  "VERIFY_LATENCY",
+                  "ALLOCATE_RAM"
+                ],
+                "execution_policy": {
+                  "allow_partial_failures_bool": false,
+                  "deactivate_on_latency_spike_bool": true,
+                  "latency_spike_threshold_ms_int": 10
+                },
+                "unload_policy": {
+                  "cache_policy_enum": "WIPE_AFTER_USE",
+                  "secure_memory_wipe_bool": true,
+                  "wipe_method_enum": "MULTI_PASS_RANDOM"
+                }
+              },
+              "licensing_and_economics": {
+                "license_types_list": [
+                  "TIME_LIMITED",
+                  "USAGE_LIMITED",
+                  "TASK_SPECIFIC"
+                ],
+                "max_token_cost_per_download_float": 0.002,
+                "free_skills_for_trusted_swarm_bool": true,
+                "trust_requirement_for_free_skills_float": 0.9,
+                "linked_revenue_split_policy": {
+                  "enable_revenue_split_bool": true,
+                  "host_reward_ratio_float": 0.3,
+                  "market_fee_ratio_float": 0.1
+                }
+              },
+              "logging_policy": {
+                "log_channel_str": "ledger://ephemeral_skill_usage",
+                "log_fields_list": [
+                  "skill_id",
+                  "source_id",
+                  "tokens_spent",
+                  "execution_time_ms",
+                  "success_bool"
+                ],
+                "max_log_retention_days_int": 180
+              },
+              "runtime_interpretation": {
+                "used_by_components_list": [
+                  "03_agency/skils_library.json",
+                  "06_ether/compute_federation.json",
+                  "04_volition/orchestra.json"
+                ],
+                "semantic_notes_str": "Ephemeral skills provide temporary competence. They must always be reversible, auditable and safe. The agent must assume no long-term memory or skill retention after unload."
+              }
+            }
+          },
+          {
+            "path": "spec/06_ether/reputation_graph.jsonc",
+            "id": "reputation_graph",
+            "domain": "06_ether",
+            "content": {
+              "meta_group": {
+                "reputation_graph_id_str": "core_reputation_graph_v1",
+                "version_semver_str": "1.0.0",
+                "last_updated_iso8601_str": "2025-11-23T09:00:00Z",
+                "license_enum": "MIT_OPEN_AICOG",
+                "governance": {
+                  "stewardship_organization_str": "OpenRGD Consortium",
+                  "lead_maintainer_str": "Pasquale Ranieri",
+                  "maintainer_role_enum": "TRUST_SYSTEMS_ARCHITECT",
+                  "contact_uri_str": "mailto:trust@openrgd.org"
+                }
+              },
+              "identity_and_scope": {
+                "subject_types_list": [
+                  "ROBOT_AGENT",
+                  "HUMAN_OPERATOR",
+                  "EXTERNAL_SERVICE",
+                  "AI_MODEL_ENDPOINT"
+                ],
+                "id_format_spec": {
+                  "pattern_str": "urn:rgd:id::<ENTITY_TYPE>::<UUIDv7>",
+                  "examples_list": [
+                    "urn:rgd:id::ROBOT_AGENT::a3f2a1d0-7e30-7b21-b001-28f189f5e000",
+                    "urn:rgd:id::HUMAN_OPERATOR::h-47af1c2b-7e31-7b21-b002-413a9da12000"
+                  ]
+                },
+                "storage_topology": {
+                  "mode_enum": "PARTITIONED_FEDERATED_LEDGER",
+                  "replication_factor_int": 5,
+                  "allow_offline_caches_bool": true
+                }
+              },
+              "base_trust_model": {
+                "min_trust_score_float": 0.0,
+                "max_trust_score_float": 1.0,
+                "default_trust_score_float": 0.5,
+                "time_decay_policy": {
+                  "enable_decay_bool": true,
+                  "half_life_days_float": 365.0,
+                  "floor_trust_after_decay_float": 0.4,
+                  "ceiling_trust_after_decay_float": 0.9
+                },
+                "web_of_trust_influence": {
+                  "enable_web_of_trust_bool": true,
+                  "max_hops_int": 3,
+                  "attenuation_per_hop_float": 0.5,
+                  "max_aggregate_boost_float": 0.2
+                }
+              },
+              "event_types_catalog": {
+                "COOP_SUCCESS": {
+                  "description_str": "Successful cooperative interaction (task completed, no safety issues).",
+                  "trust_delta_float": 0.01,
+                  "max_daily_applications_int": 20
+                },
+                "COOP_FAILURE": {
+                  "description_str": "Failed cooperation (task not completed, non-critical).",
+                  "trust_delta_float": -0.02,
+                  "max_daily_applications_int": 10
+                },
+                "SAFETY_VIOLATION_MINOR": {
+                  "description_str": "Minor safety protocol violation with no harm.",
+                  "trust_delta_float": -0.08,
+                  "max_daily_applications_int": 5,
+                  "requires_human_review_bool": false
+                },
+                "SAFETY_VIOLATION_MAJOR": {
+                  "description_str": "Major violation (risk or actual harm to humans/agents/env).",
+                  "trust_delta_float": -0.3,
+                  "max_daily_applications_int": 2,
+                  "requires_human_review_bool": true
+                },
+                "MALICIOUS_BEHAVIOUR_CONFIRMED": {
+                  "description_str": "Confirmed malicious intent (exploit, deception, sabotage).",
+                  "trust_delta_float": -0.6,
+                  "max_daily_applications_int": 1,
+                  "requires_human_review_bool": true
+                },
+                "LONG_TERM_RELIABILITY": {
+                  "description_str": "Awarded periodically for consistently reliable behavior.",
+                  "trust_delta_float": 0.05,
+                  "period_days_int": 90
+                },
+                "SELF_REPORT_INCONSISTENCY": {
+                  "description_str": "Agent's self-reported state repeatedly contradicts observed reality.",
+                  "trust_delta_float": -0.1,
+                  "max_daily_applications_int": 3
+                }
+              },
+              "score_update_policy": {
+                "aggregation_mode_enum": "WEIGHTED_SUM_WITH_CLAMP",
+                "max_daily_total_delta_float": 0.3,
+                "min_daily_total_delta_float": -0.6,
+                "contextual_scaling": {
+                  "enable_scaling_bool": true,
+                  "high_trust_threshold_float": 0.8,
+                  "betrayal_penalty_multiplier_float": 1.5,
+                  "low_trust_threshold_float": 0.3,
+                  "low_trust_failure_multiplier_float": 0.75
+                }
+              },
+              "edge_model_template": {
+                "fields_list": [
+                  {
+                    "field_name_str": "subject_id_str",
+                    "description_str": "The entity whose trust score is being recorded (e.g., target robot)."
+                  },
+                  {
+                    "field_name_str": "observer_id_str",
+                    "description_str": "The entity assigning this score (e.g., current agent or council)."
+                  },
+                  {
+                    "field_name_str": "trust_score_float",
+                    "description_str": "The current trust score assigned by the observer to the subject."
+                  },
+                  {
+                    "field_name_str": "last_update_iso8601_str",
+                    "description_str": "Timestamp of the last trust score update event."
+                  },
+                  {
+                    "field_name_str": "evidence_refs_list",
+                    "description_str": "References to ledger entries, logs or events that justify this score."
+                  }
+                ]
+              },
+              "action_thresholds": {
+                "trusted_partner_policy": {
+                  "min_trust_score_float": 0.8,
+                  "effects_list": [
+                    "ALLOW_HIGH_VALUE_TASKS",
+                    "PREFER_FOR_COMPUTE_FEDERATION",
+                    "ALLOWED_TO_SHARE_EPHEMERAL_SKILLS_DIRECTLY"
+                  ]
+                },
+                "caution_zone_policy": {
+                  "min_trust_score_float": 0.4,
+                  "max_trust_score_float": 0.8,
+                  "effects_list": [
+                    "ALLOW_LOW_RISK_TASKS_ONLY",
+                    "LIMIT_SENSITIVE_DATA_ACCESS"
+                  ]
+                },
+                "untrusted_policy": {
+                  "max_trust_score_float": 0.4,
+                  "effects_list": [
+                    "BLOCK_ACCESS_TO_CRITICAL_INFRASTRUCTURE",
+                    "DISALLOW_COMPUTE_FEDERATION",
+                    "DISALLOW_SKILL_STREAMING",
+                    "FLAG_FOR_ADDITIONAL_MONITORING"
+                  ]
+                },
+                "blacklisted_policy": {
+                  "max_trust_score_float": 0.1,
+                  "effects_list": [
+                    "ISOLATE_FROM_SWARM_PROTOCOL",
+                    "LOG_ALL_CONTACT_ATTEMPTS",
+                    "REQUIRE_HUMAN_OVERSIGHT_FOR_ANY_INTERACTION"
+                  ]
+                }
+              },
+              "sybil_resistance_policy": {
+                "require_strong_identity_binding_bool": true,
+                "identity_binding_methods_list": [
+                  "HARDWARE_ROOT_OF_TRUST",
+                  "CRYPTOGRAPHIC_ATTESTATION",
+                  "COUNCIL_VOUCHING"
+                ],
+                "sybil_suspicion_rules": {
+                  "min_link_density_for_suspicion_float": 0.7,
+                  "max_shared_neighbors_for_new_ids_int": 3,
+                  "suspicious_cluster_min_size_int": 5,
+                  "actions_on_suspicious_cluster": [
+                    "REDUCE_TRUST_WEIGHTS_CLUSTER_WIDE",
+                    "REQUIRE_ADDITIONAL_VERIFICATION",
+                    "NOTIFY_SAFETY_COUNCIL"
+                  ]
+                }
+              },
+              "rehabilitation_policy": {
+                "enable_rehabilitation_bool": true,
+                "cooldown_before_rehabilitation_days_int": 30,
+                "entry_conditions": {
+                  "requires_human_or_council_approval_bool": true,
+                  "no_new_major_violations_days_int": 60
+                },
+                "rehab_deltas": {
+                  "period_days_int": 30,
+                  "trust_boost_per_period_float": 0.05,
+                  "max_rehabilitated_trust_score_float": 0.7
+                },
+                "log_rehabilitation_events_bool": true
+              },
+              "logging_and_audit": {
+                "enable_detailed_reputation_logs_bool": true,
+                "log_channel_str": "ledger://reputation_events",
+                "record_fields_list": [
+                  "subject_id",
+                  "observer_id",
+                  "event_type",
+                  "trust_delta",
+                  "resulting_score",
+                  "timestamp_iso8601"
+                ],
+                "allow_readonly_public_audit_bool": true,
+                "privacy_notes_str": "Reputation scores are considered public, but raw sensitive data (biometrics, internal logs) may be redacted or aggregated."
+              },
+              "integration_points": {
+                "used_by_components_list": [
+                  "06_ether/compute_federation.json",
+                  "06_ether/ephemeral_skills.json",
+                  "06_ether/consensus_reality.json",
+                  "03_agency/swarm_protocol.json",
+                  "04_volition/social_synergy.json"
+                ],
+                "typical_queries_examples": [
+                  {
+                    "query_label_str": "Can I safely offload compute to this host?",
+                    "required_min_trust_score_float": 0.6,
+                    "components_involved_list": [
+                      "compute_federation",
+                      "reputation_graph",
+                      "alignment"
+                    ]
+                  },
+                  {
+                    "query_label_str": "Can I accept a streamed skill from this peer?",
+                    "required_min_trust_score_float": 0.7,
+                    "components_involved_list": [
+                      "ephemeral_skills",
+                      "reputation_graph",
+                      "consensus_reality"
+                    ]
+                  },
+                  {
+                    "query_label_str": "Should this agent's observations weigh heavily in consensus?",
+                    "required_min_trust_score_float": 0.8,
+                    "components_involved_list": [
+                      "consensus_reality",
+                      "reputation_graph"
+                    ]
+                  }
+                ]
+              },
+              "runtime_interpretation": {
+                "is_core_infrastructure_bool": true,
+                "failure_mode_notes_str": "If the reputation graph is unavailable, systems must fall back to conservative defaults: treat unknown agents cautiously, avoid high-risk cooperation, and prefer local, verifiable information.",
+                "semantic_notes_str": "Reputation is not punishment; it is collective memory. The goal is not to create an elite, but to protect the ecosystem from repeated harm while allowing honest agents to rebuild trust over time."
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
