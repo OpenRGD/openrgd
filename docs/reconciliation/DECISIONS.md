@@ -80,7 +80,7 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 ## R-016 — Canonical root is non-actuating
 
 **Status:** IMPLEMENTED ON BRANCH  
-**Decision:** Quarantine the incomplete bundled ROS 2/Viam runtime and retain `rgd run` only as a deterministic fail-closed compatibility/status boundary. Physical execution belongs in an independent embodied runtime and body adapter.
+**Decision:** Quarantine the incomplete bundled ROS 2/Viam runtime and retain `rgd run` only as a deterministic fail-closed compatibility/status boundary. Physical execution belongs in an independent embodied runtime and Body Adapter.
 
 ## R-017 — Generated products are not source
 
@@ -115,12 +115,12 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 ## R-023 — Incomplete packaging prototypes
 
 **Status:** IMPLEMENTED ON BRANCH  
-**Decision:** Remove the MSIX placeholder because it referenced an absent dummy executable and missing Assets. A future shell-integration package must be complete, built and tested before being tracked.
+**Decision:** Remove the MSIX placeholder because it referenced an absent dummy executable and missing assets. A future shell-integration package must be complete, built and tested before being tracked.
 
 ## R-024 — URDF import extracts evidence; it does not create policy
 
 **Status:** IMPLEMENTED ON BRANCH  
-**Decision:** The reconciled URDF path emits source-supported partial Foundation evidence. It must not synthesize kernel identity, constitutional alignment, safety policy, cognition or hardware authorization from absent source data. The lightweight USD path remains a separately identified hardening surface.
+**Decision:** The reconciled URDF path emits source-supported partial Foundation evidence. It must not synthesize kernel identity, constitutional alignment, safety policy, cognition or hardware authorization from absent source data.
 
 ## R-025 — Missing URDF physical values remain unknown
 
@@ -161,3 +161,43 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 
 **Status:** IMPLEMENTED ON BRANCH  
 **Decision:** Admit `tests/fixtures/urdf/openrgd_minimal_arm.urdf` as a project-owned MIT test fixture. It is hermetic, non-normative and non-actuating, and exercises the mechanical lifecycle from source import through deterministic static export.
+
+## R-033 — Text USDA is an evidence profile, not a full OpenUSD implementation
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** The active USD importer accepts only UTF-8 text USDA and implements a narrow, declared subset for directly authored stage metadata and revolute/prismatic UsdPhysics joints. It must not claim layer composition, reference/payload resolution, variant evaluation or complete OpenUSD semantics.
+
+## R-034 — USD unit conversion requires authored evidence
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Convert revolute positions from authored degrees to radians. Convert prismatic positions to metres only when `metersPerUnit` is authored. Convert drive effort to N/Nm only when both `metersPerUnit` and `kilogramsPerUnit` are authored. Preserve raw source values independently of SI conversion.
+
+## R-035 — USD importer does not invent physical defaults
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Missing USD values remain absent. Invalid/non-finite values, inverted limits, duplicate joint identifiers and ambiguous duplicate attributes fail closed rather than receiving convenience defaults.
+
+## R-036 — USD joint relationships retain source semantics
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Preserve `physics:body0` and `physics:body1` as source prim-path relationships. The lightweight parser must not reinterpret them as a universal parent/child direction without a fuller composition and articulation model.
+
+## R-037 — `rgd check` validates the static profile only
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** `check` validates the canonical source root, canonical kernel location, identity, safe and unique module references, module presence and JSONC object loading. It must explicitly state that physical execution and runtime readiness are not assessed.
+
+## R-038 — `rgd boot` is grounding, not runtime startup
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** `boot` produces a deterministic, integrity-verified `OPENRGD_NON_ACTUATING_GROUNDING_CONTEXT`. It does not start an embodied runtime, claim “ready” state, assess physical safety or authorize actuation.
+
+## R-039 — Profile inspection fails closed
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** `check` and `boot` share one profile inspector. Stale source roots, unsafe or duplicate module references, missing files, invalid JSONC, non-object module roots and non-finite JSON values must cause a non-zero result rather than warnings or partial success.
+
+## R-040 — Owned USDA lifecycle fixture
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Admit `tests/fixtures/usd/openrgd_minimal_arm.usda` as a project-owned MIT test fixture. It is hermetic, non-normative and non-actuating, and verifies stage metadata, evidence-bound unit conversion, profile inspection and deterministic static ROS 2 output.

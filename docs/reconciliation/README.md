@@ -47,18 +47,28 @@ Prepare release 0.1.1 (rename PyPI package to 'rgd')
 - `OPENRGD_SOURCE_TREE_SHA256_V1`, `rgd hash`, deterministic `compile-spec` and guarded `build-standard` implemented;
 - removed paths recorded by Git tree/blob identity.
 
-### URDF import, enrichment and static export
+### URDF/USDA evidence, enrichment and static export
 
 - URDF importer converted from a full-profile/policy generator to source-derived partial Foundation evidence;
-- missing URDF physical values no longer receive silent defaults;
-- URDF source provenance is content-addressed without machine-local paths;
+- text USDA importer hardened into a narrow declared evidence profile;
+- absent physical values no longer receive silent defaults;
+- source provenance is content-addressed without machine-local paths;
+- USD angular, linear and effort conversion is bound to authored unit evidence;
 - `rgd alive` personalizes profile identity and records seed/body compatibility as `UNVERIFIED`;
-- project-owned hermetic URDF fixture added;
+- project-owned hermetic URDF and USDA fixtures added;
 - ROS 2 static export made deterministic and bound to the source/bundle root;
 - imported bodies prevented from inheriting seed HAL through name collisions;
 - hardware Xacro withheld until explicit complete HAL evidence exists;
 - historical Isaac placeholder removed from the active target registry;
-- complete non-actuating lifecycle tested in CI.
+- complete non-actuating lifecycles tested in CI.
+
+### Static profile inspection
+
+- `rgd check` upgraded from path-existence checks to source-integrity and selected-module validation;
+- `rgd boot` converted from warning-tolerant prompt assembly to deterministic non-actuating grounding;
+- stale roots, unsafe/duplicate references, missing files and invalid/non-object modules fail closed;
+- both commands explicitly deny hardware/runtime readiness claims;
+- historical command implementations recorded by Git blob identity.
 
 ## Current authority
 
@@ -68,6 +78,7 @@ standard/                          tracked strict-JSON leaf mirror
 src/openrgd/seeds/default/spec/    tracked derived default profile
 spec/openrgd_unified_spec.json     generated machine bundle, untracked
 export/                            generated static interoperability output
+tests/fixtures/                     owned non-normative test evidence
 ```
 
 Detailed documents:
@@ -77,6 +88,7 @@ Detailed documents:
 - [`CANONICAL_HASHING.md`](CANONICAL_HASHING.md)
 - [`EXAMPLES_AND_FIXTURES.md`](EXAMPLES_AND_FIXTURES.md)
 - [`IMPORT_EXPORT_LIFECYCLE.md`](IMPORT_EXPORT_LIFECYCLE.md)
+- [`PROFILE_INSPECTION.md`](PROFILE_INSPECTION.md)
 - [`RUNTIME_BOUNDARY.md`](RUNTIME_BOUNDARY.md)
 - [`RUNTIME_STATUS.json`](RUNTIME_STATUS.json)
 - [`DECISIONS.md`](DECISIONS.md)
@@ -97,7 +109,7 @@ The package remains a **CONVERGENCE CANDIDATE** and retains explicit non-retroac
 
 - final acceptance status of Agent Contracts;
 - semantic compatibility strategy for generic imported bodies and seed profiles;
-- hardening of the lightweight ASCII USD parser;
+- future full OpenUSD SDK-based composition adapter;
 - live ROS 2 validation and a reviewed hardware-bound fixture;
 - exact next standard/toolchain release scope;
 - recovery or formal exclusion of `openrgd-v0.2-aion-ready`;

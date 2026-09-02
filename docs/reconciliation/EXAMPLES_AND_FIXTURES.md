@@ -12,9 +12,11 @@ The historical `example/` tree remains removed from the active repository.
 
 Original blob identities remain in `docs/history/generated-artifacts/INVENTORY.json` and Git history.
 
-## Admitted project-owned fixture
+## Admitted project-owned fixtures
 
-The repository now contains one canonical **test fixture**, not a normative robot example:
+The repository contains two canonical **test fixtures**, not normative robot examples.
+
+### URDF
 
 ```text
 tests/fixtures/urdf/openrgd_minimal_arm.urdf
@@ -29,18 +31,37 @@ Properties:
 - no external mesh or package dependency;
 - no IP address, secret or machine-local path;
 - no claim of physical actuation suitability;
-- assertions for exact source-derived values;
-- exercised through the complete non-actuating lifecycle.
+- exact source-derived assertions in CI.
 
-The CI path is:
+### USDA
 
 ```text
-URDF parse
+tests/fixtures/usd/openrgd_minimal_arm.usda
+tests/fixtures/usd/PROVENANCE.md
+```
+
+Properties:
+
+- synthetic and authored for OpenRGD;
+- MIT licensed;
+- text USDA with revolute and prismatic UsdPhysics joints;
+- explicit `metersPerUnit`, `kilogramsPerUnit`, `upAxis` and `defaultPrim` metadata;
+- no referenced layer, payload, external asset or package dependency;
+- no IP address, secret or machine-local path;
+- no claim of physical actuation suitability;
+- exact angular, linear and effort conversion assertions in CI.
+
+## Verified lifecycle
+
+Both fixture families are exercised through:
+
+```text
+source parse
 → partial import
 → seed enrichment (compatibility remains UNVERIFIED)
 → canonical hash
-→ structural check
-→ boot prompt assembly
+→ integrity-aware profile check
+→ deterministic non-actuating grounding context
 → deterministic machine bundle
 → deterministic static ROS 2 export
 ```
@@ -51,11 +72,11 @@ A future file under `examples/` or `tests/fixtures/` must be:
 
 1. authored by the project or accompanied by explicit redistribution provenance;
 2. minimal enough to review;
-3. hermetic, or declare every external asset dependency;
+3. hermetic, or declare every external asset/layer dependency;
 4. free of local IP addresses, secrets and machine-specific absolute paths;
 5. exercised by an automated test;
-6. associated with the importer/exporter version it validates;
+6. associated with the importer/exporter version and subset it validates;
 7. non-normative unless a specification file explicitly references it;
 8. clearly labelled as a fixture, illustrative example or physically validated reference body.
 
-A source file becoming parseable does not make it safe to actuate, nor does seed enrichment prove compatibility with inherited HAL, calibration or safety modules.
+A source file becoming parseable does not make it safe to actuate. Seed enrichment, profile hashing, structural validation and grounding-context generation do not prove hardware compatibility.

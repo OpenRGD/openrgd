@@ -10,21 +10,20 @@
 
 These versions are independent. See [`VERSIONING.md`](VERSIONING.md).
 
-## What this repository contains
+## Repository role
+
+This repository is the proposed **non-actuating canonical/tooling root** for:
 
 - `spec/` — normative modular JSONC source;
 - `standard/` — tracked strict-JSON leaf mirror;
 - `contracts/` — cross-component interfaces with explicit maturity and provenance;
-- `src/openrgd/` — non-actuating CLI and reference tooling;
-- a source-evidence URDF importer and lightweight ASCII USD importer;
-- a deterministic static ROS 2 Synapse exporter;
-- a packaged default profile synchronized from reviewed specification sources;
-- project-owned hermetic test fixtures;
+- `src/openrgd/` — validation, hashing, import, enrichment, deterministic compilation and static export tooling;
+- `tests/fixtures/` — project-owned, non-normative test evidence;
 - historical and reconciliation records.
 
-This repository does **not** ship a physical embodied runtime or a Body Adapter. The former bundled ROS 2/Viam prototype is preserved under `docs/history/runtime-prototype/` and removed from the installed package because it did not implement the convergent safety and execution boundary.
+It does **not** ship a physical embodied runtime or a Body Adapter. The former bundled ROS 2/Viam prototype is preserved under `docs/history/runtime-prototype/` and removed from the installed package because it did not implement the convergent safety and execution boundary.
 
-The repository also does not claim that HyperAion512 encoding, Chronograf production signing, Rate My Ethics runtime integration or an Isaac static exporter are complete.
+The repository also does not claim that HyperAion512 encoding, Chronograf production signing, Rate My Ethics runtime integration, a complete OpenUSD composition engine or an Isaac static exporter are implemented.
 
 ## Canonical domain model
 
@@ -59,8 +58,8 @@ rgd --help
 rgd init Robot
 cd Robot
 rgd hash
-rgd check
-rgd boot
+rgd check --output json
+rgd boot --output json
 rgd compile-spec
 ```
 
@@ -81,25 +80,39 @@ rgd hash
 rgd hash --write
 ```
 
-## Import and enrichment
+`rgd check` verifies the declared source root, canonical kernel path, safe and unique module references, module presence and JSONC object loading. It does not assess runtime or hardware readiness.
 
-`rgd import` extracts source-supported physical evidence only:
+`rgd boot` builds a deterministic **non-actuating grounding context** from the integrity-verified, kernel-selected modules. It explicitly records that physical execution is neither assessed nor authorized.
+
+## Robot-description evidence
+
+`rgd import` extracts only source-supported Foundation evidence:
 
 ```bash
 rgd import robot.urdf --out partial-robot
+rgd import robot.usda --out partial-robot
 ```
 
-The reconciled URDF path does not invent kernel identity, safety, cognition or alignment. It emits only:
+Both active importer paths emit only:
 
 ```text
 01_foundation/description.jsonc
 01_foundation/actuation_dynamics.jsonc
 ```
 
-`rgd alive` is the separate, explicit seed-enrichment operation:
+The reconciled URDF importer preserves supported topology, inertials, limits, mimic relations and dynamics without inventing absent values.
+
+The text USDA importer intentionally supports a narrow subset of `PhysicsRevoluteJoint` and `PhysicsPrismaticJoint`. It records stage metadata and source provenance, converts authored angular limits from degrees to radians, and converts linear/mass-derived values only when the stage explicitly authors the required unit metadata. It does not compose layers, resolve references or replace the OpenUSD SDK.
+
+Neither importer creates kernel identity, constitutional alignment, safety policy, cognition, HAL drivers, bus addresses or hardware authorization.
+
+## Seed enrichment
+
+`rgd alive` is a separate, explicit operation:
 
 ```bash
 rgd alive robot.urdf --out RGD-robot --seed default
+rgd alive robot.usda --out RGD-robot --seed default
 ```
 
 The resulting project is integrity-addressed, but its manifest records:
@@ -110,7 +123,14 @@ seed_compatibility_status = UNVERIFIED
 
 A valid hash proves content identity, not that inherited calibration, HAL or safety assumptions fit the imported body.
 
-A synthetic project-owned fixture is available at `tests/fixtures/urdf/openrgd_minimal_arm.urdf` and is exercised end to end in CI.
+Project-owned fixtures are maintained under:
+
+```text
+tests/fixtures/urdf/openrgd_minimal_arm.urdf
+tests/fixtures/usd/openrgd_minimal_arm.usda
+```
+
+Both are synthetic, MIT-licensed, hermetic, non-normative and exercised end to end in CI.
 
 ## Static interoperability export
 
@@ -158,7 +178,7 @@ Hardware
 ## Documentation
 
 - [`CLI_GUIDE.md`](CLI_GUIDE.md) — current command behavior;
-- [`GUIDE_IMPORT.md`](GUIDE_IMPORT.md) — evidence-only import and enrichment boundary;
+- [`GUIDE_IMPORT.md`](GUIDE_IMPORT.md) — evidence-only URDF/USDA import and enrichment boundary;
 - [`GUIDE_EXPORT.md`](GUIDE_EXPORT.md) — deterministic static ROS 2 output;
 - [`STRUCTURE.md`](STRUCTURE.md) — authority model and component boundaries;
 - [`LAYOUT.md`](LAYOUT.md) — active repository tree;

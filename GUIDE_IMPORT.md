@@ -2,18 +2,28 @@
 
 `rgd import` extracts facts from an external robot description into a **partial, non-actuating OpenRGD Foundation profile**.
 
-It does not create identity, constitutional alignment, safety policy, cognition, skills or hardware authorization. Those elements are not present in URDF/USD and must not be invented by an importer.
+It does not create identity, constitutional alignment, safety policy, cognition, skills or hardware authorization. Those elements are not established by URDF or USD source data and must not be invented by an importer.
 
 ## Supported inputs
 
-| Input | Current status | Notes |
+| Input | Current status | Boundary |
 |---|---|---|
-| URDF (`.urdf`, `.xml`) | Tested | XML root must be `<robot>` |
-| ASCII USD (`.usda`, text `.usd`) | Tested lightweight path | Binary USD must be converted before import |
+| URDF (`.urdf`, `.xml`) | Implemented and lifecycle-tested | XML robot topology/inertials/limits/dynamics subset |
+| USDA (`.usda`, UTF-8 text `.usd`) | Implemented and lifecycle-tested narrow subset | Text stage metadata plus revolute/prismatic UsdPhysics joint subset |
+| Binary USD/USDC | Not supported by this parser | Convert to USDA or use a future OpenUSD SDK adapter |
 
-## Evidence boundary
+Both paths emit only:
 
-The reconciled URDF importer may extract:
+```text
+spec/01_foundation/description.jsonc
+spec/01_foundation/actuation_dynamics.jsonc
+```
+
+Both record source filename, format, byte length and SHA-256 without embedding a machine-local absolute path.
+
+## URDF evidence boundary
+
+The URDF importer may extract:
 
 - robot name;
 - links;
@@ -23,43 +33,85 @@ The reconciled URDF importer may extract:
 - origin and axis;
 - declared limits with type-correct units;
 - source damping and friction;
-- mimic relationship.
+- mimic relationships.
 
-It emits only:
+It does not infer transmissions, controllers, vendor plugins, bus addresses or calibration.
 
-```text
-spec/01_foundation/description.jsonc
-spec/01_foundation/actuation_dynamics.jsonc
-```
+Missing numeric values remain absent. Malformed and non-finite values fail the import instead of receiving silent defaults.
 
-It does **not** emit:
+## USDA evidence boundary
 
-```text
-spec/00_core/kernel.jsonc
-spec/02_operation/*
-spec/03_agency/*
-spec/04_volition/alignment.jsonc
-```
-
-Missing URDF numeric values remain absent. Invalid or non-finite numeric values fail the import instead of being replaced by silent defaults.
-
-## Provenance
-
-Reconciled URDF evidence records:
+The text USDA importer intentionally implements a restricted, auditable profile:
 
 ```text
-source filename
-source format
-source byte length
-source SHA-256
+OPENUSD_USDA_LIGHTWEIGHT_V1
 ```
 
-Machine-local absolute paths are not embedded in the generated URDF profile.
+It currently recognizes:
+
+- stage `defaultPrim`;
+- stage `metersPerUnit`;
+- stage `kilogramsPerUnit`;
+- stage `upAxis`;
+- `PhysicsRevoluteJoint`;
+- `PhysicsPrismaticJoint`;
+- `physics:body0` and `physics:body1` relationships;
+- X/Y/Z joint axis tokens;
+- authored lower/upper limits;
+- local joint frames when directly authored;
+- angular/linear drive `maxForce`, stiffness and damping when directly authored.
+
+The parser preserves `body0` and `body1` as source relationships. It does not reinterpret them as a universal parent/child direction, because joint relationship ordering and scene composition require fuller USD semantics.
+
+### Unit rules
+
+UsdPhysics uses degrees as its angular unit, stage distance units scaled by `metersPerUnit`, and stage mass units scaled by `kilogramsPerUnit`. The importer therefore applies only conversions justified by authored stage metadata:
+
+```text
+revolute lower/upper:
+    degrees → radians
+
+prismatic lower/upper:
+    stage distance × metersPerUnit → metres
+
+linear drive maxForce:
+    source value × kilogramsPerUnit × metersPerUnit → newtons
+
+angular drive maxForce:
+    source value × kilogramsPerUnit × metersPerUnit² → newton-metres
+```
+
+Rules:
+
+1. prismatic SI limits are rejected when `metersPerUnit` is absent;
+2. drive effort is converted to SI only when both `metersPerUnit` and `kilogramsPerUnit` are authored;
+3. raw authored values remain in `source_usd_joint_map` even when SI effort cannot be derived;
+4. absent values remain absent;
+5. duplicate ambiguous attributes, inverted limits and malformed/non-finite numbers fail closed.
+
+External standards basis: the OpenUSD UsdPhysics specification defines the unit system and stage-level scaling behavior. The lightweight importer deliberately implements only the subset listed above.
+
+### Deliberate limitations
+
+This parser does not:
+
+- compose multiple USD layers;
+- resolve references or payloads;
+- evaluate variants;
+- resolve inherited opinions;
+- evaluate complete transform stacks;
+- discover all schema APIs applied to arbitrary prims;
+- compute body mass properties;
+- implement schema fallback/sentinel behavior comprehensively;
+- replace the OpenUSD SDK.
+
+A source requiring any of those semantics must use a future full OpenUSD adapter rather than silently accepting incomplete interpretation.
 
 ## Partial import
 
 ```bash
 rgd import robot.urdf --out partial-robot
+rgd import robot.usda --out partial-robot
 ```
 
 The result is intentionally incomplete:
@@ -78,6 +130,7 @@ This is the preferred operation when reviewing what the source file actually pro
 
 ```bash
 rgd alive robot.urdf --out RGD-robot --seed default
+rgd alive robot.usda --out RGD-robot --seed default
 ```
 
 `rgd alive` performs a separate, explicit operation:
@@ -99,20 +152,21 @@ seed_compatibility_status = UNVERIFIED
 
 The current default seed contains reference assumptions. Successful enrichment and a valid source-tree hash do not prove that inherited calibration, HAL, safety or behavioral modules match the imported body. Review them before any hardware use.
 
-## Project-owned fixture
-
-A minimal hermetic fixture is provided at:
+## Project-owned fixtures
 
 ```text
 tests/fixtures/urdf/openrgd_minimal_arm.urdf
+tests/fixtures/usd/openrgd_minimal_arm.usda
 ```
 
-Its provenance is documented beside it. The fixture has no mesh assets, package references, network addresses or machine-local paths and is exercised by CI through import, enrichment, hashing, structural checks, boot prompt assembly, deterministic compilation and static ROS 2 export.
+Each fixture has provenance documented beside it. Both are synthetic, MIT-licensed, hermetic, free of network and machine-local references, and exercised through import, enrichment, hashing, profile inspection, deterministic compilation and static ROS 2 export.
 
-## Current limitations
+## Profile inspection after enrichment
 
-- Geometry and mesh conversion is outside the lightweight importer contract.
-- Transmissions, controllers, vendor plugins and bus addresses are not inferred from URDF.
-- Imported evidence cannot authorize hardware execution.
-- Seed/body semantic compatibility remains an explicit review task.
-- The ASCII USD parser is lightweight and remains a separate hardening surface; it does not replace a full USD SDK.
+```bash
+cd RGD-robot
+rgd check --output json
+rgd boot --output json
+```
+
+`check` validates source integrity and every kernel-selected JSONC module. `boot` creates a deterministic non-actuating grounding context. Neither command validates physical compatibility or authorizes hardware execution.
