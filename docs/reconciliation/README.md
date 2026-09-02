@@ -11,6 +11,8 @@ The branch starts from public commit:
 Prepare release 0.1.1 (rename PyPI package to 'rgd')
 ```
 
+The detailed repository audit is available in [`AUDIT_2026-09-02.md`](AUDIT_2026-09-02.md).
+
 ## Evidence policy
 
 Evidence is classified as:
@@ -30,7 +32,8 @@ Evidence is classified as:
 - active CI for Python 3.10/3.12 and Windows executable build;
 - packaging metadata repaired;
 - candidate agent contracts imported with source hash and local validation;
-- old contradictory documents preserved under `docs/history/` rather than silently deleted.
+- old contradictory documents preserved under `docs/history/` rather than silently deleted;
+- repository invariants and reconciliation tests enforced in CI.
 
 ### SPECIFIED in the repository
 
@@ -58,7 +61,8 @@ Evidence is classified as:
 - exact release/tag scoping for the next public version;
 - migration of later `openrgd-v0.2-aion-ready` content, whose archive was not available in this workspace;
 - final ownership and names of Physics, Chronograf, embodied runtime, LeRobot and Ethics repositories;
-- promotion criteria for Agent Contracts from candidate to accepted.
+- promotion criteria for Agent Contracts from candidate to accepted;
+- packaged-seed drift and the prototype runtime's unresolved safety-module reference.
 
 ## Imported convergence artifact
 
