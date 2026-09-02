@@ -44,7 +44,11 @@ def alive_cmd(
         help="Packaged seed profile used to enrich imported evidence.",
     ),
 ) -> None:
-    """Create a full profile from imported evidence plus a reviewed seed."""
+    """Create a full profile from imported evidence plus a reviewed seed.
+
+    The command records seed/body compatibility as unverified. It never turns
+    the resulting profile into a hardware safety certification.
+    """
 
     if not file_path.is_file():
         log(f"File not found: {file_path}", "ERROR")
@@ -61,6 +65,9 @@ def alive_cmd(
         base_spec = importer.parse()
         if not base_spec:
             raise ValueError("importer returned no evidence")
+        source_artifact = importer.source_artifact(
+            file_path.suffix.lower().lstrip(".") or "UNKNOWN"
+        )
         full_spec = alive_rgd_spec(
             base_spec=base_spec,
             robot_name=importer.robot_name,
@@ -103,11 +110,14 @@ def alive_cmd(
             rgd_root,
             robot_name=importer.robot_name,
             standard_version=standard_version,
+            seed_name=seed,
+            source_artifact=source_artifact,
         )
         write_readme(
             rgd_root,
             robot_name=importer.robot_name,
             standard_version=standard_version,
+            seed_name=seed,
         )
     except (
         CanonicalIntegrityError,
@@ -121,3 +131,7 @@ def alive_cmd(
 
     log(f"OpenRGD profile written to: {rgd_root}", "SUCCESS")
     log(f"Canonical source root: {integrity.computed}", "SUCCESS")
+    log(
+        "Seed/body compatibility remains UNVERIFIED until inherited modules are reviewed.",
+        "WARN",
+    )
