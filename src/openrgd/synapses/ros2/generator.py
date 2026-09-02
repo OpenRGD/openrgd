@@ -242,6 +242,11 @@ class ROS2Synapse(BaseSynapse):
             and description_meta.get("file_role_enum")
             == "IMPORTED_PARTIAL_DESCRIPTION"
         )
+        if imported_partial:
+            # An imported body must not accidentally inherit actuator/HAL bindings
+            # merely because one of its joint names collides with the selected seed.
+            topology_by_joint = {}
+            hal_by_actuator = {}
 
         if imported_partial and description_map:
             names = {
