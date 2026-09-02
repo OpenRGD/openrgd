@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+DID_FIELD_PATTERN = re.compile(r'("id"\s*:\s*")(?P<did>did:rgd:[^"]+)(")')
 
 
 def run_script(relative_path: str) -> subprocess.CompletedProcess[str]:
@@ -31,7 +33,7 @@ def test_artifact_reconciliation_passes() -> None:
     assert "0 unexpected" in result.stdout
 
 
-def test_rgdi_init_materializes_the_complete_default_seed(tmp_path: Path) -> None:
+def test_rgd_init_materializes_the_complete_default_seed(tmp_path: Path) -> None:
     result = subprocess.run(
         ["rgd", "--quiet", "init", "seed-probe"],
         cwd=tmp_path,
@@ -60,9 +62,30 @@ def test_rgdi_init_materializes_the_complete_default_seed(tmp_path: Path) -> Non
     for rel, source in expected.items():
         generated = generated_spec / rel
         assert generated.is_file(), f"rgd init omitted {rel}"
-        assert generated.read_bytes() == source.read_bytes(), (
-            f"rgd init generated a divergent copy of {rel}"
-        )
+
+        if rel == "00_core/kernel.jsonc":
+            source_text = source.read_text(encoding="utf-8")
+            generated_text = generated.read_text(encoding="utf-8")
+            source_id = DID_FIELD_PATTERN.search(source_text)
+            generated_id = DID_FIELD_PATTERN.search(generated_text)
+
+            assert source_id is not None, "canonical kernel has no RGD DID"
+            assert generated_id is not None, "generated kernel has no RGD DID"
+            assert generated_id.group("did") == "did:rgd:seed-probe"
+
+            normalized_generated = (
+                generated_text[: generated_id.start("did")]
+                + source_id.group("did")
+                + generated_text[generated_id.end("did") :]
+            )
+            assert normalized_generated == source_text, (
+                "rgd init changed kernel content beyond the intentional DID "
+                "personalization"
+            )
+        else:
+            assert generated.read_bytes() == source.read_bytes(), (
+                f"rgd init generated a divergent copy of {rel}"
+            )
 
     assert not (generated_spec / "openrgd_unified_spec.json").exists()
     assert not (generated_spec / "openrgd_unified_spec.jsonc").exists()
