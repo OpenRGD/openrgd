@@ -1,0 +1,46 @@
+{
+  "goal": "move the gripper a small amount in the OPEN direction",
+  "chronon_flow": [
+    {
+      "facet": "PHYSICAL",
+      "event": "observation",
+      "effect": "current gripper position"
+    },
+    {
+      "facet": "COGNITIVE",
+      "event": "cognitive_proposal",
+      "effect": "ActionIntent + AION context"
+    },
+    {
+      "facet": "COGNITIVE",
+      "event": "action_intent",
+      "effect": "explicit action semantics"
+    },
+    {
+      "facet": "SOMATIC",
+      "event": "somatic_plan",
+      "effect": "declared capability plan"
+    },
+    {
+      "facet": "VOLITIONAL",
+      "event": "safety_decision",
+      "effect": "bounded operation decision"
+    },
+    {
+      "facet": "ETHICAL",
+      "event": "decision_trace",
+      "effect": "structured audit; constitutional engine not yet connected"
+    },
+    {
+      "facet": "PHYSICAL",
+      "event": "action_result",
+      "effect": "observed physical outcome"
+    },
+    {
+      "facet": "LEARNING",
+      "event": "learning_result",
+      "effect": "memory projection update"
+    }
+  ],
+  "important": "The causal chain stores structured commitments, not private chain-of-thought."
+}

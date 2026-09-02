@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenRGD DecisionTrace v0.1",
+  "type": "object",
+  "required": [
+    "version_str",
+    "trace_id_str",
+    "policy_layer_enum_str",
+    "decision_enum_str",
+    "intent_id_str",
+    "reason_summary_str",
+    "trace_sha256_hex_str"
+  ],
+  "properties": {
+    "version_str": {
+      "const": "openrgd_decision_trace_v0.1"
+    },
+    "trace_id_str": {
+      "type": "string"
+    },
+    "policy_layer_enum_str": {
+      "type": "string"
+    },
+    "decision_enum_str": {
+      "enum": [
+        "ALLOW",
+        "BLOCK",
+        "OVERRIDE",
+        "ESCALATE"
+      ]
+    },
+    "intent_id_str": {
+      "type": "string"
+    },
+    "capability_plan_id_str": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason_summary_str": {
+      "type": "string"
+    },
+    "hard_invariant_refs_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rules_triggered_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_chronon_ids_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "policy_snapshot_ref_str": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "override_authority_ref_str": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at_float": {
+      "type": "number"
+    },
+    "trace_sha256_hex_str": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    }
+  }
+}

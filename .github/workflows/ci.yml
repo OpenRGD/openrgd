@@ -49,6 +49,9 @@ jobs:
       - name: Compile Python sources
         run: python -m compileall -q src/openrgd
 
+      - name: Validate convergence candidate contracts
+        run: python contracts/agent/v0.1.0/validate.py
+
       - name: Run CLI smoke test
         run: rgd --quiet --help
 

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenRGD CognitionProposal v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version_str",
+    "proposal_id_str",
+    "cognition_provider_id_str",
+    "action_intent",
+    "parent_chronon_ids_arr",
+    "recalled_memory_chronon_ids_arr",
+    "aion_octant_obj"
+  ],
+  "properties": {
+    "version_str": {
+      "const": "openrgd_cognition_contract_v0.1"
+    },
+    "proposal_id_str": {
+      "type": "string"
+    },
+    "cognition_provider_id_str": {
+      "type": "string"
+    },
+    "model_id_str": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "action_intent": {
+      "type": "object"
+    },
+    "parent_chronon_ids_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recalled_memory_chronon_ids_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hyperaion_ref": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "aion_octant_obj": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "created_at_float": {
+      "type": "number"
+    }
+  }
+}
