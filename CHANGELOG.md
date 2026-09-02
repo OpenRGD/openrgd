@@ -15,16 +15,22 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Deterministic `tools/reconcile_artifacts.py` checker for the normative specification, strict JSON mirror and packaged default seed.
 - CI validation of 76 selected canonical leaves across `standard/` and the default seed.
 - Real `rgd init` materialization test, including exact enforcement of the intentional kernel DID personalization boundary.
+- Machine-readable embodied-runtime status in `docs/reconciliation/RUNTIME_STATUS.json`.
+- `tools/validate_runtime_boundary.py`, proving archived runtime blob integrity and fail-closed CLI behavior.
+- Tests for USD partial-evidence import and single-root `spec/` output.
 
 ### Changed
 
-- Declared minimum Python version aligned with the runtime syntax: Python 3.10+.
+- Declared minimum Python version aligned with the source syntax: Python 3.10+.
 - Project license metadata changed to a PEP 621-compatible file reference.
 - Documentation now distinguishes the standard bundle (`0.2.0`), toolchain (`0.1.1`) and candidate contracts (`0.1.0`).
 - Canonical domain names restored to `Foundation / Operation / Agency / Volition / Evolution / Ether`, coordinated by `00_core`.
 - Packaged default seed synchronized with all 76 selected canonical source artifacts.
 - Stale seed revisions of `kernel.jsonc`, `actuation_topology.jsonc` and `surface_properties.jsonc` replaced with canonical bytes.
 - Missing Agency extension-policy, installed-skill, skill-library, core-skill and skill-schema files restored to the packaged seed.
+- `rgd run` changed from an incomplete actuation surface to a deterministic, non-actuating compatibility/status boundary.
+- USD import now emits only source-supported partial Foundation evidence and no longer synthesizes policy through the historical template generator.
+- Importer output paths are normalized under exactly one `spec/` root and parent traversal is rejected.
 
 ### Removed
 
@@ -32,11 +38,14 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Inactive `.github/build.yaml`, replaced by `.github/workflows/ci.yml`.
 - Generated unified JSON/JSONC outputs from the active default seed.
 - The legacy seed-only strict-JSON skill index from the active seed namespace.
+- The historical ROS 2 / Viam runtime package from installed `src/openrgd/` code.
+- The stale in-memory template generator that recreated the nonexistent `02_operation/safety_supervisor.jsonc` dependency.
 
 ### Preserved
 
 - Original 2025 documentation is retained under `docs/history/` as non-normative evidence.
 - The removed seed-only skill index is retained byte-for-byte under `docs/history/seed/`.
+- The historical runtime, adapter and template-generator source blobs are retained and hash-verified under `docs/history/runtime-prototype/`.
 - Generated domain/unified bundles, benchmark snapshots and robot-instance copies remain available pending a separate aggregate-artifact reconciliation decision.
 
 ## [0.1.1] — 2025-11-26
