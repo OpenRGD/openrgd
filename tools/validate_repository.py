@@ -32,7 +32,6 @@ def fail(message: str) -> None:
 
 
 def load_jsonc(path: Path) -> dict[str, Any]:
-    # Import the same parser used by the installed OpenRGD toolchain.
     from openrgd.core.utils import strip_jsonc
 
     return json.loads(strip_jsonc(path.read_text(encoding="utf-8")), strict=False)
@@ -116,13 +115,22 @@ def validate_reconciliation_files() -> None:
         "docs/reconciliation/README.md",
         "docs/reconciliation/DECISIONS.md",
         "docs/reconciliation/REPOSITORY_MAP.md",
+        "docs/reconciliation/AUDIT_2026-09-02.md",
+        "docs/reconciliation/ARTIFACT_MAP.md",
+        "docs/reconciliation/ARTIFACT_POLICY.json",
+        "docs/reconciliation/RUNTIME_BOUNDARY.md",
+        "docs/reconciliation/RUNTIME_STATUS.json",
         "docs/history/README.md",
         "docs/history/STRUCTURE_2025_LEGACY.md",
         "docs/history/GLOSSARIO_MISFILED_GITIGNORE_2025.md",
+        "docs/history/seed/README.md",
+        "docs/history/runtime-prototype/README.md",
         "contracts/README.md",
         "contracts/agent/v0.1.0/README.md",
         "contracts/agent/v0.1.0/PROVENANCE.md",
         "contracts/agent/v0.1.0/validate.py",
+        "tools/reconcile_artifacts.py",
+        "tools/validate_runtime_boundary.py",
     )
     missing = [path for path in required if not (ROOT / path).is_file()]
     if missing:
@@ -138,6 +146,16 @@ def validate_reconciliation_files() -> None:
         fail("agent contract package lost its candidate maturity label")
     if "a295463bfc9fb9ad26bc2bff90800874d9e4f7c5db8219fc9a0b7123d2ceb987" not in provenance:
         fail("agent contract provenance is missing the source archive SHA-256")
+
+    runtime_status = json.loads(
+        (ROOT / "docs/reconciliation/RUNTIME_STATUS.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    if runtime_status.get("physical_actuation_available") is not False:
+        fail("canonical runtime status must remain non-actuating")
+    if runtime_status.get("historical_prototype") != "QUARANTINED":
+        fail("historical runtime prototype must remain quarantined")
 
 
 def tracked_paths() -> list[str]:
