@@ -19,6 +19,29 @@ def run_script(relative_path: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def write_minimal_usda(path: Path) -> None:
+    path.write_text(
+        '''#usda 1.0
+(
+    defaultPrim = "TestArm"
+)
+
+def Xform "TestArm"
+{
+    def PhysicsRevoluteJoint "joint_1"
+    {
+        float:physics:lowerLimit = -1.0
+        float:physics:upperLimit = 1.5
+        float:drive:angular:physics:stiffness = 12.0
+        float:drive:angular:physics:damping = 0.75
+        float:drive:angular:physics:maxForce = 4.5
+    }
+}
+''',
+        encoding="utf-8",
+    )
+
+
 def test_repository_validator_passes() -> None:
     result = run_script("tools/validate_repository.py")
     assert result.returncode == 0, result.stdout + result.stderr
@@ -96,6 +119,65 @@ def test_rgd_init_materializes_the_complete_default_seed(tmp_path: Path) -> None
     assert not (generated_spec / "openrgd_unified_spec.json").exists()
     assert not (generated_spec / "openrgd_unified_spec.jsonc").exists()
     assert not (generated_spec / "03_agency/skills_library.json").exists()
+
+
+def test_usd_importer_emits_only_source_supported_partial_evidence(
+    tmp_path: Path,
+) -> None:
+    from openrgd.importers.usd.parser import USDImporter
+
+    source = tmp_path / "test-arm.usda"
+    write_minimal_usda(source)
+
+    importer = USDImporter(str(source))
+    imported = importer.parse()
+
+    assert importer.robot_name == "TestArm"
+    assert set(imported) == {
+        "spec/01_foundation/description.jsonc",
+        "spec/01_foundation/actuation_dynamics.jsonc",
+    }
+    assert all("safety_supervisor.jsonc" not in value for value in imported.values())
+    assert all("alignment" not in path for path in imported)
+    assert all("00_core" not in path for path in imported)
+
+    dynamics_text = imported["spec/01_foundation/actuation_dynamics.jsonc"]
+    dynamics = json.loads(dynamics_text.split("\n", 1)[1])
+    assert dynamics["joint_1"]["limits"] == {
+        "torque_nm": 4.5,
+        "range_rad": [-1.0, 1.5],
+    }
+
+
+def test_import_cli_uses_one_spec_root_and_does_not_invent_policy(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "test-arm.usda"
+    output = tmp_path / "partial-rgd"
+    write_minimal_usda(source)
+
+    result = subprocess.run(
+        [
+            "rgd",
+            "--quiet",
+            "import",
+            str(source),
+            "--out",
+            str(output),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    spec = output / "spec"
+    assert (spec / "01_foundation/description.jsonc").is_file()
+    assert (spec / "01_foundation/actuation_dynamics.jsonc").is_file()
+    assert not (spec / "spec").exists()
+    assert not (spec / "00_core").exists()
+    assert not (spec / "02_operation").exists()
+    assert not (spec / "04_volition").exists()
 
 
 def test_candidate_contract_validator_passes() -> None:
