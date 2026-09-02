@@ -2,29 +2,31 @@
 
 **OpenRGD** is an open, machine-readable standard for cognitive embodiment: a semantic bridge through which an AI system can understand a robot body, its operational limits, its capabilities, its lifecycle and its relationships with other agents.
 
-| Artifact | Repository version | Maturity |
+| Artifact | Current repository version | Maturity |
 |---|---:|---|
-| OpenRGD standard bundle | `0.2.0` | Draft; maturity declared per domain |
+| OpenRGD standard bundle | `0.2.0` | Draft; maturity is declared per domain |
 | `rgd` Python toolchain | `0.1.1` | Working alpha |
 | Agent interoperability contracts | `0.1.0` | Convergence candidate |
 
-These version axes are independent. See [`VERSIONING.md`](VERSIONING.md).
+These versions are independent. See [`VERSIONING.md`](VERSIONING.md).
 
-## Repository scope
+## What this repository contains
 
-This repository is the non-actuating canonical and tooling root. It contains:
-
-- `spec/` — normative, modular JSONC source;
+- `spec/` — normative modular JSONC source;
 - `standard/` — tracked strict-JSON leaf mirror;
-- `contracts/` — versioned cross-component contracts with explicit maturity;
-- `src/openrgd/` — CLI, import/export and validation tooling;
-- `src/openrgd/seeds/default/` — reconciled default profile used by `rgd init`;
-- `docs/reconciliation/` — current decisions and audit evidence;
-- `docs/history/` — preserved non-normative historical material.
+- `contracts/` — cross-component interfaces with explicit maturity and provenance;
+- `src/openrgd/` — non-actuating CLI and reference tooling;
+- a source-evidence URDF importer and lightweight ASCII USD importer;
+- a deterministic static ROS 2 Synapse exporter;
+- a packaged default profile synchronized from reviewed specification sources;
+- project-owned hermetic test fixtures;
+- historical and reconciliation records.
 
-It does **not** ship a physical embodied runtime or hardware adapter. The former bundled ROS 2/Viam prototype is preserved under `docs/history/runtime-prototype/` and removed from the installed package. `rgd run` remains only as a fail-closed compatibility/status boundary.
+This repository does **not** ship a physical embodied runtime or a Body Adapter. The former bundled ROS 2/Viam prototype is preserved under `docs/history/runtime-prototype/` and removed from the installed package because it did not implement the convergent safety and execution boundary.
 
-## Canonical domains
+The repository also does not claim that HyperAion512 encoding, Chronograf production signing, Rate My Ethics runtime integration or an Isaac static exporter are complete.
+
+## Canonical domain model
 
 ```text
 00_core         coordination, manifests and kernel metadata
@@ -36,9 +38,9 @@ It does **not** ship a physical embodied runtime or hardware adapter. The former
 06_ether        collective, social and inter-agent protocols
 ```
 
-The bundle manifest marks Foundation and Operation as stable, Agency and Volition as experimental, and Evolution and Ether as proposals.
+The current bundle manifest marks Foundation and Operation as stable, Agency and Volition as experimental, and Evolution and Ether as proposals. Repository authority rules are documented in [`STRUCTURE.md`](STRUCTURE.md).
 
-## Installation
+## Install the toolchain
 
 Python **3.10 or newer** is required.
 
@@ -51,7 +53,7 @@ python -m pip install -e .
 rgd --help
 ```
 
-## Specification workflow
+## Standard and profile workflow
 
 ```bash
 rgd init Robot
@@ -62,58 +64,78 @@ rgd boot
 rgd compile-spec
 ```
 
-`rgd init` personalizes the project DID and immediately recalculates the project's canonical source-tree root.
-
-`rgd compile-spec` creates one deterministic, untracked machine bundle at:
+Authority:
 
 ```text
-spec/openrgd_unified_spec.json
+spec/                              normative JSONC source
+        ↓ parsed equivalence
+standard/                          tracked strict-JSON leaf mirror
+        ↓ selected byte equivalence
+src/openrgd/seeds/default/spec/    tracked derived default profile
 ```
 
-Use `rgd build-standard` to rebuild the strict JSON leaf mirror.
-
-## Canonical integrity
-
-The profile:
-
-```text
-OPENRGD_SOURCE_TREE_SHA256_V1
-```
-
-commits the path, normalized byte count and SHA-256 digest of every selected modular source file. JSONC comments and formatting are included. Only the manifest's own hash field is replaced with `sha256:SELF` while calculating the root.
+`OPENRGD_SOURCE_TREE_SHA256_V1` commits the selected modular source tree. Verify or intentionally update it with:
 
 ```bash
-rgd hash          # verify
-rgd hash --write  # update manifest after an intentional source change
+rgd hash
+rgd hash --write
 ```
 
-Detailed rules: [`docs/reconciliation/CANONICAL_HASHING.md`](docs/reconciliation/CANONICAL_HASHING.md).
+## Import and enrichment
 
-## Source and derived artifacts
+`rgd import` extracts source-supported physical evidence only:
+
+```bash
+rgd import robot.urdf --out partial-robot
+```
+
+The reconciled URDF path does not invent kernel identity, safety, cognition or alignment. It emits only:
 
 ```text
-spec/                              normative source
-        │
-        ├── standard/              tracked strict-JSON leaf mirror
-        ├── machine bundle         generated on demand, untracked
-        └── seed profile           tracked, byte-aligned default scaffold
+01_foundation/description.jsonc
+01_foundation/actuation_dynamics.jsonc
 ```
 
-Old recursive domain bundles, unified copies, benchmark snapshots, duplicate UR5 workspaces and checked-in exports were removed from active authority. Their Git identities remain in `docs/history/generated-artifacts/INVENTORY.json`.
+`rgd alive` is the separate, explicit seed-enrichment operation:
 
-The three former external URDF examples were also removed because they were not hermetic, license-audited test fixtures and referenced absent assets or local deployment details. Future examples must satisfy [`docs/reconciliation/EXAMPLES_AND_FIXTURES.md`](docs/reconciliation/EXAMPLES_AND_FIXTURES.md).
+```bash
+rgd alive robot.urdf --out RGD-robot --seed default
+```
 
-## Import, enrichment and export
+The resulting project is integrity-addressed, but its manifest records:
 
-`rgd import` ingests source-supported evidence. For the reconciled ASCII USD path, it produces a partial Foundation description and does not invent policy.
+```text
+seed_compatibility_status = UNVERIFIED
+```
 
-`rgd alive` is the explicit operation that merges partial imported evidence with the reviewed default profile.
+A valid hash proves content identity, not that inherited calibration, HAL or safety assumptions fit the imported body.
 
-`rgd export` remains experimental static Synapse tooling. Generated output belongs in a caller-selected local directory and is ignored by the canonical repository.
+A synthetic project-owned fixture is available at `tests/fixtures/urdf/openrgd_minimal_arm.urdf` and is exercised end to end in CI.
 
-## Cognition-to-body boundary
+## Static interoperability export
 
-The convergence-candidate contracts define:
+After compiling a verified profile:
+
+```bash
+rgd export ros2 --out export/ros2
+```
+
+The active ROS 2 Synapse is deterministic and non-actuating. It produces controller/limit configuration and an `export_manifest.json` with explicit completeness status.
+
+`rgd_hardware.xacro` is emitted only when every exported joint has explicit HAL interfaces and the joint set resolves to one system driver plugin. Imported bodies cannot inherit seed driver bindings through a coincidental joint-name match.
+
+The historical Isaac generator was a placeholder and is not active. `rgd export isaac` fails explicitly.
+
+## Runtime boundary
+
+```bash
+rgd run status
+rgd run status --output json
+```
+
+Legacy adapter commands such as `rgd run ros2` and `rgd run viam` return a deterministic blocked result and do not import middleware or actuate hardware. See [`docs/reconciliation/RUNTIME_BOUNDARY.md`](docs/reconciliation/RUNTIME_BOUNDARY.md).
+
+The candidate cognitive-to-physical contract remains:
 
 ```text
 CognitionProposal
@@ -133,34 +155,21 @@ Body Adapter
 Hardware
 ```
 
-These contracts store structured commitments and audit evidence, not private chain-of-thought. HyperAion is a cognitive representation/ranking input, not permission to actuate.
-
-## Validation
-
-```bash
-python tools/validate_repository.py
-python tools/reconcile_artifacts.py
-python tools/validate_canonical_hash.py
-python tools/validate_runtime_boundary.py
-python contracts/agent/v0.1.0/validate.py
-python -m pytest -q
-```
-
-GitHub Actions runs the suite on Python 3.10 and 3.12 and builds a Windows executable artifact.
-
 ## Documentation
 
-- [`STRUCTURE.md`](STRUCTURE.md) — authority, domains and component boundaries;
-- [`LAYOUT.md`](LAYOUT.md) — actual directory map;
-- [`GLOSSARIO.md`](GLOSSARIO.md) — terminology;
-- [`VERSIONING.md`](VERSIONING.md) — independent version axes;
 - [`CLI_GUIDE.md`](CLI_GUIDE.md) — current command behavior;
-- [`docs/reconciliation/`](docs/reconciliation/) — reconciliation record;
-- [`docs/history/`](docs/history/) — non-normative historical evidence.
+- [`GUIDE_IMPORT.md`](GUIDE_IMPORT.md) — evidence-only import and enrichment boundary;
+- [`GUIDE_EXPORT.md`](GUIDE_EXPORT.md) — deterministic static ROS 2 output;
+- [`STRUCTURE.md`](STRUCTURE.md) — authority model and component boundaries;
+- [`LAYOUT.md`](LAYOUT.md) — active repository tree;
+- [`GLOSSARIO.md`](GLOSSARIO.md) — shared terminology;
+- [`VERSIONING.md`](VERSIONING.md) — independent version axes;
+- [`docs/reconciliation/`](docs/reconciliation/) — current decisions and audits;
+- [`docs/history/`](docs/history/) — preserved non-normative history.
 
-## Governance
+## Governance and contribution
 
-OpenRGD follows an RFC-oriented process. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable; its maturity label controls its authority.
+OpenRGD follows an RFC-oriented development model. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing normative changes. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable: its maturity label controls its authority.
 
 ## Author
 

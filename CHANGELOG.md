@@ -17,7 +17,11 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Deterministic single machine-bundle compiler without wall-clock metadata.
 - Runtime quarantine and fail-closed `rgd run` compatibility boundary.
 - Generated-artifact and removed-example inventory with original Git identities.
-- Tests for real `rgd init`, source-tree hashing, deterministic bundles and mirrors, runtime quarantine, USD partial import and SO-101 causal ordering.
+- Project-owned, MIT-licensed hermetic URDF fixture under `tests/fixtures/urdf/`.
+- Content-addressed URDF importer provenance using source filename, format, byte count and SHA-256.
+- Deterministic ROS 2 static export manifest with explicit `CONFIGURATION_ONLY` / `HARDWARE_BOUND` status.
+- End-to-end non-actuating URDF lifecycle and seed-HAL collision tests.
+- Tests for real `rgd init`, source-tree hashing, deterministic bundles and mirrors, runtime quarantine, partial import and SO-101 causal ordering.
 
 ### Changed
 
@@ -29,8 +33,14 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - `rgd init` now rehashes the project after DID personalization and fails atomically on integrity errors.
 - `rgd compile-spec` now emits one deterministic machine bundle instead of human/domain/benchmark copies.
 - `rgd build-standard` now mirrors only the canonical source set with destructive-path guards.
-- ASCII USD import emits source-supported partial Foundation evidence and writes under one `spec/` root.
+- URDF import is treated as a source-evidence operation rather than a policy generator.
+- URDF import now preserves supported type-correct revolute/prismatic units, link inertials, topology, source dynamics and mimic data when present.
+- Missing URDF physical values remain absent; invalid and non-finite values fail instead of receiving silent defaults.
+- `rgd alive` personalizes profile identity, records source provenance and marks seed/body compatibility `UNVERIFIED`.
+- `rgd export` now validates the source-tree root and machine-bundle root before generating files.
+- Imported bodies are isolated from seed actuator/HAL mappings until explicit review.
 - The canonical repository is explicitly non-actuating; physical runtime ownership is external.
+- Quiet-mode CLI errors now use deterministic plain stderr output.
 
 ### Removed
 
@@ -43,6 +53,9 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Competing Node bundle builder, duplicate Python unifier, old benchmark integrity command and unreachable parallel `src/cli.py`.
 - Redundant stale `requirements.txt` and its generator.
 - Historical bundled ROS 2/Viam runtime from the installed package.
+- Historical Isaac static generator placeholder from the active target registry.
+- URDF-generated kernel and default-alignment policy.
+- Generic fallback driver/address behavior from the ROS 2 static exporter.
 
 ### Preserved
 
@@ -50,6 +63,7 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Historical runtime source with verified Git blob identities.
 - Superseded seed skill index.
 - Original tree/blob identities for removed generated artifacts, workspaces, packaging prototypes and external examples.
+- Historical importer/exporter prototype identities under `docs/history/import-export-prototypes/`.
 
 ## [0.1.1] — 2025-11-26
 

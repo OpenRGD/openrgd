@@ -116,3 +116,48 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 
 **Status:** IMPLEMENTED ON BRANCH  
 **Decision:** Remove the MSIX placeholder because it referenced an absent dummy executable and missing Assets. A future shell-integration package must be complete, built and tested before being tracked.
+
+## R-024 — URDF import extracts evidence; it does not create policy
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** The reconciled URDF path emits source-supported partial Foundation evidence. It must not synthesize kernel identity, constitutional alignment, safety policy, cognition or hardware authorization from absent source data. The lightweight USD path remains a separately identified hardening surface.
+
+## R-025 — Missing URDF physical values remain unknown
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** The URDF importer must not replace absent or malformed physical values with convenient torque, velocity or joint-range defaults. Non-finite values fail closed; absent values remain absent.
+
+## R-026 — URDF source provenance is content-addressed
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Reconciled URDF evidence records source filename, format, byte count and SHA-256. Machine-local absolute paths are not part of the generated profile.
+
+## R-027 — Seed enrichment does not prove body compatibility
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** `rgd alive` may explicitly combine imported evidence with a selected reviewed seed, personalize profile identity and recalculate integrity. The project manifest must retain `seed_compatibility_status = UNVERIFIED` until inherited physical, HAL, safety and behavioral modules are reviewed against the actual body.
+
+## R-028 — Imported bodies cannot inherit HAL by name collision
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Static export must ignore inherited seed actuator and HAL bindings for a profile whose body description remains marked as imported partial evidence. A matching joint name is not provenance for a driver, address or interface.
+
+## R-029 — ROS 2 Synapse is static and non-actuating
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** The active ROS 2 Synapse validates the canonical source root and compiled machine bundle, then emits deterministic configuration artifacts with an explicit completeness status. It never launches ROS 2 or authorizes execution.
+
+## R-030 — Hardware export requires complete explicit bindings
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** `rgd_hardware.xacro` is generated only when every exported joint has explicit HAL interfaces and the exported set resolves to one system driver plugin. Otherwise export succeeds only as `CONFIGURATION_ONLY` and records missing bindings.
+
+## R-031 — Target registry reflects implementation maturity
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** ROS 2 is the only active static-export target in this release candidate. The historical Isaac file is classified as a placeholder and removed from the active registry; `rgd export isaac` fails explicitly.
+
+## R-032 — Owned URDF lifecycle fixture
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Admit `tests/fixtures/urdf/openrgd_minimal_arm.urdf` as a project-owned MIT test fixture. It is hermetic, non-normative and non-actuating, and exercises the mechanical lifecycle from source import through deterministic static export.
