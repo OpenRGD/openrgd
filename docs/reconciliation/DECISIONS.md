@@ -81,3 +81,34 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 
 **Status:** ADOPTED ON BRANCH  
 **Decision:** Root domain bundles, unified specifications, benchmark snapshots and robot-instance copies are not silently normalized as part of leaf convergence. They remain a separate reconciliation scope until their generation and ownership are proved.
+
+## R-017 — Historical runtime quarantine
+
+**Status:** IMPLEMENTED  
+**Decision:** Preserve the first bundled ROS 2 / Viam runtime and its related in-memory template generator under `docs/history/runtime-prototype/`, verify their original Git blob identities, and remove them from active package code.
+
+**Evidence:** the prototype referenced an absent `02_operation/safety_supervisor.jsonc`, contained API mismatches and unimplemented actuation paths, and bypassed the later cognition/somatic/safety/audit boundary.
+
+## R-018 — No safety-contract substitution by filename
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** Do not rename `safety_critical.jsonc` or `runtime_validation.jsonc`, and do not declare either equivalent to the absent historical `safety_supervisor.jsonc` without an explicit semantic mapping. Their recovered schemas have distinct responsibilities.
+
+## R-019 — Canonical root is non-actuating
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** `OpenRGD/openrgd` ships specification tooling, contracts, import/export utilities and validators. It does not ship a physical embodied runtime or Body Adapter. Physical execution belongs to an independently versioned implementation repository consuming OpenRGD contracts.
+
+The final repository name remains open; the empty `rgd-runtime` placeholder is not authority.
+
+## R-020 — Fail-closed `rgd run` compatibility
+
+**Status:** IMPLEMENTED / TESTED  
+**Decision:** Retain `rgd run status`, `rgd run ros2`, `rgd run viam` and `rgd run hybrid` as a deterministic migration boundary. `status` reports the externalized runtime; legacy adapter commands return `BLOCKED` with exit code `2`, import no middleware and cannot actuate hardware.
+
+## R-021 — Importers do not invent missing policy
+
+**Status:** IMPLEMENTED FOR USD / ADOPTED AS BOUNDARY  
+**Decision:** An importer emits only facts supported by the source robot description. `rgd import` writes a partial specification under one `spec/` root; `rgd alive` is the explicit step that merges partial evidence with the reviewed packaged seed.
+
+The USD importer was decoupled from the quarantined template generator. Broader importer-schema modernization remains separate work.
