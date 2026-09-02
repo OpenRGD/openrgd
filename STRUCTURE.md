@@ -96,21 +96,45 @@ The convergence candidate separates ownership as follows:
 
 ## Implementation boundaries in this repository
 
-The Python package currently contains:
+The installed Python package contains:
 
 - CLI command routing;
 - JSONC loading and specification compilation;
 - URDF and USD importers;
 - ROS 2 and Isaac-oriented Synapse generators;
-- prototype ROS 2 and Viam runtime adapters;
-- an experimental pure-logic runtime engine;
-- plugin-discovery and policy scaffolding.
+- seed and profile materialization;
+- plugin-discovery and policy scaffolding;
+- a non-actuating `rgd run` compatibility/status group.
 
-These modules prove implementation activity but do not establish a complete production embodied runtime.
+It does **not** contain an active physical embodied runtime or hardware adapter implementation.
+
+The first ROS 2 / Viam runtime experiment and its related in-memory template generator are preserved byte-for-byte under `docs/history/runtime-prototype/`. They were quarantined because they referenced a nonexistent safety file, contained API mismatches and placeholders, and bypassed the later cognition/somatic/safety/audit boundary.
+
+The canonical ownership decision is documented in:
+
+```text
+docs/reconciliation/RUNTIME_BOUNDARY.md
+docs/reconciliation/RUNTIME_STATUS.json
+```
+
+A separately versioned embodied runtime may consume OpenRGD contracts, but must be reconciled and released through its own implementation repository. The empty repository names already present in the GitHub organization are not authority.
+
+## Fail-closed compatibility
+
+The `rgd run` namespace is retained to explain migration and preserve deterministic behavior for historical command names.
+
+```text
+rgd run status      → reports the external runtime boundary
+rgd run ros2        → BLOCKED, exit 2
+rgd run viam        → BLOCKED, exit 2
+rgd run hybrid      → BLOCKED, exit 2
+```
+
+These commands do not import ROS 2, Viam, serial or CAN libraries and do not open hardware or network connections.
 
 ## Retained legacy areas
 
-The following areas are deliberately retained pending a later evidence-based cleanup:
+The following areas are deliberately retained pending later evidence-based cleanup:
 
 - `RGD-ur5/` and `my-robots/RGD-ur5/`;
 - tracked example exports under `export/`;
