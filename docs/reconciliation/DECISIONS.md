@@ -56,3 +56,28 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 
 **Status:** ADOPTED ON BRANCH  
 **Decision:** A schema, placeholder file or conceptual module must not be described as a complete runtime implementation without executable evidence and validation.
+
+## R-012 — Executable artifact authority
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Encode the source/derived relationship in `ARTIFACT_POLICY.json` and enforce it through `tools/reconcile_artifacts.py` in CI. Selected `spec/` leaves are normative; `standard/` must be semantically equivalent strict JSON; the packaged default seed must be byte-identical unless an approved override exists.
+
+## R-013 — Runtime seed overrides
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** A seed-specific divergence is permitted only as an explicit `RUNTIME_PROFILE_OVERRIDE` containing a semantic reason, governance decision reference, canonical SHA-256 and seed SHA-256. Unlisted or stale differences fail CI. The current default seed has zero approved overrides.
+
+## R-014 — Default seed convergence
+
+**Status:** IMPLEMENTED  
+**Decision:** Replace the three stale default-seed copies with canonical source bytes, restore the ten missing Agency/skill JSONC artifacts, archive the legacy strict-JSON skill index and remove generated unified products from the active seed.
+
+## R-015 — Project identity personalization
+
+**Status:** CONFIRMED / TESTED  
+**Decision:** `rgd init NAME` may personalize only the RGD DID in `00_core/kernel.jsonc` to `did:rgd:<normalized-name>`. Every other selected artifact and every other kernel byte must remain canonical.
+
+## R-016 — Aggregate products remain separately governed
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** Root domain bundles, unified specifications, benchmark snapshots and robot-instance copies are not silently normalized as part of leaf convergence. They remain a separate reconciliation scope until their generation and ownership are proved.
