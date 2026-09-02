@@ -1,104 +1,119 @@
-import re
+from __future__ import annotations
+
 import json
-from pathlib import Path
-from typing import Dict, Any
+import re
+from typing import Any, Dict
+
 from ..base import BaseImporter
-from ...core.templates import get_templates
+
 
 class USDImporter(BaseImporter):
+    """Import an ASCII USD/USDA description into a partial OpenRGD spec.
+
+    The importer extracts only facts supported by the source file. It does not
+    synthesize a kernel, safety policy, alignment profile or other multi-domain
+    material. ``rgd alive`` owns the later merge with a reviewed packaged seed.
     """
-    Ingests USD (Universal Scene Description) files in ASCII format (.usda).
-    Extracts PhysicsJoints and Drives to reconstruct the OpenRGD definition.
-    """
-    
+
     def parse(self) -> Dict[str, Any]:
         self.log(f"Parsing USD structure from {self.source}...")
-        
+
         try:
-            with open(self.source, 'r', encoding='utf-8') as f:
-                content = f.read()
+            content = self.source.read_text(encoding="utf-8")
         except UnicodeDecodeError:
-            self.log("❌ Error: Can only parse ASCII USD files (.usda). Convert .usd to .usda first.")
+            self.log(
+                "Error: only ASCII/text USD files are supported. "
+                "Convert binary .usd/.usdc content to .usda first."
+            )
             return {}
-        except Exception as e:
-            self.log(f"❌ Read Error: {e}")
+        except OSError as exc:
+            self.log(f"Read error: {exc}")
             return {}
 
-        # 1. Trova il nome del robot (Default Prim)
-        # Cerca: defaultPrim = "RobotName"
         name_match = re.search(r'defaultPrim\s*=\s*"([^"]+)"', content)
         if name_match:
             self.robot_name = name_match.group(1)
 
-        # 2. Estrazione Giunti (PhysicsRevoluteJoint / PhysicsPrismaticJoint)
-        # Pattern: def PhysicsRevoluteJoint "joint_name"
-        joint_pattern = re.compile(r'def\s+Physics(Revolute|Prismatic)Joint\s+"([^"]+)"', re.MULTILINE)
-        
-        joints = {}
-        
+        joint_pattern = re.compile(
+            r'def\s+Physics(Revolute|Prismatic)Joint\s+"([^"]+)"',
+            re.MULTILINE,
+        )
+        joints: dict[str, dict[str, Any]] = {}
+
         for match in joint_pattern.finditer(content):
-            j_type = match.group(1).lower() # revolute or prismatic
-            j_name = match.group(2)
-            
-            # Cerca il blocco del giunto per trovare i limiti
-            # (Questo è un parser semplificato, cerca nelle righe successive)
+            joint_type = match.group(1).lower()
+            joint_name = match.group(2)
+
             block_start = match.end()
-            block_end = content.find("def ", block_start) # Cerca il prossimo def come fine blocco
-            if block_end == -1: block_end = len(content)
-            
+            block_end = content.find("def ", block_start)
+            if block_end == -1:
+                block_end = len(content)
             joint_block = content[block_start:block_end]
-            
-            # Estrazione Limiti
-            lower = -3.14
-            upper = 3.14
-            limit_match = re.search(r'float:physics:lowerLimit\s*=\s*([-0-9.]+)', joint_block)
-            if limit_match: lower = float(limit_match.group(1))
-            
-            limit_match = re.search(r'float:physics:upperLimit\s*=\s*([-0-9.]+)', joint_block)
-            if limit_match: upper = float(limit_match.group(1))
 
-            # Estrazione Drive (Stiffness/Damping -> PID)
-            stiffness = 0.0
-            damping = 0.0
-            drive_stiff = re.search(r'float:drive:angular:physics:stiffness\s*=\s*([-0-9.]+)', joint_block)
-            if drive_stiff: stiffness = float(drive_stiff.group(1))
-            
-            drive_damp = re.search(r'float:drive:angular:physics:damping\s*=\s*([-0-9.]+)', joint_block)
-            if drive_damp: damping = float(drive_damp.group(1))
-            
-            # Estrazione Max Force
-            max_force = 100.0
-            force_match = re.search(r'float:drive:angular:physics:maxForce\s*=\s*([-0-9.]+)', joint_block)
-            if force_match: max_force = float(force_match.group(1))
+            lower = self._read_float(
+                joint_block,
+                r'float:physics:lowerLimit\s*=\s*([-+0-9.eE]+)',
+                -3.14,
+            )
+            upper = self._read_float(
+                joint_block,
+                r'float:physics:upperLimit\s*=\s*([-+0-9.eE]+)',
+                3.14,
+            )
+            stiffness = self._read_float(
+                joint_block,
+                r'float:drive:angular:physics:stiffness\s*=\s*([-+0-9.eE]+)',
+                0.0,
+            )
+            damping = self._read_float(
+                joint_block,
+                r'float:drive:angular:physics:damping\s*=\s*([-+0-9.eE]+)',
+                0.0,
+            )
+            max_force = self._read_float(
+                joint_block,
+                r'float:drive:angular:physics:maxForce\s*=\s*([-+0-9.eE]+)',
+                100.0,
+            )
 
-            joints[j_name] = {
-                "type": j_type,
+            joints[joint_name] = {
+                "type": joint_type,
                 "limits": {
                     "torque_nm": max_force,
-                    "range_rad": [lower, upper]
+                    "range_rad": [lower, upper],
                 },
-                # Qui salviamo i parametri Isaac originali per il round-trip perfetto
-                "isaac_params": {
-                    "stiffness": stiffness,
-                    "damping": damping
-                }
+                "source_parameters": {
+                    "usd_drive_stiffness": stiffness,
+                    "usd_drive_damping": damping,
+                },
             }
 
         self.log(f"Extracted {len(joints)} physics joints from USD.")
 
-        # 3. Costruzione Struttura RGD
-        rgd_structure = get_templates(self.robot_name)
-        
-        desc_content = {
+        description = {
             "hardware_id": self.robot_name,
-            "source_format": "USD",
-            "notes": "Imported from Isaac Sim context"
+            "imported_from": str(self.source),
+            "source_format": "USD_ASCII",
+            "notes": "Partial Foundation evidence imported from a USD scene.",
         }
-        
-        rgd_structure["spec/01_foundation/description.jsonc"] = \
-            f"/** IMPORTED FROM USD */\n{json.dumps(desc_content, indent=2)}"
-            
-        rgd_structure["spec/01_foundation/actuation_dynamics.jsonc"] = \
-            f"/** IMPORTED FROM ISAAC PHYSICS */\n{json.dumps(joints, indent=2)}"
 
-        return rgd_structure
+        return {
+            "spec/01_foundation/description.jsonc": (
+                "/** IMPORTED FROM USD; PARTIAL FOUNDATION EVIDENCE */\n"
+                + json.dumps(description, indent=2)
+            ),
+            "spec/01_foundation/actuation_dynamics.jsonc": (
+                "/** IMPORTED FROM USD PHYSICS; PARTIAL FOUNDATION EVIDENCE */\n"
+                + json.dumps(joints, indent=2)
+            ),
+        }
+
+    @staticmethod
+    def _read_float(block: str, pattern: str, default: float) -> float:
+        match = re.search(pattern, block)
+        if not match:
+            return default
+        try:
+            return float(match.group(1))
+        except ValueError:
+            return default
