@@ -1,0 +1,51 @@
+{
+  "policy_version": "1.0.0",
+  "status": "DECIDED_FOR_RECONCILIATION",
+  "canonical_source_root": "spec",
+  "standard_mirror_root": "standard",
+  "default_seed_root": "src/openrgd/seeds/default/spec",
+  "canonical_file_selection": {
+    "jsonc_recursive": true,
+    "static_files": [
+      "MANIFESTO.md"
+    ],
+    "excluded_source_files": [
+      "01_spec.jsonc",
+      "02_spec.jsonc",
+      "03_spec.jsonc",
+      "04_spec.jsonc",
+      "05_spec.jsonc",
+      "06_spec.jsonc",
+      "openrgd_unified_spec.jsonc"
+    ]
+  },
+  "standard_mirror": {
+    "jsonc_target_extension": ".json",
+    "comparison": "parsed-json-equivalence",
+    "static_comparison": "byte-exact",
+    "allowed_generated_paths": [
+      "01_spec.json",
+      "02_spec.json",
+      "03_spec.json",
+      "04_spec.json",
+      "05_spec.json",
+      "06_spec.json",
+      "openrgd_unified_spec.json",
+      "benchmarks/**"
+    ]
+  },
+  "default_seed": {
+    "comparison": "byte-exact",
+    "allowed_extra_paths": [],
+    "allowed_overrides": [],
+    "override_required_fields": [
+      "path",
+      "classification",
+      "reason",
+      "decision_ref",
+      "canonical_sha256",
+      "seed_sha256"
+    ]
+  },
+  "non_retroactivity_rule": "This policy controls repository convergence from 2026-09-02 onward. It does not rewrite the maturity or meaning of historical artifacts."
+}
