@@ -49,21 +49,19 @@ jobs:
       - name: Compile Python sources
         run: python -m compileall -q src/openrgd
 
+      - name: Validate repository invariants
+        run: python tools/validate_repository.py
+
       - name: Validate convergence candidate contracts
         run: python contracts/agent/v0.1.0/validate.py
 
       - name: Run CLI smoke test
         run: rgd --quiet --help
 
-      - name: Run tests when present
-        shell: bash
+      - name: Run tests
         run: |
-          if [ -d tests ]; then
-            python -m pip install pytest
-            python -m pytest -q
-          else
-            echo "No tests/ directory found; smoke validation completed."
-          fi
+          python -m pip install pytest
+          python -m pytest -q
 
   build-windows:
     name: Build Windows executable
