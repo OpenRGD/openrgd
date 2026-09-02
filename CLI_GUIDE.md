@@ -1,101 +1,203 @@
-# OpenRGD CLI: Operator's Manual
+# OpenRGD CLI Guide
 
-The **OpenRGD Command Line Interface** (`rgd`) is the primary tool for managing the lifecycle of a cognitive robot definition. It acts as the bridge between your file system and the AI Agent.
+The `rgd` command in this repository manages OpenRGD specifications, contracts and interoperability artifacts. It is **not** a physical robot runner.
 
----
-
-## ⚡ Installation
-
-If you are developing locally (from the source):
+Python 3.10 or newer is required.
 
 ```bash
-cd openrgd
-pip install -e .
-Verify the installation:
-
-Bash
-
+python -m pip install -e .
 rgd --help
-🎮 Core Commands
-1. Genesis (init)
-Scaffolds a new robot project ("Containment Field") populated with the internal Gold Standard templates.
+```
 
-Bash
+## Global options
 
-# Interactive mode (will ask for the project name)
-rgd init
+```text
+--quiet, -q     disable cinematic output for automation
+--verbose, -v   enable diagnostic logging
+```
 
-# Fast mode (creates the folder immediately)
-rgd init my_robot_v1
-What it does:
+Global options precede the command:
 
-Creates the standard folder structure (spec/01_foundation, spec/02_operation, etc.).
+```bash
+rgd --quiet check
+rgd --verbose export ros2
+```
 
-Injects a valid kernel.jsonc in spec/00_core.
+## Specification lifecycle
 
-Populates domains with reference templates (actuation dynamics, safety supervisors, ethical alignment).
+### `rgd init`
 
-2. Diagnostics (check)
-Validates the semantic integrity of your robot definition.
+Create a new profile from the packaged default seed:
 
-Bash
+```bash
+rgd init my_robot
+```
 
-# Auto-detects the kernel in the current folder
+The seed is validated against the normative `spec/` source in CI. The command copies the selected canonical modules and personalizes only the project DID in:
+
+```text
+spec/00_core/kernel.jsonc
+```
+
+It does not copy stale unified/compiled products into the new profile.
+
+### `rgd check`
+
+Validate the kernel and its declared module references:
+
+```bash
+cd my_robot
 rgd check
+```
 
-# Targets a specific kernel file
-rgd check path/to/kernel.jsonc
-What it does:
+A specific kernel may be supplied:
 
-Auto-discovery: Finds kernel.jsonc automatically (searching in root, spec/, or 00_core/).
+```bash
+rgd check spec/00_core/kernel.jsonc
+```
 
-Link Verification: Ensures every module referenced in the Kernel actually exists on the disk.
+### `rgd boot`
 
-Syntax Validation: Checks for valid JSONC syntax using a robust parser.
+Load the modules referenced by a kernel and emit the current grounding representation:
 
-Visuals: Displays a hierarchical, color-coded tree of the robot's "cortex".
-
-3. Awakening (boot)
-Simulates the robot's cognitive boot sequence and generates the System Prompt for Large Language Models.
-
-Bash
-
-# Standard Boot (Cinematic UI)
+```bash
 rgd boot
-
-# Pipeable Output (for software pipelines)
 rgd boot --output json
-Use Case: Copy the output of rgd boot (Text Mode) and paste it into the System Message of GPT-4, Claude, or your local VLA model to "ground" it in physical reality.
+```
 
-4. Compilation (compile-spec)
-Compiles the fragmented .jsonc files into a Unified Specification Artifact. This is essential for training or fine-tuning models on the robot's definition.
+`boot` prepares structured context. It does not start a physical runtime or issue actuator commands.
 
-Bash
+### `rgd compile-spec`
 
+Build the unified human/machine specification products:
+
+```bash
 rgd compile-spec
-The "Twin" System: This command generates two files in your spec/ folder:
+```
 
-openrgd_unified_spec.jsonc (Human Twin): Contains the raw source code (comments included) of all modules. Optimized for LLM context injection (the AI can read the comments).
+Unified artifacts are generated products, not independent sources of truth. The canonical source remains the modular JSONC under `spec/`.
 
-openrgd_unified_spec.json (Machine Twin): Contains clean, minified JSON data. Optimized for validators and software tools.
+### `rgd build-standard`
 
-🤖 Automation & CI/CD
-The CLI supports "Robotic Modes" for integration into pipelines (GitHub Actions, Jenkins, Docker).
+Generate the strict-JSON compatibility mirror from JSONC sources:
 
-Quiet Mode (-q / --quiet)
-Disables all animations, ASCII art, and "personality" logs. Only critical errors or requested data are printed to stdout.
+```bash
+rgd build-standard
+```
 
-Bash
+Repository maintainers must additionally run:
 
-# Example: Extract JSON configuration silently to a file
-rgd boot -q --output json > robot_config.json
-Verbose Mode (-v / --verbose)
-Enables deep debugging logs, showing exact file paths, parsing steps, and internal state changes.
+```bash
+python tools/reconcile_artifacts.py
+```
 
-Bash
+to prove leaf-level equivalence among `spec/`, `standard/` and the packaged default seed.
 
-rgd check -v
-🧠 "Cinematic" Experience
-By default, the CLI runs in Cinematic Mode. It simulates system initialization delays, displays ASCII art, and occasionally "chats" via randomized status messages (e.g., "Checking my limbs...").
+## Import and profile convergence
 
-This is designed to give the developer a sense of connection with the machine being defined. To disable this permanently for a session, use -q.
+### `rgd import`
+
+Import only facts supported by an external robot description:
+
+```bash
+rgd import robot.urdf --out RGD-robot
+rgd import robot.usda --out RGD-robot
+```
+
+The result is a **partial** OpenRGD specification under one `spec/` root. Importers must not invent constitutional, safety or cognitive policy absent from the source description.
+
+### `rgd alive`
+
+Merge a partial URDF/USD import with the reviewed packaged seed:
+
+```bash
+rgd alive robot.urdf
+```
+
+This is the explicit full-profile convergence step. It is distinct from physical runtime execution.
+
+## Interoperability exporters
+
+### `rgd export`
+
+Generate target-ecosystem artifacts from an OpenRGD specification:
+
+```bash
+rgd export ros2
+rgd export isaac
+```
+
+Synapse exporters are static generators. Their existence does not mean that a bidirectional runtime or hardware connection has been started.
+
+## Runtime compatibility boundary
+
+The historical ROS 2 / Viam runtime prototype has been quarantined and removed from the installed package. The old `run` namespace remains only so existing scripts receive a deterministic migration result.
+
+### `rgd run status`
+
+```bash
+rgd run status
+rgd run status --output json
+```
+
+This command reports:
+
+```text
+status: NOT_PROVIDED_BY_CANONICAL_ROOT
+historical prototype: QUARANTINED
+physical actuation: disabled
+```
+
+### Legacy adapter names
+
+```bash
+rgd run ros2
+rgd run viam
+rgd run hybrid
+```
+
+These commands:
+
+- never import ROS 2, Viam, serial or CAN libraries;
+- never open hardware or network connections;
+- never issue actuator commands;
+- return `BLOCKED` with exit code `2`.
+
+A conformant physical runtime belongs to an independently versioned repository and must consume the candidate/accepted contracts:
+
+```text
+CognitionProposal
+      ↓
+ActionIntent
+      ↓
+Somatic Translator
+      ↓
+CapabilityPlan
+      ↓
+Operation Safety Gate
+      ↓
+DecisionTrace
+      ↓
+Body Adapter
+      ↓
+Hardware
+```
+
+See:
+
+```text
+docs/reconciliation/RUNTIME_BOUNDARY.md
+docs/reconciliation/RUNTIME_STATUS.json
+```
+
+## Validation for maintainers
+
+```bash
+python tools/validate_repository.py
+python tools/reconcile_artifacts.py
+python tools/validate_runtime_boundary.py
+python contracts/agent/v0.1.0/validate.py
+python -m pytest -q
+```
+
+The runtime-boundary validator proves that historical source blobs remain intact in the archive, no active bundled runtime survives, and the compatibility CLI fails closed.
