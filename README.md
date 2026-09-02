@@ -12,16 +12,18 @@ These versions are independent. See [`VERSIONING.md`](VERSIONING.md).
 
 ## What this repository contains
 
-- `spec/` — human-readable JSONC source for the OpenRGD standard and reference bundle;
-- `standard/` — strict-JSON machine mirror generated from the specification;
+- `spec/` — normative human-readable JSONC source for the OpenRGD standard and reference bundle;
+- `standard/` — strict-JSON compatibility mirror validated against the specification;
 - `contracts/` — cross-component interfaces with explicit maturity and provenance;
-- `src/openrgd/` — the Python CLI and current reference tooling;
+- `src/openrgd/` — the non-actuating Python CLI and current reference tooling;
 - importers for URDF and USD;
 - Synapse generators for ROS 2 and Isaac-oriented outputs;
-- experimental runtime adapters and the `rgd-timetravel` plugin prototype;
+- a packaged default profile synchronized from reviewed specification sources;
 - examples, build tools and historical documentation.
 
-The repository does **not** claim that the complete embodied cognitive pipeline, a complete HyperAion512 encoder, Chronograf production signing or Rate My Ethics runtime integration are already finished.
+This repository does **not** ship a physical embodied runtime or a hardware adapter implementation. The former bundled ROS 2 / Viam prototype has been preserved under `docs/history/runtime-prototype/` and removed from the installed package because it could not prove the convergent safety and execution boundary.
+
+The repository also does not claim that a complete HyperAion512 encoder, Chronograf production signing or Rate My Ethics runtime integration are already finished.
 
 ## Canonical domain model
 
@@ -50,7 +52,7 @@ python -m pip install -e .
 rgd --help
 ```
 
-Typical workflow:
+Typical specification workflow:
 
 ```bash
 rgd init Robot
@@ -61,7 +63,36 @@ rgd compile-spec
 rgd export ros2
 ```
 
-Available CLI areas include `init`, `check`, `boot`, `alive`, `import`, `export`, `build-standard`, `compile-spec` and the `run` command group.
+Available active CLI areas include `init`, `check`, `boot`, `alive`, `import`, `export`, `build-standard` and `compile-spec`.
+
+The historical `run` namespace remains only as a fail-closed migration/status boundary:
+
+```bash
+rgd run status
+rgd run status --output json
+```
+
+Legacy adapter commands such as `rgd run ros2` and `rgd run viam` return a deterministic blocked result and do not import middleware or actuate hardware. See [`docs/reconciliation/RUNTIME_BOUNDARY.md`](docs/reconciliation/RUNTIME_BOUNDARY.md).
+
+## Source and derived artifacts
+
+The reconciliation branch enforces:
+
+```text
+spec/                              normative JSONC source
+        ↓ parsed equivalence
+standard/                          derived strict JSON mirror
+        ↓ selected byte equivalence
+src/openrgd/seeds/default/spec/    derived packaged profile
+```
+
+Check the relationship with:
+
+```bash
+python tools/reconcile_artifacts.py
+```
+
+Runtime-profile divergences require an explicit, justified and hash-pinned override. The default seed currently has zero approved overrides.
 
 ## Contracts and auditability
 
@@ -78,6 +109,8 @@ CapabilityPlan
       ↓
 Operation Safety Gate
       ↓
+DecisionTrace
+      ↓
 Body Adapter
       ↓
 Hardware
@@ -85,13 +118,14 @@ Hardware
 
 They also formalize Chronons as canonical historical evidence, memory as a projection, and DecisionTrace as structured audit evidence rather than private chain-of-thought. Candidate material remains non-stable until accepted through governance.
 
-Validate the imported contract package with:
+Validate the imported contract package and runtime quarantine with:
 
 ```bash
 python contracts/agent/v0.1.0/validate.py
+python tools/validate_runtime_boundary.py
 ```
 
-GitHub Actions validates Python 3.10 and 3.12, runs CLI and contract smoke tests, and builds a Windows executable artifact.
+GitHub Actions validates Python 3.10 and 3.12, checks canonical artifact mirrors, verifies the fail-closed runtime boundary, runs tests and builds a Windows executable artifact.
 
 ## Documentation
 
@@ -100,7 +134,7 @@ GitHub Actions validates Python 3.10 and 3.12, runs CLI and contract smoke tests
 - [`GLOSSARIO.md`](GLOSSARIO.md) — shared terminology;
 - [`VERSIONING.md`](VERSIONING.md) — independent version axes;
 - [`docs/reconciliation/`](docs/reconciliation/) — historical reconciliation record;
-- [`docs/history/`](docs/history/) — preserved non-normative 2025 documents.
+- [`docs/history/`](docs/history/) — preserved non-normative 2025 documents and code evidence.
 
 ## Governance and contribution
 
