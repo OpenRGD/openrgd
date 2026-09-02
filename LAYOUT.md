@@ -1,92 +1,47 @@
-# OpenRGD Project Layout
+# OpenRGD Repository Layout
 
-This document describes the directory structure of the OpenRGD repository.
-It helps contributors locate the core logic, the standard definitions, and the tooling modules.
-
-## 📂 High-Level Overview
-
-The repository is divided into two main realms:
-1.  **`spec/`**: The **Data** (The Standard, Reference Implementation, and Templates).
-2.  **`src/`**: The **Code** (The CLI, Compilers, and Bridges).
+This file describes the directories that actually exist after the first reconciliation pass.
 
 ```text
 openrgd/
-├── assets/                 # Static resources (Icons, Wallpapers, Logos)
-├── spec/                   # The Reference Implementation (JSONC)
-├── src/                    # The Python Package Source Code
-├── .gitignore              # Git configuration
-├── CHANGELOG.md            # Version history
-├── CLI_GUIDE.md            # User manual for the 'rgd' command
-├── CONTRIBUTING.md         # Governance and contribution rules
-├── GUIDE_EXPORT.md         # Documentation for ROS2/Isaac bridges
-├── GUIDE_IMPORT.md         # Documentation for URDF/USD ingestion
-├── LAYOUT.md               # This file
-├── LICENSE                 # MIT License
-├── pyproject.toml          # Python build configuration (PEP 621)
-├── README.md               # The Vision and Manifesto
-├── run.py                  # Dev launcher script
-└── SECURITY.md             # Vulnerability reporting policy
-🏗️ Directory Details
-spec/ (The Standard)
-Contains the "Golden Standard" definition of a robot. This folder serves two purposes: it documents the schema via example (Reference Implementation) and provides the default template for new projects.
+├── .github/workflows/       # Active CI workflows
+├── assets/                  # Branding and platform assets
+├── contracts/               # Versioned cross-component contracts and provenance
+├── docs/
+│   ├── history/             # Preserved non-normative historical documents
+│   └── reconciliation/      # Decisions, status and repository map
+├── example/                 # Source robot-description examples
+├── export/                  # Legacy/example generated outputs; non-authoritative
+├── plugins/                 # Bundled plugin prototypes
+├── RGD-ur5/                 # Legacy/reference generated robot bundle
+├── my-robots/               # Legacy local-style generated robot bundle
+├── spec/                    # Human-readable JSONC specification source
+├── standard/                # Generated strict-JSON mirror
+├── src/
+│   ├── openrgd/
+│   │   ├── commands/        # CLI verbs and command groups
+│   │   ├── core/            # Shared loading, compilation and plugin logic
+│   │   ├── importers/       # URDF and USD ingestion
+│   │   ├── runtime/         # Experimental engine and runtime adapters
+│   │   ├── seeds/           # Packaged scaffold copied by `rgd init`
+│   │   └── synapses/        # Interoperability generators
+│   └── cli.py               # Legacy parallel CLI module pending review
+├── tools/                   # Repository and specification build utilities
+├── CHANGELOG.md
+├── GLOSSARIO.md
+├── LICENSE
+├── README.md
+├── STRUCTURE.md
+├── VERSIONING.md
+└── pyproject.toml
+```
 
-00_core/: The Kernel and Meta-Governance (e.g., kernel.jsonc).
+## Where to make changes
 
-01_foundation/ to 06_ether/: The 6 normative domains of the OpenRGD protocol.
+- Change the reference standard in `spec/`, then regenerate and review derived mirrors.
+- Change Python behavior in `src/openrgd/`.
+- Add cross-component interfaces under `contracts/` with a maturity label and provenance.
+- Add historical evidence under `docs/history/`; do not rewrite it as if it were current.
+- Record reconciliation choices under `docs/reconciliation/`.
 
-src/openrgd/ (The Toolchain)
-The Python package source.
-
-commands/: The CLI verbs. Each file corresponds to an rgd [verb] command.
-
-init.py: Scaffolding engine (uses seeds/).
-
-check.py: Semantic validator and linter.
-
-boot.py: Cognitive BIOS simulator (Prompt generation).
-
-compiler.py: Logic for compile-spec (Twin generation).
-
-bridge.py: Router for the Export system.
-
-importer.py: Router for the Import system.
-
-studio.py: Web server for the GUI.
-
-core/: Shared utilities and internal logic.
-
-config.py: Global state (Quiet/Verbose flags).
-
-visuals.py: UI helpers (Rich logs, ASCII art, Progress bars).
-
-utils.py: Robust JSONC parser, Path resolution.
-
-templates.py: Dynamic text generation helpers.
-
-bridges/: The Export Plugins (Adapters).
-
-ros2/: Generates .yaml and .xacro.
-
-isaac/: Generates Python ArticulationCfg classes.
-
-base.py: Abstract Interface for new bridges.
-
-importers/: The Ingestion Plugins (Parsers).
-
-urdf/: XML parser for ROS robots.
-
-usd/: Regex parser for Isaac/Omniverse stages (.usda).
-
-seeds/: Static assets included in the binary build.
-
-default/: The copy of spec/ used by rgd init to generate new robots.
-
-assets/ (Resources)
-branding/: Official logos and vector graphics.
-
-windows/: Integration scripts (setup.bat) and icons (.ico) for Windows Explorer support.
-
-⚙️ Configuration Files
-pyproject.toml: The modern replacement for setup.py. It defines dependencies (typer, rich), metadata, and the entry point script (rgd = openrgd.main:run).
-
-SECURITY.md: Defines the Responsible Disclosure policy and PGP keys.
+Generated `build/`, `dist/`, bytecode and packaging metadata are excluded by `.gitignore` and MUST NOT be committed.

@@ -1,44 +1,40 @@
 # Changelog
 
-All notable changes to the **OpenRGD** project will be documented in this file.
+All notable changes to the OpenRGD repository and Python toolchain are documented here. Standard, toolchain and contract versions are independent; see [`VERSIONING.md`](VERSIONING.md).
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
----
-
-## [Unreleased]
-*Changes currently in the `main` branch, targeting v0.2.0.*
+## [Unreleased] — Historical reconciliation
 
 ### Added
-- **CLI Toolchain:** Complete refactoring of the `rgd` command line interface using `typer` and `rich`.
-  - Added `rgd init`: Interactive scaffolding with "Gold Standard" templates.
-  - Added `rgd check`: Semantic validation of the Kernel and module links.
-  - Added `rgd boot`: Cognitive BIOS simulation and LLM Prompt generation.
-  - Added `rgd compile-spec`: Generation of Human (.jsonc) and Machine (.json) digital twins.
-- **Interoperability Bridges:**
-  - **Import:** New `rgd import` command supporting URDF and USD (ASCII/Zip).
-  - **Export:** New `rgd export` command for ROS2 (`ros2_control` + `xacro`) and Isaac Lab (Python Configs).
-- **OpenRGD Studio:** Added `studio.html`, a single-page web application for visual configuration and cognitive simulation.
-- **Windows Integration:** Added `assets/windows/setup.bat` for native .rgd file association and icons.
-- **Security:** Added `SECURITY.md` and PGP keys structure for vulnerability reporting.
+
+- Active GitHub Actions workflow validating Python 3.10 and 3.12.
+- Windows executable build and artifact publication in CI.
+- Versioned `contracts/` area with maturity and provenance rules.
+- OpenRGD Agent Contracts `v0.1.0` imported as a **convergence candidate**.
+- Explicit repository versioning, structure, glossary and reconciliation documentation.
 
 ### Changed
-- **Architecture:** Moved core specifications from `src/` to a dedicated `spec/` directory to separate code from data.
-- **Kernel:** Updated to v0.3 schema to support `cognitive_expansion_engine` and `oneiric_cycle`.
-- **Foundation:** Updated `actuation_topology.jsonc` to support Control Profiles (inheritance) and Isaac Lab impedance parameters.
 
----
+- Declared minimum Python version aligned with the runtime syntax: Python 3.10+.
+- Project license metadata changed to a PEP 621-compatible file reference.
+- Documentation now distinguishes the standard bundle (`0.2.0`), toolchain (`0.1.1`) and candidate contracts (`0.1.0`).
+- Canonical domain names restored to `Foundation / Operation / Agency / Volition / Evolution / Ether`, coordinated by `00_core`.
 
-## [0.1.0] - 2025-11-25
-*Initial Public Alpha Release.*
+### Removed
 
-### Added
-- **Core Specification:** Definition of the 6 Domains (Foundation, Operation, Agency, Volition, Evolution, Ether).
-- **Kernel Architecture:** Introduced `kernel.jsonc` as the semantic orchestrator.
-- **Reference Implementation:** Full JSONC schema examples for the "Berkeley Humanoid Lite".
-- **Documentation:** Added `README.md`, `CONTRIBUTING.md`, `CLI_GUIDE.md`, and `STRUCTURE.md`.
-- **License:** Released under MIT License.
+- Tracked build products, distributions, Python bytecode, generated package metadata and the local source archive.
+- Inactive `.github/build.yaml`, replaced by `.github/workflows/ci.yml`.
 
-### Security
-- Established the `vulnerabilities.openrgd.org` disclosure program structure.
+### Preserved
+
+- Original 2025 documentation is retained under `docs/history/` as non-normative evidence.
+- Generated robot bundles and duplicate specification copies remain temporarily available pending a separate reconciliation decision.
+
+## [0.1.1] — 2025-11-26
+
+- Renamed the Python distribution to `rgd`.
+- Prepared the `v0.1.1` repository/toolchain tag.
+
+## [0.1.0] — 2025-11-25
+
+- Published the initial OpenRGD draft and six-domain reference specification.
+- Added the first CLI, import/export tooling and project documentation.

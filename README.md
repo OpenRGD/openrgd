@@ -1,140 +1,114 @@
-# OpenRGD: A Proposed Standard for Cognitive Embodiment
+# OpenRGD — Robot Graph Definition
 
-[![Status: RFC](https://img.shields.io/badge/Status-Draft_Standard_v0.1-blue.svg)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+**OpenRGD** is an open, machine-readable standard for cognitive embodiment: a semantic bridge through which an AI system can understand a robot body, its operational limits, its capabilities, its lifecycle and its relationships with other agents.
 
-**OpenRGD (Robot Graph Definition)** is an open architectural standard designed to serve as the universal semantic bridge between Artificial Intelligence and Physical Reality.  
-It defines a machine‑readable “Self‑Model” that enables any cognitive agent to safely and effectively embody any physical machine.
+| Artifact | Current repository version | Maturity |
+|---|---:|---|
+| OpenRGD standard bundle | `0.2.0` | Draft; maturity is declared per domain |
+| `rgd` Python toolchain | `0.1.1` | Working alpha |
+| Agent interoperability contracts | `0.1.0` | Convergence candidate |
 
----
+These versions are independent. See [`VERSIONING.md`](VERSIONING.md).
 
-## ⚡ Start Instantly: The 30‑Second Magic
+## What this repository contains
 
-Don't just read the spec — experience the **Cognitive BIOS** immediately.
+- `spec/` — human-readable JSONC source for the OpenRGD standard and reference bundle;
+- `standard/` — strict-JSON machine mirror generated from the specification;
+- `contracts/` — cross-component interfaces with explicit maturity and provenance;
+- `src/openrgd/` — the Python CLI and current reference tooling;
+- importers for URDF and USD;
+- Synapse generators for ROS 2 and Isaac-oriented outputs;
+- experimental runtime adapters and the `rgd-timetravel` plugin prototype;
+- examples, build tools and historical documentation.
 
-### 🐧 Linux / macOS
+The repository does **not** claim that the complete embodied cognitive pipeline, a complete HyperAion512 encoder, Chronograf production signing or Rate My Ethics runtime integration are already finished.
 
-```bash
-# 1. Install the Toolchain
-git clone https://github.com/OpenRGD/openrgd.git && cd openrgd && pip install -e .
+## Canonical domain model
 
-# 2. The Magic Sequence (Create → Enter → Boot)
-rgd init Robot && cd Robot && rgd boot
+```text
+00_core         coordination, manifests and kernel metadata
+01_foundation   physical body and hardware reality
+02_operation    runtime constraints, safety and physiological operation
+03_agency       capabilities, world model and action interfaces
+04_volition     values, alignment and decision governance
+05_evolution    lifecycle, wear, adaptation and continuity
+06_ether        collective, social and inter-agent protocols
 ```
 
----
+The current bundle manifest marks Foundation and Operation as stable, Agency and Volition as experimental, and Evolution and Ether as proposals. The exact repository authority rules are documented in [`STRUCTURE.md`](STRUCTURE.md).
 
-### 🪟 Windows (PowerShell)
+## Install the toolchain
 
-```powershell
-# 1. Install the Toolchain
-git clone https://github.com/OpenRGD/openrgd.git ; cd openrgd ; pip install -e .
-
-# 2. The Magic Sequence (Create → Enter → Boot)
-rgd init Robot ; cd Robot ; rgd boot
-```
-
----
-
-## 1. Interoperability
-
-A unified language enabling cognitive models to transfer seamlessly across different robotic bodies, platforms, and ecosystems.
-
----
-
-## 2. The Architecture
-
-OpenRGD is not a monolithic file but a hierarchical **Semantic Graph** structured into six normative domains.
-
-### **01. Foundation — The Body**  
-*Immutable physical reality.*  
-Defines hardware abstraction: actuator models, sensors, dimensions, topology.
-
-### **02. Operation — The Physiology**  
-*Autonomic safety system.*  
-Defines operational envelopes, reflex rules, and constraints that override unsafe intent.
-
-### **03. Agency — The Mind**  
-*Capability interface.*  
-Defines the “Skills Library” and how the cognitive agent interacts with the environment.
-
-### **04. Volition — The Conscience**  
-*Intent alignment.*  
-Defines ethics, value hierarchies, and decision‑governance logic.
-
-### **05. Evolution — The Lifecycle**  
-*Temporal state.*  
-Tracks wear, fatigue, maintenance, lifespan, and change over time.
-
-### **06. Ether — The Society**  
-*Collective intelligence.*  
-Defines swarm behavior, consensus, inter‑agent communication, and reputation.
-
----
-
-## 3. Toolchain (CLI)
-
-The `rgd` CLI manages the entire lifecycle of an embodiment definition — effectively acting as the **Operating System of the Standard**.
-
-### The Golden Loop
-
-- **Ingest** (`rgd import`) — Convert URDF/USD into OpenRGD.  
-- **Compile** (`rgd compile-spec`) — Produce Digital Twins (`.jsonc` for LLMs, `.json` for validation).  
-- **Bridge** (`rgd export`) — Export to ROS2, Isaac Lab, and other engines.  
-- **Boot** (`rgd boot`) — Initialize the Cognitive BIOS and generate the System Prompt.
-
-### Example Workflow
+Python **3.10 or newer** is required.
 
 ```bash
-rgd import my_robot.urdf
-cd my_robot
+git clone https://github.com/OpenRGD/openrgd.git
+cd openrgd
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m pip install -e .
+rgd --help
+```
+
+Typical workflow:
+
+```bash
+rgd init Robot
+cd Robot
+rgd check
+rgd boot
 rgd compile-spec
 rgd export ros2
-rgd boot
 ```
 
----
+Available CLI areas include `init`, `check`, `boot`, `alive`, `import`, `export`, `build-standard`, `compile-spec` and the `run` command group.
 
-## 4. The Kernel Concept
+## Contracts and auditability
 
-Implementations rely on a **Semantic Kernel**, an orchestrator that loads the six domains and guarantees a complete and consistent cognitive embodiment before any action is executed.
+The candidate agent contracts make the boundary between cognition and actuation explicit:
 
----
+```text
+CognitionProposal
+      ↓
+ActionIntent
+      ↓
+Somatic Translator
+      ↓
+CapabilityPlan
+      ↓
+Operation Safety Gate
+      ↓
+Body Adapter
+      ↓
+Hardware
+```
 
-## 5. Governance
+They also formalize Chronons as canonical historical evidence, memory as a projection, and DecisionTrace as structured audit evidence rather than private chain-of-thought. Candidate material remains non-stable until accepted through governance.
 
-OpenRGD follows an open **RFC‑driven** development model.
+Validate the imported contract package with:
 
-- **Status:** Draft v0.1  
-- **Documentation:** See `STRUCTURE.md`  
-- **Contribution Guide:** See `CONTRIBUTING.md`  
+```bash
+python contracts/agent/v0.1.0/validate.py
+```
 
----
+GitHub Actions validates Python 3.10 and 3.12, runs CLI and contract smoke tests, and builds a Windows executable artifact.
 
-## 6. Future Roadmap: AI‑Governed Evolution
+## Documentation
 
-> *This section anticipates the v1.0 architecture.*
+- [`STRUCTURE.md`](STRUCTURE.md) — authority model, domains and boundaries;
+- [`LAYOUT.md`](LAYOUT.md) — actual repository directory map;
+- [`GLOSSARIO.md`](GLOSSARIO.md) — shared terminology;
+- [`VERSIONING.md`](VERSIONING.md) — independent version axes;
+- [`docs/reconciliation/`](docs/reconciliation/) — historical reconciliation record;
+- [`docs/history/`](docs/history/) — preserved non-normative 2025 documents.
 
-OpenRGD is designed to support **AI‑assisted stewardship** via **Commitment Proposals (CPs)** — machine‑generated diffs that undergo:
+## Governance and contribution
 
-1. **Automated Validation**  
-2. **Human Maintainer Review**  
-3. **Regulatory / Cryptographic Audit**
+OpenRGD follows an RFC-oriented development model. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing normative changes. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable: its maturity label controls its authority.
 
-A controlled path toward shared evolution of safety standards.
+## Author
 
----
+**Pasquale Ranieri — Italia Robotica**  
+Lead architect and specification author.
 
-# 7. Authors
-
-* **Pasquale Ranieri (Italia Robotica)** - *Lead Architect & Specification Author*
-
-### Acknowledgements
-* **Recursive Design:** Portions of this specification were developed with the assistance of Large Language Models (LLMs). The latest generation of models shows an emerging ability to infer physical behavior—linking geometry, dynamics, and constraints in ways that approximate real-world reasoning. These capabilities helped validate the internal consistency of the `01_Foundation` domain.
-
-## 8. Contribute
-**OpenRGD is an open standard.** To participate in its development, read the [`CONTRIBUTING.md`](CONTRIBUTING.md) guide and follow the contribution workflow.
-
----
-
-Copyright © 2025 OpenRGD Organization. Distributed under the MIT License.
+OpenRGD is distributed under the MIT License.
