@@ -1,6 +1,6 @@
 # OpenRGD CLI guide
 
-The `rgd` CLI manages OpenRGD specification profiles and derived tooling artifacts. The canonical package is non-actuating.
+The `rgd` CLI manages OpenRGD specification profiles and derived static artifacts. The canonical package is non-actuating.
 
 ## Install
 
@@ -9,74 +9,93 @@ python -m pip install -e .
 rgd --help
 ```
 
-## Core lifecycle
+Use the global `--quiet` flag for deterministic machine-readable output and stderr-only errors.
+
+## Core profile lifecycle
 
 ### `rgd init NAME`
 
-Creates a project from the packaged default profile:
+Creates a project from the packaged default profile, personalizes its DID and recalculates `OPENRGD_SOURCE_TREE_SHA256_V1`.
 
 ```bash
 rgd init my_robot
 ```
 
-The command:
-
-1. copies the reconciled modular seed;
-2. assigns `did:rgd:my_robot`-style identity;
-3. recalculates `spec/manifest.jsonc` using `OPENRGD_SOURCE_TREE_SHA256_V1`;
-4. fails atomically if personalization or hashing fails.
-
 ### `rgd hash`
-
-Verifies the declared canonical source root:
 
 ```bash
 rgd hash
 rgd hash --output json
-```
-
-After an intentional source edit:
-
-```bash
 rgd hash --write
 ```
 
-A mismatch exits non-zero.
+Without `--write`, a mismatch exits non-zero. `--write` is for an intentional source change.
 
 ### `rgd check`
 
-Checks kernel references and JSONC loading:
+Checks kernel module references and JSONC loading:
 
 ```bash
 rgd check
 rgd check spec/00_core/kernel.jsonc
 ```
 
-Canonical source-tree integrity is a separate explicit check through `rgd hash`.
+This is a structural check, not hardware certification. Source-tree integrity remains a separate explicit `rgd hash` check.
 
 ### `rgd boot`
 
-Loads the project through the kernel and emits the current grounding/system-prompt representation:
+Loads modules selected by the kernel and emits the current prompt/grounding representation:
 
 ```bash
 rgd boot
 rgd boot --output json
 ```
 
-This command does not actuate hardware.
+It does not actuate hardware.
+
+## Import and enrichment
+
+### `rgd import`
+
+Imports only facts supported by the source description:
+
+```bash
+rgd import robot.urdf --out partial-robot
+rgd import robot.usda --out partial-robot
+```
+
+Current importers emit partial Foundation evidence. They do not create kernel identity, safety, alignment or cognition.
+
+The reconciled URDF path preserves supported link inertials, joint topology, type-correct limits, source dynamics and mimic relations. Absent URDF values remain absent; malformed or non-finite physical values fail.
+
+### `rgd alive`
+
+Explicitly enriches imported evidence with a selected packaged seed:
+
+```bash
+rgd alive robot.urdf --out RGD-robot --seed default
+```
+
+It personalizes kernel/bundle identity and recalculates the source root. The project manifest retains:
+
+```text
+seed_compatibility_status = UNVERIFIED
+```
+
+Review inherited physical, HAL, safety and behavioral modules before hardware use.
 
 ## Derived artifacts
 
 ### `rgd build-standard`
 
-Rebuilds the strict JSON leaf mirror from the selected canonical source files:
+Builds a deterministic strict-JSON leaf mirror:
 
 ```bash
 rgd build-standard
 rgd build-standard --src ./Robot --dest ./Robot/standard
 ```
 
-The destination is replaced deterministically. It cannot be the source tree or an ancestor/descendant that would delete the source.
+Destructive source/ancestor/descendant destinations are rejected.
 
 ### `rgd compile-spec`
 
@@ -94,42 +113,31 @@ Default output:
 spec/openrgd_unified_spec.json
 ```
 
-The output contains the source-tree root and source index. It has no generation timestamp and is ignored by Git.
+The output contains the source root and source index, has no wall-clock timestamp and is ignored by Git.
 
-The former `--domain` and `--full-definition` modes were removed because their generator could recursively ingest previously generated bundles and stored volatile benchmark copies.
+## Static interoperability
 
-## Import and profile enrichment
-
-### `rgd import`
-
-Imports source-supported facts into a partial OpenRGD specification:
+### `rgd export ros2`
 
 ```bash
-rgd import robot.usda --out ./partial-rgd
+rgd export ros2 --out export/ros2
+rgd export ros2 --out export/ros2 --output json
 ```
 
-The reconciled ASCII USD path writes under exactly one `spec/` root and emits only Foundation evidence. It does not create safety or alignment policy.
-
-### `rgd alive`
-
-Merges partial imported evidence with the reviewed default profile:
+Prerequisites:
 
 ```bash
-rgd alive robot.usda --out ./my-robots/RGD-robot
+rgd hash
+rgd compile-spec
 ```
 
-Generated robot workspaces are local artifacts and are ignored by this repository.
+The exporter verifies both the source tree and the compiled bundle. It generates deterministic non-actuating files and reports either `CONFIGURATION_ONLY` or `HARDWARE_BOUND`.
 
-The URDF importer lineage remains under reconciliation and must not be treated as a normative full-profile generator.
+Hardware Xacro is omitted unless all exported joints have complete explicit HAL interfaces and one system driver plugin.
 
-## Static interoperability export
+### Unavailable target
 
-```bash
-rgd export ros2 --out ./export
-rgd export isaac --out ./export
-```
-
-Synapse output is generated, non-normative and untracked. It is not a physical runtime path.
+`rgd export isaac` fails explicitly with exit code `2`: the historical Isaac generator was a placeholder and is not an active implementation.
 
 ## Runtime compatibility boundary
 
@@ -138,7 +146,7 @@ rgd run status
 rgd run status --output json
 ```
 
-The historical commands:
+Historical physical adapter commands fail closed:
 
 ```bash
 rgd run ros2
@@ -146,15 +154,14 @@ rgd run viam
 rgd run hybrid
 ```
 
-fail closed with a blocked result and exit code `2`. The embodied runtime belongs in an independent implementation repository.
+They return exit code `2`; the embodied runtime belongs in an independent implementation repository.
 
-## Automation
+## Verified non-actuating lifecycle
 
-Use `--quiet` for machine-readable or CI operation:
+CI exercises the owned URDF fixture through:
 
-```bash
-rgd --quiet hash --output json
-rgd --quiet compile-spec --output json
+```text
+import → alive → hash → check → boot → compile-spec → export ros2
 ```
 
-Use `--verbose` for additional toolchain diagnostics.
+This verifies mechanics, provenance and determinism. It does not prove seed/body compatibility or physical safety.
