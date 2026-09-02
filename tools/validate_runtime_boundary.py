@@ -28,6 +28,7 @@ EXPECTED_ARCHIVED_GIT_BLOBS = {
     "runtime/adapters/ros2/node.py": "a790d786c4bc2ca170dac7a294896195e4e6fcdb",
     "runtime/adapters/viam/__init__.py": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
     "runtime/adapters/viam/node.py": "fddc0f0a42aff487fef85faca9cc9ed4ad07752a",
+    "related/core/templates.py": "24339ee9531397b61decafbbc441a4c5eb1a2030",
 }
 
 FORBIDDEN_ACTIVE_IMPORT_ROOTS = {

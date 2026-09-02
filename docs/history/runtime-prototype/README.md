@@ -6,6 +6,8 @@
 
 This directory preserves the source files of the first bundled ROS 2 / Viam runtime experiment exactly as they existed before quarantine. The files are historical evidence, not executable package code and not a conformant implementation of the later embodied contracts.
 
+The related in-memory `core/templates.py` generator is preserved here as well because it independently generated the same missing `02_operation/safety_supervisor.jsonc` path. The active CLI had already superseded that generator with the packaged default seed.
+
 ## Why it was quarantined
 
 Direct inspection found that the prototype:
@@ -16,7 +18,8 @@ Direct inspection found that the prototype:
 4. called an undefined `engine.ingest_sense()` method from the ROS 2 adapter;
 5. left ROS 2 actuation unimplemented;
 6. left Viam think/act dispatch and `publish_intent()` unimplemented;
-7. described hardware execution through a CLI surface even though the implementation could not prove safe or complete execution.
+7. described hardware execution through a CLI surface even though the implementation could not prove safe or complete execution;
+8. coexisted with an unused alternative template generator that could recreate the missing safety-module dependency.
 
 No existing safety file was renamed or treated as an equivalent replacement without evidence.
 
@@ -33,5 +36,6 @@ No existing safety file was renamed or treated as an equivalent replacement with
 | `src/openrgd/runtime/adapters/ros2/node.py` | `runtime/adapters/ros2/node.py` | `a790d786c4bc2ca170dac7a294896195e4e6fcdb` |
 | `src/openrgd/runtime/adapters/viam/__init__.py` | `runtime/adapters/viam/__init__.py` | `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` |
 | `src/openrgd/runtime/adapters/viam/node.py` | `runtime/adapters/viam/node.py` | `fddc0f0a42aff487fef85faca9cc9ed4ad07752a` |
+| `src/openrgd/core/templates.py` | `related/core/templates.py` | `24339ee9531397b61decafbbc441a4c5eb1a2030` |
 
 The repository validator recomputes Git blob identities for these files. Any modification destroys the evidence match and fails CI.
