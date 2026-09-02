@@ -31,5 +31,19 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Generated local archives
+# Generated local archives and bundles
 /src/openrgd.rar
+*.rgd
+
+# OpenRGD generated aggregate products
+/spec/0[1-6]_spec.jsonc
+/spec/openrgd_unified_spec*.json
+/spec/openrgd_unified_spec*.jsonc
+/standard/0[1-6]_spec.json
+/standard/openrgd_unified_spec*.json
+/standard/benchmarks/
+
+# Local robot workspaces and generated interoperability outputs
+/RGD-*/
+/my-robots/
+/export/

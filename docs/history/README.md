@@ -1,17 +1,16 @@
-# Historical evidence
+# Historical documentation and implementation evidence
 
-Files in this directory preserve pre-reconciliation documentation and implementation artifacts. They are **non-normative** and remain available so later readers can distinguish historical claims, experiments and generated copies from current decisions.
+Files in this directory preserve pre-reconciliation evidence. They are **non-normative**. Current authority is defined by `spec/`, accepted contracts and `docs/reconciliation/`.
 
-| Path | Why it is historical |
+| Area | Preserved evidence |
 |---|---|
 | `README_2025_BASELINE.md` | Original public positioning and Draft v0.1 wording |
-| `STRUCTURE_2025_LEGACY.md` | Uses the superseded `Safety / Capability / Ethics / History / Collective` taxonomy |
-| `LAYOUT_2025_LEGACY.md` | References paths and modules that do not match the repository tree |
-| `GLOSSARIO_MISFILED_GITIGNORE_2025.md` | Was a gitignore ruleset stored under the glossary filename |
-| `CHANGELOG_2025_BASELINE.md` | Contains an old Unreleased section with claims not consistently reflected in the tree |
-| `seed/` | Preserves packaged-seed artifacts removed from the active runtime profile after source/derived reconciliation |
-| `runtime-prototype/` | Preserves the first bundled ROS 2 / Viam runtime and related template generator after quarantine |
+| `STRUCTURE_2025_LEGACY.md` | Superseded Safety/Capability/Ethics/History/Collective taxonomy |
+| `LAYOUT_2025_LEGACY.md` | Paths and modules that did not match the actual tree |
+| `GLOSSARIO_MISFILED_GITIGNORE_2025.md` | Gitignore rules stored under a glossary filename |
+| `CHANGELOG_2025_BASELINE.md` | Old unreleased claims not consistently reflected in code |
+| `seed/` | Superseded seed-only skill index and provenance |
+| `runtime-prototype/` | Quarantined ROS 2/Viam runtime and stale template generator, with verified original Git blob identities |
+| `generated-artifacts/` | Inventory of removed recursive bundles, benchmark copies, generated UR5 profiles, export outputs, external examples and incomplete packaging prototypes |
 
-Implementation evidence under `runtime-prototype/` is checked against its original Git blob identities. This proves preservation without treating the code as executable or conformant.
-
-The Git history remains the ultimate provenance. Convenience copies and archives do not imply endorsement, compatibility or current implementation status.
+Git history remains the ultimate byte-level provenance. Convenience inventories and copies do not imply endorsement or current compatibility.
