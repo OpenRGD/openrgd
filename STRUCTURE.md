@@ -1,58 +1,78 @@
-# OpenRGD Canonical Repository Structure
+# OpenRGD canonical repository structure
 
 ## Status
 
-This document defines the repository authority model adopted by the historical reconciliation branch. It becomes the repository-level authority policy only when that branch is reviewed and merged.
+This document defines the authority model adopted by the historical reconciliation branch. It becomes repository policy only after review and merge.
 
 ## Authority order
 
-Within this repository, authority is resolved in this order:
-
-1. `spec/manifest.jsonc` declares the standard-bundle version and domain maturity.
-2. Modular files under `spec/` are the human-readable source of the reference specification.
+1. `spec/manifest.jsonc` declares the standard version, integrity profile and domain maturity.
+2. Modular files under `spec/` are the human-readable normative source.
 3. Accepted contracts under `contracts/` define cross-component interfaces within their declared scope.
 4. Candidate contracts are reviewable formalizations, not stable normative law.
-5. `standard/` is a generated strict-JSON mirror and MUST NOT become an independent source of truth.
-6. `src/openrgd/seeds/default/spec/` is a distributable scaffold and MUST be synchronized from reviewed specification sources.
-7. Generated bundles, examples, exports and historical snapshots are non-authoritative unless a normative file explicitly references them.
+5. `standard/` is a tracked strict-JSON leaf mirror and cannot become an independent source of truth.
+6. `src/openrgd/seeds/default/spec/` is a derived default runtime profile.
+7. Machine bundles, exports and robot workspaces are generated products and remain untracked.
+8. Historical evidence under `docs/history/` is non-normative.
 
-Where duplicate copies disagree, the disagreement MUST be surfaced and reconciled; tooling MUST NOT select a winner silently.
+Duplicate copies must not be resolved silently. Source/derived relationships are enforced through `ARTIFACT_POLICY.json`, canonical hashing and CI.
 
 ## Canonical domains
 
-### `00_core` — Coordination
+### `00_core` — coordination
 
-Owns bundle coordination, kernel metadata, loading order, validation references and cross-domain orchestration. It is not a substitute for the six semantic domains.
+Bundle metadata, kernel identity, validation references and cross-domain orchestration.
 
-### `01_foundation` — Physical reality
+### `01_foundation` — physical reality
 
-Owns body description, actuators, sensors, calibration, power, compute, firmware/HAL mappings, materials and physical constraints.
+Body description, actuators, sensors, calibration, power, compute, firmware/HAL mappings, materials and physical constraints.
 
-### `02_operation` — Runtime operation and safety
+### `02_operation` — operation and safety
 
-Owns operational envelopes, runtime validation, safety-critical behavior, compliance and autonomic protection.
+Operational envelopes, runtime validation, safety-critical behavior, compliance and autonomic protection.
 
-### `03_agency` — Capabilities and interaction
+### `03_agency` — capability and interaction
 
-Owns the world model, declared skills, capability interfaces and the semantics through which cognition requests action.
+World model, declared skills, capability interfaces and action semantics.
 
-### `04_volition` — Values and governance
+### `04_volition` — values and governance
 
-Owns alignment, hard invariants, value priorities, decision governance and conflict resolution. Soft cognitive scores cannot override hard constitutional blocks.
+Alignment, hard invariants, value priorities, decision governance and conflict resolution. Soft scores cannot override hard constitutional blocks.
 
-### `05_evolution` — Lifecycle and change
+### `05_evolution` — lifecycle and adaptation
 
-Owns wear, adaptation, plasticity, continuity, replication and termination semantics.
+Wear, plasticity, continuity, replication and termination semantics.
 
-### `06_ether` — Collective existence
+### `06_ether` — collective existence
 
-Owns inter-agent coordination, shared computation, consensus, reputation and civilizational protocols.
+Inter-agent coordination, shared computation, consensus, reputation and civilizational protocols.
 
-The older `Foundation / Safety / Capability / Ethics / History / Collective` taxonomy is preserved only as a historical artifact and is not the canonical directory model.
+The older Foundation/Safety/Capability/Ethics/History/Collective taxonomy is historical only.
+
+## Canonical source integrity
+
+The standard/profile source tree uses:
+
+```text
+OPENRGD_SOURCE_TREE_SHA256_V1
+```
+
+The profile commits selected modular source paths and exact source bytes. The manifest's own hash value is normalized to `sha256:SELF` while calculating the root. Details are in `docs/reconciliation/CANONICAL_HASHING.md`.
+
+## Generated artifact boundary
+
+```text
+spec/ modular source
+        │
+        ├── standard/ strict leaf mirror
+        └── deterministic machine bundle generated on demand
+```
+
+Tracked domain bundles, human unified copies, benchmark snapshots, generated workspaces and export outputs are prohibited. Their historical identities are recorded in `docs/history/generated-artifacts/`.
 
 ## Cognitive-to-physical boundary
 
-The current convergence-candidate interface is:
+The convergence-candidate interface is:
 
 ```text
 LLM / VLM / VLA / planner / world model
@@ -74,72 +94,43 @@ LLM / VLM / VLA / planner / world model
                Hardware
 ```
 
-Key separation:
+- HyperAion is a representation, not actuation permission.
+- `ActionIntent` is model-agnostic.
+- `CapabilityPlan` remains hardware-agnostic.
+- the Body Adapter owns servo IDs, buses, middleware messages and device commands;
+- DecisionTrace stores structured evidence, not private reasoning.
 
-- HyperAion is a cognitive representation, not an actuation permission;
-- `ActionIntent` expresses model-agnostic action semantics;
-- `CapabilityPlan` remains hardware-agnostic;
-- the Body Adapter owns servo IDs, ticks, buses, ROS messages and device-specific commands;
-- DecisionTrace records structured evidence and outcomes, not private reasoning.
+These interfaces remain convergence candidates under `contracts/agent/v0.1.0/`.
 
-These interfaces are currently candidate material under `contracts/agent/v0.1.0/`.
+## Temporal and memory ownership
 
-## Temporal and memory boundary
+- Robot Chronograf owns time measurement, clock domains, uncertainty and anchor resolution.
+- RGD-Physics owns Chronon/Aion and causal-envelope semantics.
+- the embodied runtime owns execution, recall and learning mediation.
+- Chronons are canonical history; memories are projections.
 
-The convergence candidate separates ownership as follows:
+## Implementation boundary in this repository
 
-- Robot Chronograf measures time, clock domains, uncertainty and anchor resolution;
-- RGD-Physics defines Chronon and Aion semantics;
-- an embodied runtime executes cognition and builds projections;
-- Chronons are canonical append-only history;
-- episodes, facts, skills, summaries and embeddings are rebuildable projections.
+The Python package contains:
 
-## Implementation boundaries in this repository
+- CLI routing;
+- JSONC loading and canonical hashing;
+- deterministic strict-mirror and machine-bundle generation;
+- URDF/USD importer scaffolding;
+- static ROS 2 and Isaac-oriented Synapse generators;
+- plugin discovery and policy scaffolding;
+- a fail-closed `rgd run` compatibility/status namespace.
 
-The installed Python package contains:
+It does not contain an active physical runtime.
 
-- CLI command routing;
-- JSONC loading and specification compilation;
-- URDF and USD importers;
-- ROS 2 and Isaac-oriented Synapse generators;
-- seed and profile materialization;
-- plugin-discovery and policy scaffolding;
-- a non-actuating `rgd run` compatibility/status group.
+## External implementation candidates
 
-It does **not** contain an active physical embodied runtime or hardware adapter implementation.
+Independent repositories are expected for:
 
-The first ROS 2 / Viam runtime experiment and its related in-memory template generator are preserved byte-for-byte under `docs/history/runtime-prototype/`. They were quarantined because they referenced a nonexistent safety file, contained API mismatches and placeholders, and bypassed the later cognition/somatic/safety/audit boundary.
+- RGD-Physics;
+- Robot Chronograf;
+- embodied runtime;
+- LeRobot/body adapters;
+- RGD-Ethics.
 
-The canonical ownership decision is documented in:
-
-```text
-docs/reconciliation/RUNTIME_BOUNDARY.md
-docs/reconciliation/RUNTIME_STATUS.json
-```
-
-A separately versioned embodied runtime may consume OpenRGD contracts, but must be reconciled and released through its own implementation repository. The empty repository names already present in the GitHub organization are not authority.
-
-## Fail-closed compatibility
-
-The `rgd run` namespace is retained to explain migration and preserve deterministic behavior for historical command names.
-
-```text
-rgd run status      → reports the external runtime boundary
-rgd run ros2        → BLOCKED, exit 2
-rgd run viam        → BLOCKED, exit 2
-rgd run hybrid      → BLOCKED, exit 2
-```
-
-These commands do not import ROS 2, Viam, serial or CAN libraries and do not open hardware or network connections.
-
-## Retained legacy areas
-
-The following areas are deliberately retained pending later evidence-based cleanup:
-
-- `RGD-ur5/` and `my-robots/RGD-ur5/`;
-- tracked example exports under `export/`;
-- duplicate generated unified specifications;
-- `src/cli.py` beside the packaged entry point;
-- the bundled `plugins/rgd_timetravel/` prototype.
-
-Their presence does not make them canonical.
+Repository names and promotion state remain explicit decisions rather than implications from empty placeholders.

@@ -2,79 +2,68 @@
 
 ## Authority
 
-| Artifact | Repository path | Authority | Comparison rule |
+| Artifact | Path | Authority | Validation |
 |---|---|---|---|
-| Human-readable standard | `spec/` | Normative source | Authored JSONC and selected static files |
-| Strict compatibility mirror | `standard/` | Derived | Parsed JSON equivalence with `spec/` |
-| Packaged default runtime profile | `src/openrgd/seeds/default/spec/` | Derived runtime seed | Byte-identical with selected `spec/` files unless an approved override is hash-pinned |
-| Domain and unified bundles | root `*_spec.*`, `openrgd_unified_spec.*`, `standard/benchmarks/` | Generated | Outside the leaf-mirror contract until the aggregate generator is reconciled separately |
+| Human-readable standard | `spec/` | Normative source | Source-tree root and JSONC parsing |
+| Strict compatibility mirror | `standard/` | Derived and tracked | Parsed JSON equivalence with selected `spec/` leaves |
+| Packaged default profile | `src/openrgd/seeds/default/spec/` | Derived and tracked | Byte-identical with selected sources unless an approved override is hash-pinned |
+| Machine bundle | `spec/openrgd_unified_spec.json` by default | Generated and untracked | Deterministic output bound to the declared source root |
+| Interoperability exports | commonly `export/` | Generated and untracked | Exporter-owned evidence, not standard source |
+| Robot workspaces | commonly `RGD-*` or `my-robots/` | Generated and untracked | Local implementation artifacts |
 
-The machine-readable policy is `ARTIFACT_POLICY.json`.
+Rules are machine-readable in [`ARTIFACT_POLICY.json`](ARTIFACT_POLICY.json). Hashing is specified in [`CANONICAL_HASHING.md`](CANONICAL_HASHING.md).
 
-## Reconciliation performed on 2026-09-02
+## Canonical closure
 
-### Missing default-seed material
+The repository selects 76 source artifacts: modular JSONC under `spec/` plus `spec/MANIFESTO.md`, excluding generated domain and unified names.
 
-The following normative Agency material existed under `spec/` but was absent from the packaged seed and has now been mirrored byte-for-byte:
+CI requires:
 
-- `03_agency/extension_permissions_policy.jsonc`
-- `03_agency/installed_skill_packages.jsonc`
-- `03_agency/skills_library.jsonc`
-- `03_agency/skills/index.jsonc`
-- four core skill definitions
-- two core skill schemas
+```text
+STANDARD: 76 expected, 0 missing, 0 mismatched, 0 unexpected
+DEFAULT SEED: 76 expected, 0 missing, 0 mismatched,
+0 approved overrides, 0 unexpected
+```
 
-**Classification before repair:** IMPLEMENTATION DIVERGENCE / STALE DERIVED COPY.  
-**Classification after repair:** DERIVED MIRROR, VERIFIED BY CI.
+## Canonical hashing
 
-### Stale default-seed copies
+`meta_group.integrity_profile_str` declares:
 
-| Path | Seed evidence | Canonical evidence | Decision |
-|---|---|---|---|
-| `00_core/kernel.jsonc` | header labelled the same kernel body as `v0.2` | normative source labels the kernel profile `v0.1`; body metadata remains `0.1.0` and targets standard `0.2.0` | replace seed copy with canonical bytes |
-| `01_foundation/actuation_topology.jsonc` | topology `1.1.0`, limited joint map | topology `1.4.0`, reusable control profiles and expanded joint mapping | classify seed copy as SUPERSEDED and replace |
-| `01_foundation/surface_properties.jsonc` | profile `1.0.0`, legacy `surface_map` | profile `1.2.0`, material catalog, link bindings and domain-randomization policy | classify seed copy as SUPERSEDED and replace |
+```text
+OPENRGD_SOURCE_TREE_SHA256_V1
+```
 
-No evidence supported treating these three files as intentional runtime-profile overrides.
+The root commits each selected relative path, normalized byte count and SHA-256 file digest. Only `integrity_hash_str` in the manifest is replaced with `sha256:SELF` while calculating the root.
 
-### Legacy and generated files removed from the active seed
+```bash
+rgd hash
+rgd hash --write
+```
 
-- `03_agency/skills_library.json` was a separate two-entry legacy index. Its original bytes and Git blob identity are preserved under `docs/history/seed/03_agency/skills_library.legacy.json`.
-- `openrgd_unified_spec.json` and `openrgd_unified_spec.jsonc` were generated aggregate outputs. They were removed from the seed so a newly initialized profile starts from source modules rather than stale compiled products.
+## Removed generated material
 
-## Override governance
+The active tree no longer contains:
 
-The active default seed currently has **zero approved overrides**.
+- recursive domain bundles `01_spec` through `06_spec`;
+- recursive or volatile unified JSON/JSONC bundles;
+- strict-JSON domain bundles and benchmark duplicates;
+- duplicate generated UR5 profiles;
+- checked-in ROS 2 and Isaac export outputs;
+- unverified non-hermetic external URDF examples;
+- the incomplete MSIX placeholder;
+- competing bundle generators and the parallel legacy CLI.
 
-A future intentional difference is allowed only when `ARTIFACT_POLICY.json` declares all of:
+Original paths and Git tree/blob identities are retained in:
 
-1. relative path;
-2. classification `RUNTIME_PROFILE_OVERRIDE`;
-3. semantic reason;
-4. decision or governance reference;
-5. SHA-256 of the canonical source;
-6. SHA-256 of the seed override.
+```text
+docs/history/generated-artifacts/INVENTORY.json
+```
 
-Changing either side invalidates the approval until the policy is reviewed and updated. This prevents runtime-specific values from becoming silent forks of the standard.
-
-## Reconciliation command
-
-Check without mutation:
+## Commands
 
 ```bash
 python tools/reconcile_artifacts.py
+python tools/validate_canonical_hash.py
+rgd build-standard
+rgd compile-spec
 ```
-
-Regenerate leaf mirrors:
-
-```bash
-python tools/reconcile_artifacts.py --write
-```
-
-Prune undeclared files from the active default-seed namespace only after historical material has been archived:
-
-```bash
-python tools/reconcile_artifacts.py --write --prune-seed
-```
-
-The command deliberately does not regenerate or normalize domain/unified aggregate bundles. Those remain a separately auditable convergence step.

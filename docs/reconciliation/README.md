@@ -1,125 +1,73 @@
-# OpenRGD Historical Reconciliation
+# OpenRGD historical reconciliation
 
 ## Scope
 
-This work reconciles the public `OpenRGD/openrgd` repository with later local artifacts without redesigning the ecosystem from scratch or pretending that later convergence decisions existed in the 2025 history.
+This work reconciles the public `OpenRGD/openrgd` repository with later local artifacts without redesigning the ecosystem from scratch or projecting later convergence decisions backward into the 2025 lineage.
 
-The branch starts from public commit:
+The branch starts from:
 
 ```text
 4776e637b4d575d14d55f06423c87cfe1ec0de87
 Prepare release 0.1.1 (rename PyPI package to 'rgd')
 ```
 
-The detailed repository audit is available in [`AUDIT_2026-09-02.md`](AUDIT_2026-09-02.md).
-
-Reconciliation controls are documented in:
-
-- [`ARTIFACT_MAP.md`](ARTIFACT_MAP.md) — human-readable source/derived artifact map;
-- [`ARTIFACT_POLICY.json`](ARTIFACT_POLICY.json) — machine-readable artifact and override policy;
-- [`RUNTIME_BOUNDARY.md`](RUNTIME_BOUNDARY.md) — normative-root versus physical-runtime ownership;
-- [`RUNTIME_STATUS.json`](RUNTIME_STATUS.json) — machine-readable runtime availability status;
-- [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md) — cross-repository ownership candidates.
-
-## Evidence policy
-
-Evidence is classified as:
+## Evidence classification
 
 - **IMPLEMENTED** — executable code, CI, tests or committed artifacts verified directly;
 - **SPECIFIED** — machine-readable or written specification exists;
 - **DECIDED FOR RECONCILIATION** — adopted on this branch, pending review/merge;
-- **PROPOSED** — plausible future boundary or repository, not yet approved;
-- **SUPERSEDED** — preserved historically but contradicted by later accepted structure;
+- **PROPOSED** — future boundary not yet approved;
+- **SUPERSEDED** — retained historically but contradicted by later accepted evidence;
 - **OPEN / UNCERTAIN** — insufficient evidence or unresolved compatibility.
 
-## Current status
+## Implemented closures
 
-### IMPLEMENTED on this branch
+### Repository and seed
 
-- generated build artifacts removed and ignored;
-- active CI for Python 3.10/3.12 and Windows executable build;
-- packaging metadata repaired;
-- candidate agent contracts imported with source hash and local validation;
-- contradictory historical material preserved under `docs/history/` rather than silently deleted;
-- repository invariants and reconciliation tests enforced in CI;
-- deterministic leaf-artifact checker for `spec/`, `standard/` and the packaged default seed;
-- real `rgd init` test proving complete seed materialization and limiting kernel mutation to the project DID;
-- archival of the superseded seed-only skill index under `docs/history/seed/`;
-- byte-preserved quarantine of the first bundled ROS 2 / Viam runtime and its stale template generator;
-- removal of the historical runtime from the installed Python package;
-- fail-closed `rgd run` compatibility/status commands with no middleware imports or physical actuation;
-- executable runtime-boundary validator integrated into CI;
-- USD importer decoupled from the quarantined template generator;
-- direct import path normalization under one `spec/` root.
+- generated build/package artifacts removed;
+- active Python/Windows CI established;
+- Python and packaging metadata corrected;
+- 76 selected canonical source artifacts synchronized with `standard/` and the default seed;
+- real `rgd init` materialization verified;
+- runtime-profile overrides require explicit reason, decision reference and pinned canonical/seed digests.
 
-### SPECIFIED in the repository
+### Runtime boundary
 
-- OpenRGD bundle target version `0.2.0`;
-- six domains: Foundation, Operation, Agency, Volition, Evolution and Ether;
-- kernel profile and modular JSONC specification;
-- CLI/import/export/Synapse tooling;
-- explicit source/derived artifact authority and hash-pinned seed-override requirements;
-- candidate cognition, somatic, safety/audit, Chronon and memory interfaces.
+- incomplete bundled ROS 2/Viam runtime preserved as historical evidence;
+- runtime removed from the installed canonical package;
+- `rgd run` converted to a deterministic non-actuating, fail-closed compatibility boundary;
+- external embodied-runtime ownership documented;
+- ASCII USD importer detached from the stale safety template generator.
 
-### DECIDED FOR RECONCILIATION, pending merge
+### Generated artifacts and hashing
 
-- `OpenRGD/openrgd` is the single normative root for the standard and cross-component contracts;
-- standard, CLI and contract versions remain independent;
-- `spec/` is the human-readable normative source;
-- `standard/` is a strict JSON compatibility mirror validated by parsed semantic equivalence;
-- the packaged default seed is a derived runtime profile, byte-identical to selected canonical sources unless an explicit `RUNTIME_PROFILE_OVERRIDE` is approved and digest-pinned;
-- generated domain/unified bundles remain outside the leaf-mirror closure until their generator is reconciled separately;
-- the canonical root is non-actuating and does not ship a physical embodied runtime;
-- the historical safety file name is not repaired by renaming a different recovered contract;
-- importers provide source-supported evidence, while `rgd alive` performs explicit seed convergence;
-- convergence artifacts retain explicit candidate status and cannot rewrite history retroactively.
+- recursive domain/unified bundles and volatile benchmark snapshots removed;
+- duplicate UR5 profiles and checked-in exports removed;
+- unverified external URDF examples and incomplete MSIX placeholder removed;
+- competing generator lineages replaced by one deterministic Python implementation;
+- `OPENRGD_SOURCE_TREE_SHA256_V1` introduced;
+- `rgd hash`, deterministic `compile-spec` and guarded `build-standard` implemented;
+- all removed paths recorded by Git tree/blob identity under `docs/history/generated-artifacts/`.
 
-### VERIFIED CLOSURE
-
-Artifact closure:
+## Current authority
 
 ```text
-STANDARD: 76 expected, 0 missing, 0 mismatched, 0 unexpected
-DEFAULT SEED: 76 expected, 0 missing, 0 mismatched,
-0 approved overrides, 0 unexpected
+spec/                              normative modular source
+standard/                          tracked strict-JSON leaf mirror
+src/openrgd/seeds/default/spec/    tracked derived default profile
+spec/openrgd_unified_spec.json     generated machine bundle, untracked
 ```
 
-Runtime-boundary closure:
+Detailed documents:
 
-```text
-active bundled runtime: absent
-historical runtime blobs: preserved and verified
-physical actuation in canonical toolchain: disabled
-legacy runtime commands: fail closed with exit 2
-missing safety-supervisor reference in active package: absent
-```
-
-The previous packaged-seed drift and bundled-runtime safety findings are therefore resolved on this branch without pretending that the historical prototypes were complete.
-
-### SUPERSEDED
-
-- the legacy domain taxonomy `Foundation / Safety / Capability / Ethics / History / Collective`;
-- the old root `GLOSSARIO.md`, which contained ignore rules rather than terminology;
-- documentation that presented missing paths as implemented modules;
-- stale seed revisions of the kernel header, actuation topology and surface properties;
-- the seed-only strict-JSON two-entry skill index;
-- generated unified outputs stored inside the active default seed;
-- the bundled ROS 2 / Viam runtime prototype as active package code;
-- the in-memory template generator that recreated `02_operation/safety_supervisor.jsonc`;
-- direct adapter intent dispatch as a canonical cognition-to-hardware boundary.
-
-### OPEN / UNCERTAIN
-
-- deterministic ownership and regeneration of domain bundles, unified specifications, benchmark snapshots and robot-instance copies;
-- exact release/tag scoping for the next public version;
-- migration of later `openrgd-v0.2-aion-ready` content, whose archive was not available in this workspace;
-- final populated repository and name for Physics, Chronograf, embodied runtime, LeRobot and Ethics;
-- promotion criteria for Agent Contracts from candidate to accepted;
-- canonical serialization and bundle-hash scope;
-- remaining full CLI lifecycle coverage;
-- modernization of the remaining importer schemas and URDF/default-policy behavior;
-- protection and required checks for `main`;
-- artifact and commit signing policy.
+- [`ARTIFACT_MAP.md`](ARTIFACT_MAP.md)
+- [`ARTIFACT_POLICY.json`](ARTIFACT_POLICY.json)
+- [`CANONICAL_HASHING.md`](CANONICAL_HASHING.md)
+- [`EXAMPLES_AND_FIXTURES.md`](EXAMPLES_AND_FIXTURES.md)
+- [`RUNTIME_BOUNDARY.md`](RUNTIME_BOUNDARY.md)
+- [`RUNTIME_STATUS.json`](RUNTIME_STATUS.json)
+- [`DECISIONS.md`](DECISIONS.md)
+- [`AUDIT_2026-09-02.md`](AUDIT_2026-09-02.md)
 
 ## Imported convergence artifact
 
@@ -130,4 +78,15 @@ openrgd-convergence-alpha-v0.1.zip
 sha256 a295463bfc9fb9ad26bc2bff90800874d9e4f7c5db8219fc9a0b7123d2ceb987
 ```
 
-Its own provenance file records the non-retroactivity rule.
+The package remains a **CONVERGENCE CANDIDATE** and retains explicit non-retroactivity language.
+
+## Open decisions
+
+- final acceptance status of Agent Contracts;
+- URDF importer lineage and owned test fixtures;
+- static Synapse/export lifecycle tests;
+- exact next standard/toolchain release scope;
+- recovery or formal exclusion of `openrgd-v0.2-aion-ready`;
+- branch protection and required checks;
+- commit, release and artifact signing;
+- final names and repositories for Physics, Chronograf, embodied runtime, LeRobot and Ethics.

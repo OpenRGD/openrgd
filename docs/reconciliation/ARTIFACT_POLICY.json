@@ -1,5 +1,5 @@
 {
-  "policy_version": "1.0.0",
+  "policy_version": "2.0.0",
   "status": "DECIDED_FOR_RECONCILIATION",
   "canonical_source_root": "spec",
   "standard_mirror_root": "standard",
@@ -16,23 +16,30 @@
       "04_spec.jsonc",
       "05_spec.jsonc",
       "06_spec.jsonc",
-      "openrgd_unified_spec.jsonc"
+      "openrgd_unified_spec.jsonc",
+      "openrgd_unified_spec_document.jsonc"
     ]
+  },
+  "canonical_hash": {
+    "profile": "OPENRGD_SOURCE_TREE_SHA256_V1",
+    "algorithm": "SHA-256",
+    "source_bytes": "exact tracked UTF-8 bytes after Git LF normalization",
+    "path_order": "lexicographic POSIX relative paths",
+    "manifest_self_field": "meta_group.integrity_hash_str",
+    "manifest_self_value": "sha256:SELF",
+    "index_serialization": {
+      "encoding": "UTF-8",
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "allow_nan": false,
+      "ensure_ascii": false
+    }
   },
   "standard_mirror": {
     "jsonc_target_extension": ".json",
     "comparison": "parsed-json-equivalence",
     "static_comparison": "byte-exact",
-    "allowed_generated_paths": [
-      "01_spec.json",
-      "02_spec.json",
-      "03_spec.json",
-      "04_spec.json",
-      "05_spec.json",
-      "06_spec.json",
-      "openrgd_unified_spec.json",
-      "benchmarks/**"
-    ]
+    "allowed_generated_paths": []
   },
   "default_seed": {
     "comparison": "byte-exact",
@@ -45,6 +52,20 @@
       "decision_ref",
       "canonical_sha256",
       "seed_sha256"
+    ]
+  },
+  "generated_artifacts": {
+    "tracked": false,
+    "default_machine_bundle": "spec/openrgd_unified_spec.json",
+    "ignored_paths": [
+      "spec/0[1-6]_spec.jsonc",
+      "spec/openrgd_unified_spec*.json*",
+      "standard/0[1-6]_spec.json",
+      "standard/openrgd_unified_spec*.json",
+      "standard/benchmarks/**",
+      "RGD-*/**",
+      "my-robots/**",
+      "export/**"
     ]
   },
   "non_retroactivity_rule": "This policy controls repository convergence from 2026-09-02 onward. It does not rewrite the maturity or meaning of historical artifacts."

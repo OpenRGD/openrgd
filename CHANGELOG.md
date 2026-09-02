@@ -6,47 +6,50 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 
 ### Added
 
-- Active GitHub Actions workflow validating Python 3.10 and 3.12.
-- Windows executable build and artifact publication in CI.
-- Versioned `contracts/` area with maturity and provenance rules.
-- OpenRGD Agent Contracts `v0.1.0` imported as a **convergence candidate**.
-- Explicit repository versioning, structure, glossary and reconciliation documentation.
-- Machine-readable artifact authority in `docs/reconciliation/ARTIFACT_POLICY.json`.
-- Deterministic `tools/reconcile_artifacts.py` checker for the normative specification, strict JSON mirror and packaged default seed.
-- CI validation of 76 selected canonical leaves across `standard/` and the default seed.
-- Real `rgd init` materialization test, including exact enforcement of the intentional kernel DID personalization boundary.
-- Machine-readable embodied-runtime status in `docs/reconciliation/RUNTIME_STATUS.json`.
-- `tools/validate_runtime_boundary.py`, proving archived runtime blob integrity and fail-closed CLI behavior.
-- Tests for USD partial-evidence import and single-root `spec/` output.
+- Active GitHub Actions validation for Python 3.10 and 3.12.
+- Windows executable build and CI artifact publication.
+- Versioned `contracts/` area and Agent Contracts `v0.1.0` as a convergence candidate.
+- Repository structure, versioning, provenance and reconciliation documentation.
+- Machine-readable source/derived policy in `docs/reconciliation/ARTIFACT_POLICY.json`.
+- Deterministic reconciliation of 76 canonical leaves across `spec/`, `standard/` and the packaged default seed.
+- Canonical source-tree integrity profile `OPENRGD_SOURCE_TREE_SHA256_V1`.
+- `rgd hash` verification/update command.
+- Deterministic single machine-bundle compiler without wall-clock metadata.
+- Runtime quarantine and fail-closed `rgd run` compatibility boundary.
+- Generated-artifact and removed-example inventory with original Git identities.
+- Tests for real `rgd init`, source-tree hashing, deterministic bundles and mirrors, runtime quarantine, USD partial import and SO-101 causal ordering.
 
 ### Changed
 
-- Declared minimum Python version aligned with the source syntax: Python 3.10+.
-- Project license metadata changed to a PEP 621-compatible file reference.
-- Documentation now distinguishes the standard bundle (`0.2.0`), toolchain (`0.1.1`) and candidate contracts (`0.1.0`).
-- Canonical domain names restored to `Foundation / Operation / Agency / Volition / Evolution / Ether`, coordinated by `00_core`.
-- Packaged default seed synchronized with all 76 selected canonical source artifacts.
-- Stale seed revisions of `kernel.jsonc`, `actuation_topology.jsonc` and `surface_properties.jsonc` replaced with canonical bytes.
-- Missing Agency extension-policy, installed-skill, skill-library, core-skill and skill-schema files restored to the packaged seed.
-- `rgd run` changed from an incomplete actuation surface to a deterministic, non-actuating compatibility/status boundary.
-- USD import now emits only source-supported partial Foundation evidence and no longer synthesizes policy through the historical template generator.
-- Importer output paths are normalized under exactly one `spec/` root and parent traversal is rejected.
+- Minimum Python version aligned with actual syntax: Python 3.10+.
+- License metadata changed to a PEP 621-compatible file reference.
+- Standard `0.2.0`, Python toolchain `0.1.1` and candidate contracts `0.1.0` treated as independent axes.
+- Canonical domain names restored to Foundation, Operation, Agency, Volition, Evolution and Ether under `00_core`.
+- Packaged default seed synchronized with the selected canonical source set.
+- `rgd init` now rehashes the project after DID personalization and fails atomically on integrity errors.
+- `rgd compile-spec` now emits one deterministic machine bundle instead of human/domain/benchmark copies.
+- `rgd build-standard` now mirrors only the canonical source set with destructive-path guards.
+- ASCII USD import emits source-supported partial Foundation evidence and writes under one `spec/` root.
+- The canonical repository is explicitly non-actuating; physical runtime ownership is external.
 
 ### Removed
 
-- Tracked build products, distributions, Python bytecode, generated package metadata and the local source archive.
-- Inactive `.github/build.yaml`, replaced by `.github/workflows/ci.yml`.
-- Generated unified JSON/JSONC outputs from the active default seed.
-- The legacy seed-only strict-JSON skill index from the active seed namespace.
-- The historical ROS 2 / Viam runtime package from installed `src/openrgd/` code.
-- The stale in-memory template generator that recreated the nonexistent `02_operation/safety_supervisor.jsonc` dependency.
+- Tracked builds, distributions, bytecode, package metadata and local archives.
+- Inactive `.github/build.yaml`.
+- Stale and recursive domain/unified specification bundles and benchmark snapshots.
+- Duplicate generated UR5 profiles and checked-in export outputs.
+- Three unverified, non-hermetic external URDF examples.
+- Incomplete MSIX shell-integration placeholder.
+- Competing Node bundle builder, duplicate Python unifier, old benchmark integrity command and unreachable parallel `src/cli.py`.
+- Redundant stale `requirements.txt` and its generator.
+- Historical bundled ROS 2/Viam runtime from the installed package.
 
 ### Preserved
 
-- Original 2025 documentation is retained under `docs/history/` as non-normative evidence.
-- The removed seed-only skill index is retained byte-for-byte under `docs/history/seed/`.
-- The historical runtime, adapter and template-generator source blobs are retained and hash-verified under `docs/history/runtime-prototype/`.
-- Generated domain/unified bundles, benchmark snapshots and robot-instance copies remain available pending a separate aggregate-artifact reconciliation decision.
+- Contradictory 2025 documentation under `docs/history/`.
+- Historical runtime source with verified Git blob identities.
+- Superseded seed skill index.
+- Original tree/blob identities for removed generated artifacts, workspaces, packaging prototypes and external examples.
 
 ## [0.1.1] — 2025-11-26
 

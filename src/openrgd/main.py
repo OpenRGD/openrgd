@@ -1,41 +1,25 @@
-"""
-OPENRGD MAIN ENTRY POINT
---------------------------------------------------------------------------------
-This module serves as the central hub for the OpenRGD Command Line Interface (CLI).
-It bootstraps the application, parses arguments, and dispatches commands to the
-appropriate modules.
+"""OpenRGD command-line entry point."""
 
-ARCHITECTURAL OVERVIEW:
-1. Uses Typer for CLI parsing.
-2. Registers core specification/tooling verbs directly.
-3. Retains ``rgd run`` only as a fail-closed compatibility/status group; the
-   canonical package does not ship a physical embodied runtime.
-4. Handles shared ``--quiet`` and ``--verbose`` state.
-5. Manages optional cinematic output.
-
-USAGE:
-    This file is exposed as the ``rgd`` console script via ``pyproject.toml``.
-    Execution flow: run() -> _register_core_commands() -> app()
---------------------------------------------------------------------------------
-"""
+from __future__ import annotations
 
 import sys
 
 import typer
 
-from .core.config import state
-from .core.visuals import log, print_header
 from .commands import (
     boot,
     check,
     compiler,
     dist,
+    hash as hash_cmd,
     importer,
     init,
     run as runtime_boundary_cmd,
     synapse,
 )
 from .commands.alive import alive_cmd
+from .core.config import state
+from .core.visuals import log, print_header
 
 app = typer.Typer(
     help="OpenRGD: The Cognitive BIOS for Robotics",
@@ -45,23 +29,21 @@ app = typer.Typer(
 
 
 def _register_core_commands() -> None:
-    """Register the canonical toolchain and compatibility command groups."""
+    """Register specification tooling and fail-closed compatibility commands."""
 
-    # Lifecycle and specification tooling.
     app.command()(init.init)
     app.command()(check.check)
     app.command()(boot.boot)
     app.command(name="alive")(alive_cmd)
 
-    # Interoperability.
     app.command()(synapse.export)
     app.command(name="import")(importer.import_cmd)
 
-    # Standardization.
+    app.command(name="hash")(hash_cmd.bundle_hash)
     app.command()(dist.build_standard)
     app.command()(compiler.compile_spec)
 
-    # Historical CLI compatibility. This group never actuates hardware.
+    # Historical CLI compatibility only. This group never actuates hardware.
     app.add_typer(runtime_boundary_cmd.app, name="run")
 
 
@@ -84,7 +66,6 @@ def main(
 
     state["quiet"] = quiet
     state["verbose"] = verbose
-
     if quiet:
         state["cinematic"] = False
         state["delay"] = 0
@@ -103,7 +84,6 @@ def run() -> None:
 
     is_quiet = "-q" in sys.argv or "--quiet" in sys.argv
     is_help = "--help" in sys.argv
-
     if not is_quiet and not is_help:
         print_header()
 

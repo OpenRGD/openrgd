@@ -2,30 +2,29 @@
 
 **OpenRGD** is an open, machine-readable standard for cognitive embodiment: a semantic bridge through which an AI system can understand a robot body, its operational limits, its capabilities, its lifecycle and its relationships with other agents.
 
-| Artifact | Current repository version | Maturity |
+| Artifact | Repository version | Maturity |
 |---|---:|---|
-| OpenRGD standard bundle | `0.2.0` | Draft; maturity is declared per domain |
+| OpenRGD standard bundle | `0.2.0` | Draft; maturity declared per domain |
 | `rgd` Python toolchain | `0.1.1` | Working alpha |
 | Agent interoperability contracts | `0.1.0` | Convergence candidate |
 
-These versions are independent. See [`VERSIONING.md`](VERSIONING.md).
+These version axes are independent. See [`VERSIONING.md`](VERSIONING.md).
 
-## What this repository contains
+## Repository scope
 
-- `spec/` — normative human-readable JSONC source for the OpenRGD standard and reference bundle;
-- `standard/` — strict-JSON compatibility mirror validated against the specification;
-- `contracts/` — cross-component interfaces with explicit maturity and provenance;
-- `src/openrgd/` — the non-actuating Python CLI and current reference tooling;
-- importers for URDF and USD;
-- Synapse generators for ROS 2 and Isaac-oriented outputs;
-- a packaged default profile synchronized from reviewed specification sources;
-- examples, build tools and historical documentation.
+This repository is the non-actuating canonical and tooling root. It contains:
 
-This repository does **not** ship a physical embodied runtime or a hardware adapter implementation. The former bundled ROS 2 / Viam prototype has been preserved under `docs/history/runtime-prototype/` and removed from the installed package because it could not prove the convergent safety and execution boundary.
+- `spec/` — normative, modular JSONC source;
+- `standard/` — tracked strict-JSON leaf mirror;
+- `contracts/` — versioned cross-component contracts with explicit maturity;
+- `src/openrgd/` — CLI, import/export and validation tooling;
+- `src/openrgd/seeds/default/` — reconciled default profile used by `rgd init`;
+- `docs/reconciliation/` — current decisions and audit evidence;
+- `docs/history/` — preserved non-normative historical material.
 
-The repository also does not claim that a complete HyperAion512 encoder, Chronograf production signing or Rate My Ethics runtime integration are already finished.
+It does **not** ship a physical embodied runtime or hardware adapter. The former bundled ROS 2/Viam prototype is preserved under `docs/history/runtime-prototype/` and removed from the installed package. `rgd run` remains only as a fail-closed compatibility/status boundary.
 
-## Canonical domain model
+## Canonical domains
 
 ```text
 00_core         coordination, manifests and kernel metadata
@@ -37,9 +36,9 @@ The repository also does not claim that a complete HyperAion512 encoder, Chronog
 06_ether        collective, social and inter-agent protocols
 ```
 
-The current bundle manifest marks Foundation and Operation as stable, Agency and Volition as experimental, and Evolution and Ether as proposals. The exact repository authority rules are documented in [`STRUCTURE.md`](STRUCTURE.md).
+The bundle manifest marks Foundation and Operation as stable, Agency and Volition as experimental, and Evolution and Ether as proposals.
 
-## Install the toolchain
+## Installation
 
 Python **3.10 or newer** is required.
 
@@ -52,51 +51,69 @@ python -m pip install -e .
 rgd --help
 ```
 
-Typical specification workflow:
+## Specification workflow
 
 ```bash
 rgd init Robot
 cd Robot
+rgd hash
 rgd check
 rgd boot
 rgd compile-spec
-rgd export ros2
 ```
 
-Available active CLI areas include `init`, `check`, `boot`, `alive`, `import`, `export`, `build-standard` and `compile-spec`.
+`rgd init` personalizes the project DID and immediately recalculates the project's canonical source-tree root.
 
-The historical `run` namespace remains only as a fail-closed migration/status boundary:
+`rgd compile-spec` creates one deterministic, untracked machine bundle at:
+
+```text
+spec/openrgd_unified_spec.json
+```
+
+Use `rgd build-standard` to rebuild the strict JSON leaf mirror.
+
+## Canonical integrity
+
+The profile:
+
+```text
+OPENRGD_SOURCE_TREE_SHA256_V1
+```
+
+commits the path, normalized byte count and SHA-256 digest of every selected modular source file. JSONC comments and formatting are included. Only the manifest's own hash field is replaced with `sha256:SELF` while calculating the root.
 
 ```bash
-rgd run status
-rgd run status --output json
+rgd hash          # verify
+rgd hash --write  # update manifest after an intentional source change
 ```
 
-Legacy adapter commands such as `rgd run ros2` and `rgd run viam` return a deterministic blocked result and do not import middleware or actuate hardware. See [`docs/reconciliation/RUNTIME_BOUNDARY.md`](docs/reconciliation/RUNTIME_BOUNDARY.md).
+Detailed rules: [`docs/reconciliation/CANONICAL_HASHING.md`](docs/reconciliation/CANONICAL_HASHING.md).
 
 ## Source and derived artifacts
 
-The reconciliation branch enforces:
-
 ```text
-spec/                              normative JSONC source
-        ↓ parsed equivalence
-standard/                          derived strict JSON mirror
-        ↓ selected byte equivalence
-src/openrgd/seeds/default/spec/    derived packaged profile
+spec/                              normative source
+        │
+        ├── standard/              tracked strict-JSON leaf mirror
+        ├── machine bundle         generated on demand, untracked
+        └── seed profile           tracked, byte-aligned default scaffold
 ```
 
-Check the relationship with:
+Old recursive domain bundles, unified copies, benchmark snapshots, duplicate UR5 workspaces and checked-in exports were removed from active authority. Their Git identities remain in `docs/history/generated-artifacts/INVENTORY.json`.
 
-```bash
-python tools/reconcile_artifacts.py
-```
+The three former external URDF examples were also removed because they were not hermetic, license-audited test fixtures and referenced absent assets or local deployment details. Future examples must satisfy [`docs/reconciliation/EXAMPLES_AND_FIXTURES.md`](docs/reconciliation/EXAMPLES_AND_FIXTURES.md).
 
-Runtime-profile divergences require an explicit, justified and hash-pinned override. The default seed currently has zero approved overrides.
+## Import, enrichment and export
 
-## Contracts and auditability
+`rgd import` ingests source-supported evidence. For the reconciled ASCII USD path, it produces a partial Foundation description and does not invent policy.
 
-The candidate agent contracts make the boundary between cognition and actuation explicit:
+`rgd alive` is the explicit operation that merges partial imported evidence with the reviewed default profile.
+
+`rgd export` remains experimental static Synapse tooling. Generated output belongs in a caller-selected local directory and is ignored by the canonical repository.
+
+## Cognition-to-body boundary
+
+The convergence-candidate contracts define:
 
 ```text
 CognitionProposal
@@ -116,29 +133,34 @@ Body Adapter
 Hardware
 ```
 
-They also formalize Chronons as canonical historical evidence, memory as a projection, and DecisionTrace as structured audit evidence rather than private chain-of-thought. Candidate material remains non-stable until accepted through governance.
+These contracts store structured commitments and audit evidence, not private chain-of-thought. HyperAion is a cognitive representation/ranking input, not permission to actuate.
 
-Validate the imported contract package and runtime quarantine with:
+## Validation
 
 ```bash
-python contracts/agent/v0.1.0/validate.py
+python tools/validate_repository.py
+python tools/reconcile_artifacts.py
+python tools/validate_canonical_hash.py
 python tools/validate_runtime_boundary.py
+python contracts/agent/v0.1.0/validate.py
+python -m pytest -q
 ```
 
-GitHub Actions validates Python 3.10 and 3.12, checks canonical artifact mirrors, verifies the fail-closed runtime boundary, runs tests and builds a Windows executable artifact.
+GitHub Actions runs the suite on Python 3.10 and 3.12 and builds a Windows executable artifact.
 
 ## Documentation
 
-- [`STRUCTURE.md`](STRUCTURE.md) — authority model, domains and boundaries;
-- [`LAYOUT.md`](LAYOUT.md) — actual repository directory map;
-- [`GLOSSARIO.md`](GLOSSARIO.md) — shared terminology;
+- [`STRUCTURE.md`](STRUCTURE.md) — authority, domains and component boundaries;
+- [`LAYOUT.md`](LAYOUT.md) — actual directory map;
+- [`GLOSSARIO.md`](GLOSSARIO.md) — terminology;
 - [`VERSIONING.md`](VERSIONING.md) — independent version axes;
-- [`docs/reconciliation/`](docs/reconciliation/) — historical reconciliation record;
-- [`docs/history/`](docs/history/) — preserved non-normative 2025 documents and code evidence.
+- [`CLI_GUIDE.md`](CLI_GUIDE.md) — current command behavior;
+- [`docs/reconciliation/`](docs/reconciliation/) — reconciliation record;
+- [`docs/history/`](docs/history/) — non-normative historical evidence.
 
-## Governance and contribution
+## Governance
 
-OpenRGD follows an RFC-oriented development model. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing normative changes. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable: its maturity label controls its authority.
+OpenRGD follows an RFC-oriented process. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable; its maturity label controls its authority.
 
 ## Author
 

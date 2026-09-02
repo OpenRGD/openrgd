@@ -55,6 +55,9 @@ jobs:
       - name: Validate canonical artifact mirrors
         run: python tools/reconcile_artifacts.py
 
+      - name: Validate canonical source-tree hash and cleanup
+        run: python tools/validate_canonical_hash.py
+
       - name: Validate fail-closed runtime boundary
         run: python tools/validate_runtime_boundary.py
 

@@ -15,7 +15,7 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 ## R-003 — Specification authority
 
 **Status:** ADOPTED ON BRANCH  
-**Decision:** `spec/` is the human-readable source for the reference standard. `standard/`, packaged seeds and unified files are derived representations and must not diverge silently.
+**Decision:** `spec/` is the human-readable source for the reference standard. `standard/`, packaged seeds and generated bundles are derived representations and must not diverge silently.
 
 ## R-004 — Independent versions
 
@@ -32,7 +32,7 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 **Status:** IMPLEMENTED  
 **Decision:** Import the 2026 Agent Contracts into the canonical repository with their original candidate status, exact source archive hash and explicit non-retroactivity language.
 
-## R-007 — Generated artifacts
+## R-007 — Generated build artifacts
 
 **Status:** IMPLEMENTED  
 **Decision:** Build outputs, Python bytecode, package metadata and local archives are not source and must not be versioned.
@@ -50,7 +50,7 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 ## R-010 — Historical documents
 
 **Status:** IMPLEMENTED  
-**Decision:** Preserve contradictory 2025 documents byte-for-byte under `docs/history/`, while replacing root documentation with the reconciled view.
+**Decision:** Preserve contradictory 2025 documents under `docs/history/`, while replacing root documentation with the reconciled view.
 
 ## R-011 — No silent implementation claims
 
@@ -60,7 +60,7 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 ## R-012 — Executable artifact authority
 
 **Status:** IMPLEMENTED ON BRANCH  
-**Decision:** Encode the source/derived relationship in `ARTIFACT_POLICY.json` and enforce it through `tools/reconcile_artifacts.py` in CI. Selected `spec/` leaves are normative; `standard/` must be semantically equivalent strict JSON; the packaged default seed must be byte-identical unless an approved override exists.
+**Decision:** Encode source/derived relationships in `ARTIFACT_POLICY.json` and enforce them through CI. Selected `spec/` leaves are normative; `standard/` must be semantically equivalent strict JSON; the packaged default seed must be byte-identical unless an approved override exists.
 
 ## R-013 — Runtime seed overrides
 
@@ -70,45 +70,49 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 ## R-014 — Default seed convergence
 
 **Status:** IMPLEMENTED  
-**Decision:** Replace the three stale default-seed copies with canonical source bytes, restore the ten missing Agency/skill JSONC artifacts, archive the legacy strict-JSON skill index and remove generated unified products from the active seed.
+**Decision:** Replace three stale default-seed copies with canonical source bytes, restore ten missing Agency/skill JSONC artifacts, archive the legacy strict-JSON skill index and remove generated unified products from the active seed.
 
 ## R-015 — Project identity personalization
 
 **Status:** CONFIRMED / TESTED  
-**Decision:** `rgd init NAME` may personalize only the RGD DID in `00_core/kernel.jsonc` to `did:rgd:<normalized-name>`. Every other selected artifact and every other kernel byte must remain canonical.
+**Decision:** `rgd init NAME` may personalize the RGD DID in `00_core/kernel.jsonc`. It must then recalculate the canonical source root. Every other source difference must be explicit.
 
-## R-016 — Aggregate products remain separately governed
+## R-016 — Canonical root is non-actuating
 
-**Status:** ADOPTED ON BRANCH  
-**Decision:** Root domain bundles, unified specifications, benchmark snapshots and robot-instance copies are not silently normalized as part of leaf convergence. They remain a separate reconciliation scope until their generation and ownership are proved.
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Quarantine the incomplete bundled ROS 2/Viam runtime and retain `rgd run` only as a deterministic fail-closed compatibility/status boundary. Physical execution belongs in an independent embodied runtime and body adapter.
 
-## R-017 — Historical runtime quarantine
+## R-017 — Generated products are not source
 
-**Status:** IMPLEMENTED  
-**Decision:** Preserve the first bundled ROS 2 / Viam runtime and its related in-memory template generator under `docs/history/runtime-prototype/`, verify their original Git blob identities, and remove them from active package code.
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Domain bundles, unified bundles, benchmark snapshots, generated robot profiles and interoperability exports must not be tracked as normative source. Reproducible products are generated on demand; historical identities are retained in the generated-artifact inventory.
 
-**Evidence:** the prototype referenced an absent `02_operation/safety_supervisor.jsonc`, contained API mismatches and unimplemented actuation paths, and bypassed the later cognition/somatic/safety/audit boundary.
-
-## R-018 — No safety-contract substitution by filename
+## R-018 — Canonical source-tree integrity profile
 
 **Status:** ADOPTED ON BRANCH  
-**Decision:** Do not rename `safety_critical.jsonc` or `runtime_validation.jsonc`, and do not declare either equivalent to the absent historical `safety_supervisor.jsonc` without an explicit semantic mapping. Their recovered schemas have distinct responsibilities.
+**Decision:** OpenRGD standard/profile integrity uses `OPENRGD_SOURCE_TREE_SHA256_V1`. It commits exact selected source bytes and path metadata through SHA-256, normalizing only `manifest.jsonc`'s own `integrity_hash_str` to `sha256:SELF`.
 
-## R-019 — Canonical root is non-actuating
+## R-019 — One deterministic bundle compiler
+
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Replace the recursive domain/human-twin/benchmark generator lineage and the competing Node builder with one deterministic Python machine-bundle compiler. Generated output contains no wall-clock timestamp and is ignored by Git.
+
+## R-020 — Examples require provenance and tests
 
 **Status:** ADOPTED ON BRANCH  
-**Decision:** `OpenRGD/openrgd` ships specification tooling, contracts, import/export utilities and validators. It does not ship a physical embodied runtime or Body Adapter. Physical execution belongs to an independently versioned implementation repository consuming OpenRGD contracts.
+**Decision:** Remove the three historical external URDF examples from the active tree. Future examples must be owned or redistribution-audited, minimal, hermetic, free of local secrets/paths and exercised by automated tests.
 
-The final repository name remains open; the empty `rgd-runtime` placeholder is not authority.
+## R-021 — Duplicate generated workspaces
 
-## R-020 — Fail-closed `rgd run` compatibility
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Remove both checked-in UR5 workspaces because they share the same generated spec tree and differ only in timestamps. Local robot profiles belong outside the canonical repository source tree.
 
-**Status:** IMPLEMENTED / TESTED  
-**Decision:** Retain `rgd run status`, `rgd run ros2`, `rgd run viam` and `rgd run hybrid` as a deterministic migration boundary. `status` reports the externalized runtime; legacy adapter commands return `BLOCKED` with exit code `2`, import no middleware and cannot actuate hardware.
+## R-022 — Strict mirror contains leaves only
 
-## R-021 — Importers do not invent missing policy
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** `standard/` contains only strict-JSON equivalents of selected canonical leaves and static files. Domain/unified aggregates and benchmark copies are not allowed exceptions.
 
-**Status:** IMPLEMENTED FOR USD / ADOPTED AS BOUNDARY  
-**Decision:** An importer emits only facts supported by the source robot description. `rgd import` writes a partial specification under one `spec/` root; `rgd alive` is the explicit step that merges partial evidence with the reviewed packaged seed.
+## R-023 — Incomplete packaging prototypes
 
-The USD importer was decoupled from the quarantined template generator. Broader importer-schema modernization remains separate work.
+**Status:** IMPLEMENTED ON BRANCH  
+**Decision:** Remove the MSIX placeholder because it referenced an absent dummy executable and missing Assets. A future shell-integration package must be complete, built and tested before being tracked.

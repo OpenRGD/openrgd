@@ -6,6 +6,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+from openrgd.core.canonical import compute_integrity
+from openrgd.core.utils import strip_jsonc
+
 ROOT = Path(__file__).resolve().parents[1]
 DID_FIELD_PATTERN = re.compile(r'("id"\s*:\s*")(?P<did>did:rgd:[^"]+)(")')
 
@@ -56,13 +59,19 @@ def test_artifact_reconciliation_passes() -> None:
     assert "0 unexpected" in result.stdout
 
 
+def test_canonical_hash_validator_passes() -> None:
+    result = run_script("tools/validate_canonical_hash.py")
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "PASS: canonical source root" in result.stdout
+
+
 def test_runtime_boundary_validator_passes() -> None:
     result = run_script("tools/validate_runtime_boundary.py")
     assert result.returncode == 0, result.stdout + result.stderr
     assert "canonical CLI is non-actuating and fail-closed" in result.stdout
 
 
-def test_rgd_init_materializes_the_complete_default_seed(tmp_path: Path) -> None:
+def test_rgd_init_materializes_and_rehashes_default_seed(tmp_path: Path) -> None:
     result = subprocess.run(
         ["rgd", "--quiet", "init", "seed-probe"],
         cwd=tmp_path,
@@ -108,13 +117,28 @@ def test_rgd_init_materializes_the_complete_default_seed(tmp_path: Path) -> None
                 + generated_text[generated_id.end("did") :]
             )
             assert normalized_generated == source_text, (
-                "rgd init changed kernel content beyond the intentional DID "
-                "personalization"
+                "rgd init changed kernel content beyond DID personalization"
+            )
+        elif rel == "manifest.jsonc":
+            source_manifest = json.loads(
+                strip_jsonc(source.read_text(encoding="utf-8")), strict=False
+            )
+            generated_manifest = json.loads(
+                strip_jsonc(generated.read_text(encoding="utf-8")), strict=False
+            )
+            generated_hash = generated_manifest["meta_group"]["integrity_hash_str"]
+            source_manifest["meta_group"]["integrity_hash_str"] = generated_hash
+            assert generated_manifest == source_manifest, (
+                "rgd init changed manifest content beyond its integrity root"
             )
         else:
             assert generated.read_bytes() == source.read_bytes(), (
                 f"rgd init generated a divergent copy of {rel}"
             )
+
+    integrity = compute_integrity(generated_spec)
+    assert integrity.matches
+    assert integrity.computed != compute_integrity(ROOT / "spec").computed
 
     assert not (generated_spec / "openrgd_unified_spec.json").exists()
     assert not (generated_spec / "openrgd_unified_spec.jsonc").exists()
@@ -196,3 +220,31 @@ def test_so101_flow_keeps_cognition_and_actuation_separate() -> None:
     assert events.index("action_intent") < events.index("somatic_plan")
     assert events.index("somatic_plan") < events.index("safety_decision")
     assert events.index("safety_decision") < events.index("action_result")
+
+
+def test_alive_merges_seed_and_rehashes_profile(tmp_path: Path) -> None:
+    source = tmp_path / "test-arm.usda"
+    output = tmp_path / "RGD-TestArm"
+    write_minimal_usda(source)
+
+    result = subprocess.run(
+        [
+            "rgd",
+            "--quiet",
+            "alive",
+            str(source),
+            "--out",
+            str(output),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not (output / "spec" / "spec").exists()
+    assert compute_integrity(output / "spec").matches
+
+    project_manifest = json.loads(
+        (output / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert project_manifest["standard_version"] == "0.2.0"

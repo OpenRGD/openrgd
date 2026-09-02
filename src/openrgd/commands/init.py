@@ -1,85 +1,86 @@
-import shutil
-import os
-import re
-from pathlib import Path
-from typing import Optional
-import typer
+"""Create a project from the packaged, reconciled OpenRGD default profile."""
+
+from __future__ import annotations
+
 from importlib import resources
-from ..core.visuals import log, smart_track, print_header
+from pathlib import Path
+import re
+import shutil
+from typing import Optional
+
+import typer
+
+from ..core.canonical import CanonicalIntegrityError, update_manifest_integrity
 from ..core.config import state
+from ..core.visuals import log, print_header, smart_track
+
+_DID_RE = re.compile(r'"id":\s*"did:rgd:[^"]+"')
+
+
+def _project_did(name: str) -> str:
+    normalized = name.strip().lower().replace(" ", "-")
+    return f"did:rgd:{normalized}"
+
 
 def init(
     name: Optional[str] = typer.Argument(None, help="Name of the robot project")
-):
-    """
-    Scaffolds a new OpenRGD project by cloning the internal Gold Standard seed.
-    Includes automatic ID injection into the Kernel.
-    """
-    
-    # 1. Interactive Input Handling
+) -> None:
+    """Clone the canonical default seed, personalize identity, and rehash it."""
+
     if not name:
         if state["quiet"]:
             log("Missing argument 'NAME' in quiet mode.", "ERROR")
             raise typer.Exit(1)
-            
-        if not state["quiet"]: print_header()
+        print_header()
         name = typer.prompt("🤖 Project Name")
 
-    log(f"Initializing containment field: {name}", "SYSTEM")
-    
     target_dir = Path(name)
     if target_dir.exists():
         log(f"Directory '{name}' exists. Abort.", "ERROR")
         raise typer.Exit(1)
 
-    # 2. Locate Internal Seeds (The DNA)
-    try:
-        # This finds the 'seeds/default' folder inside the installed package
-        package_files = resources.files("openrgd") / "seeds" / "default"
-    except Exception:
-        log("Could not locate internal seeds. Is the package installed correctly?", "ERROR")
-        raise typer.Exit(1)
+    log(f"Initializing containment field: {name}", "SYSTEM")
 
-    log(f"Cloning Gold Standard Template...", "DEBUG")
-
-    # 3. Cinematic Simulation (Optional)
     if state["cinematic"]:
         import time
-        dirs_to_show = ["00_core", "01_foundation", "02_operation", "03_agency", "04_volition", "05_evolution", "06_ether"]
-        for d in smart_track(dirs_to_show, "[cyan]Injecting Neural Pathways...[/]"):
+
+        domains = [
+            "00_core",
+            "01_foundation",
+            "02_operation",
+            "03_agency",
+            "04_volition",
+            "05_evolution",
+            "06_ether",
+        ]
+        for _ in smart_track(domains, "[cyan]Injecting Neural Pathways...[/]"):
             time.sleep(0.1)
 
-    # 4. Physical Copy (The Cloning)
-    src_path = str(package_files)
     try:
-        shutil.copytree(src_path, target_dir)
-    except Exception as e:
-        log(f"Cloning failed: {e}", "ERROR")
-        raise typer.Exit(1)
+        packaged_seed = resources.files("openrgd") / "seeds" / "default"
+        shutil.copytree(str(packaged_seed), target_dir)
 
-    # 5. Kernel Personalization (The Identity Injection)
-    # We open the new kernel.jsonc and replace the default ID with the user's project name
-    kernel_path = target_dir / "spec/00_core/kernel.jsonc"
-    
-    if kernel_path.exists():
-        try:
-            with open(kernel_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            # Regex to find "id": "did:rgd:..." and replace it
-            new_id = f"did:rgd:{name.lower().replace(' ', '-')}"
-            content = re.sub(r'"id":\s*"did:rgd:[^"]+"', f'"id": "{new_id}"', content)
-            
-            with open(kernel_path, 'w', encoding='utf-8') as f:
-                f.write(content)
-            
-            log(f"Identity assigned: {new_id}", "DEBUG")
-        except Exception as e:
-            log(f"Failed to personalize kernel ID: {e}", "WARN")
+        kernel_path = target_dir / "spec" / "00_core" / "kernel.jsonc"
+        if not kernel_path.is_file():
+            raise FileNotFoundError(f"packaged seed missing {kernel_path}")
 
-    # 6. Success Handover
+        text = kernel_path.read_text(encoding="utf-8")
+        did = _project_did(name)
+        updated, count = _DID_RE.subn(f'"id": "{did}"', text, count=1)
+        if count != 1:
+            raise ValueError("kernel identity field could not be personalized exactly once")
+        kernel_path.write_text(updated, encoding="utf-8", newline="\n")
+
+        integrity = update_manifest_integrity(target_dir / "spec")
+    except (CanonicalIntegrityError, FileNotFoundError, OSError, ValueError) as exc:
+        shutil.rmtree(target_dir, ignore_errors=True)
+        log(f"Project initialization failed: {exc}", "ERROR")
+        raise typer.Exit(1) from exc
+
+    log(f"Identity assigned: {did}", "DEBUG")
+    log(f"Canonical source root: {integrity.computed}", "DEBUG")
     log("Kernel & Semantic Graph injected.", "SUCCESS")
-    
+
     if not state["quiet"]:
         print(f"\n\033[1;32m» Project ready in ./{name}\033[0m")
-        print(f"  Try: cd {name} && rgd compile-spec")
+        print(f"  Try: cd {name} && rgd hash && rgd check")

@@ -28,12 +28,13 @@
     "author_str": "OpenRGD Foundation",
     "license_enum": "MIT",
     
+    "integrity_profile_str": "OPENRGD_SOURCE_TREE_SHA256_V1",
     "integrity_hash_str": "sha256:placeholder_auto_generated",
     "created_at_iso8601_str": "2025-11-23T05:10:14.795731Z",
 
     // Links to core coordination artifacts
     "rgd_schema_ref_str": "rgd_schema.jsonc",
-    "kernel_ref_str": "kernel.jsonc"
+    "kernel_ref_str": "00_core/kernel.jsonc"
   },
 
   // ============================================================

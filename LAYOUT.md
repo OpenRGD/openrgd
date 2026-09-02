@@ -1,52 +1,70 @@
-# OpenRGD Repository Layout
+# OpenRGD repository layout
 
-This file describes the directories that actually exist after the current reconciliation pass.
+This file describes the active tree after the canonical-artifact and runtime-boundary reconciliation.
 
 ```text
 openrgd/
-├── .github/workflows/       # Active CI workflows
-├── assets/                  # Branding and platform assets
-├── contracts/               # Versioned cross-component contracts and provenance
+├── .github/workflows/       # Active CI
+├── assets/                  # Branding and packaging assets
+├── contracts/               # Versioned cross-component contracts
 ├── docs/
 │   ├── history/
-│   │   ├── runtime-prototype/ # Byte-preserved quarantined runtime evidence
-│   │   └── seed/              # Superseded packaged-seed evidence
-│   └── reconciliation/      # Decisions, status, artifact and repository maps
-├── example/                 # Source robot-description examples
-├── export/                  # Legacy/example generated outputs; non-authoritative
+│   │   ├── generated-artifacts/  # Removed artifact/example inventory
+│   │   ├── runtime-prototype/    # Quarantined runtime source evidence
+│   │   └── seed/                 # Superseded seed evidence
+│   └── reconciliation/      # Decisions, policies and audit reports
 ├── plugins/                 # Bundled plugin prototypes
-├── RGD-ur5/                 # Legacy/reference generated robot bundle
-├── my-robots/               # Legacy local-style generated robot bundle
-├── spec/                    # Normative human-readable JSONC source
-├── standard/                # Derived strict-JSON compatibility mirror
-├── src/
-│   ├── openrgd/
-│   │   ├── commands/        # CLI verbs; `run` is fail-closed compatibility only
-│   │   ├── core/            # Shared loading, compilation and plugin logic
-│   │   ├── importers/       # URDF and USD ingestion
-│   │   ├── seeds/           # Packaged scaffold copied by `rgd init`
-│   │   └── synapses/        # Static interoperability generators
-│   └── cli.py               # Legacy parallel CLI module pending review
-├── tests/                   # Repository, artifact, runtime-boundary and contract tests
-├── tools/                   # Repository, artifact and specification utilities
+├── spec/                    # Normative modular JSONC source
+├── src/openrgd/
+│   ├── commands/            # CLI commands
+│   ├── core/                # Loading, canonical hashing and shared tooling
+│   ├── importers/           # URDF and USD ingestion
+│   ├── seeds/               # Packaged default profile
+│   └── synapses/            # Static interoperability generators
+├── standard/                # Tracked strict-JSON leaf mirror
+├── tests/                   # Automated contract and toolchain tests
+├── tools/                   # Reconciliation and validation tools
+├── .gitattributes
+├── .gitignore
 ├── CHANGELOG.md
+├── CLI_GUIDE.md
 ├── GLOSSARIO.md
 ├── LICENSE
 ├── README.md
 ├── STRUCTURE.md
 ├── VERSIONING.md
-└── pyproject.toml
+├── pyproject.toml
+├── rgd.spec                 # Windows PyInstaller recipe
+└── run.py                   # PyInstaller entry point
 ```
 
-There is intentionally no active `src/openrgd/runtime/` package on the reconciliation branch. The old implementation is historical evidence; a conformant embodied runtime belongs to a separately reconciled repository.
+## Deliberately absent from the active tree
+
+The following are generated or quarantined and must not be committed as current authority:
+
+```text
+spec/01_spec.jsonc ... spec/06_spec.jsonc
+spec/openrgd_unified_spec*.json*
+standard/01_spec.json ... standard/06_spec.json
+standard/openrgd_unified_spec*.json
+standard/benchmarks/
+RGD-*/
+my-robots/
+export/
+example/ historical external URDF files
+src/openrgd/runtime/ historical prototype
+```
+
+Original Git identities are recorded under `docs/history/`.
 
 ## Where to make changes
 
-- Change the reference standard in `spec/`, then regenerate and review derived mirrors.
-- Change non-actuating Python tooling in `src/openrgd/`.
-- Add cross-component interfaces under `contracts/` with a maturity label and provenance.
-- Add historical evidence under `docs/history/`; do not rewrite it as if it were current.
-- Record reconciliation choices under `docs/reconciliation/`.
-- Implement hardware execution only in a versioned embodied-runtime or Body Adapter repository consuming the contracts.
+- Change the standard in modular `spec/` source files.
+- Run `rgd hash --write` after an intentional source change.
+- Rebuild `standard/` through `rgd build-standard` and review the diff.
+- Change toolchain behavior in `src/openrgd/`.
+- Add cross-component interfaces under `contracts/` with maturity and provenance.
+- Put test-owned inputs under `tests/fixtures/` only when they are minimal, hermetic and exercised by tests.
+- Record historical evidence under `docs/history/` and current decisions under `docs/reconciliation/`.
 
-Generated `build/`, `dist/`, bytecode and packaging metadata are excluded by `.gitignore` and MUST NOT be committed.
+Generated build products, machine bundles, robot workspaces and export outputs are excluded by `.gitignore`.
