@@ -55,6 +55,9 @@ jobs:
       - name: Validate canonical artifact mirrors
         run: python tools/reconcile_artifacts.py
 
+      - name: Validate fail-closed runtime boundary
+        run: python tools/validate_runtime_boundary.py
+
       - name: Validate convergence candidate contracts
         run: python contracts/agent/v0.1.0/validate.py
 
