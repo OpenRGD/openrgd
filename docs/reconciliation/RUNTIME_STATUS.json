@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "component": "embodied-runtime",
+  "canonical_root": "OpenRGD/openrgd",
+  "status": "NOT_PROVIDED_BY_CANONICAL_ROOT",
+  "historical_prototype": "QUARANTINED",
+  "physical_actuation_available": false,
+  "contract_package": "contracts/agent/v0.1.0",
+  "implementation_repository": null,
+  "repository_name_decision": "OPEN",
+  "legacy_cli_names": [
+    "ros2",
+    "viam",
+    "hybrid"
+  ],
+  "legacy_cli_behavior": "FAIL_CLOSED_WITH_MIGRATION_STATUS",
+  "decision_ref": "docs/reconciliation/RUNTIME_BOUNDARY.md"
+}
