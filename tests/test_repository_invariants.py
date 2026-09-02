@@ -33,6 +33,12 @@ def test_artifact_reconciliation_passes() -> None:
     assert "0 unexpected" in result.stdout
 
 
+def test_runtime_boundary_validator_passes() -> None:
+    result = run_script("tools/validate_runtime_boundary.py")
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "canonical CLI is non-actuating and fail-closed" in result.stdout
+
+
 def test_rgd_init_materializes_the_complete_default_seed(tmp_path: Path) -> None:
     result = subprocess.run(
         ["rgd", "--quiet", "init", "seed-probe"],
