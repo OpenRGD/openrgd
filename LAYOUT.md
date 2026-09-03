@@ -19,7 +19,7 @@ openrgd/
 │   ├── governance/
 │   │   └── BRANCH_PROTECTION.md   # Required external GitHub controls
 │   ├── history/
-│   │   ├── ai-generated-prototypes/   # Removed promotional/prototype identities
+│   │   ├── stale-prototypes/          # Removed stale/prototype identities
 │   │   ├── generated-artifacts/       # Removed artifact/example inventory
 │   │   ├── import-export-prototypes/  # Superseded importer/exporter identities
 │   │   ├── profile-inspection-prototypes/ # Superseded check/boot identities
@@ -27,7 +27,9 @@ openrgd/
 │   │   └── seed/                      # Superseded seed evidence
 │   └── reconciliation/
 │       ├── AION_READY_BACKUP_AUDIT.json
+│       ├── AI_HYGIENE_AUDIT.md
 │       ├── DECISIONS.md
+│       ├── DECISIONS_HYGIENE.md
 │       ├── EVIDENCE_SCOPE.json
 │       ├── MERGE_READINESS.md
 │       ├── SPEC_CONTENT_HYGIENE.json

@@ -5,6 +5,7 @@
 ```text
 technical review readiness:   YES
 governance tree freeze:       COMPLETE AND CI-VALIDATED
+repository hygiene:           COMPLETE AND CI-VALIDATED
 external branch protection:   OPEN — ISSUE #2
 pull-request state:            DRAFT
 merge authorization:          NO
@@ -27,24 +28,20 @@ This document records the decisions required to move the reconciliation from dra
 | New tag names | `standard-v*`, `toolchain-v*`, `contracts-agent-v*` only |
 | Agent Contracts | `candidate`, non-normative, not promoted by merge |
 | Physical runtime | external repository responsibility |
-| AION-ready archive | digest-only evidence; explicitly excluded from PR #1 |
+| AION expected archive | exact bytes unavailable; historical digest preserved |
+| AION recovered backup | mismatched same-lineage variant; audited and excluded from PR #1 |
+| Draft spec assertions | registered; block stable standard release, not reconciliation merge |
+| Plugin ABI | disabled pending accepted contract and fail-closed loader |
 | Signing | not implemented; not claimed; stable-release gate |
 | Default merge method | merge commit; squash only by explicit exception |
 | PR #1 merge method | merge commit to preserve reconciliation provenance |
 | Merge vs release | separate decisions; merge creates no tag or release |
 
-## Technical closure
-
-Governance implementation checkpoint:
+## Latest hygiene implementation checkpoint
 
 ```text
-02222e88a4e5f5026d828e3f5d174ae65a0a2428
-```
-
-Pull-request workflow:
-
-```text
-33735707622 — SUCCESS
+commit:   b614334f167b92ba3b84d0b37adc9a782c9fec1e
+workflow: 33744591319 — SUCCESS
 ```
 
 Required checks:
@@ -58,21 +55,24 @@ Build Windows executable   PASS
 Additional verified results:
 
 ```text
+repository hygiene         PASS
 governance validator       PASS
 Agent Contracts candidate  PASS
-pytest                     35 passed
+pytest                     41 passed
 ```
 
 Checkpoint artifact:
 
 ```text
-id:     9885693022
+id:     9889133457
 name:   openrgd-rgd-windows
-size:   12,190,774 bytes
-sha256: bb1303549910927f9e1f04c9709fe54ca179ac8404139ab5c534c33073a0d966
+size:   12,189,099 bytes
+sha256: 148a1ea8202ddeb313323ff0feee736219d0b34b5d366883d4aed98a2a0453f3
 ```
 
-## Governance-tree closure
+The final documentation-only reconciliation head must pass the same checks before review status changes.
+
+## Governance and hygiene closure
 
 The branch contains and validates:
 
@@ -83,16 +83,21 @@ The branch contains and validates:
 - `.github/CODEOWNERS`;
 - pull-request and RFC templates;
 - explicit Agent Contracts maturity status;
-- evidence-scope exclusion record;
-- branch-protection target policy;
-- governance validator and tests;
-- decisions R-041 through R-049.
-
-The tree-level governance freeze is complete.
+- canonical source, mirror and seed policy;
+- runtime and physical-actuation boundary;
+- generated-artifact cleanup and canonical hashing;
+- evidence-only URDF/USDA lifecycle;
+- static profile inspection;
+- `.env`/private-key/generated-debris exclusions;
+- tracked-file secret and contact scanning;
+- stable-release registry for unverified draft-spec assertions;
+- recovered AION backup identity and security audit;
+- stale/prototype surface inventory;
+- governance and hygiene regression tests.
 
 ## External repository control still required
 
-GitHub reported at freeze time:
+GitHub reports:
 
 ```text
 main protected: false
@@ -113,7 +118,7 @@ Before merge:
 3. verify these required contexts are present:
    - `Validate Python 3.10`
    - `Validate Python 3.12`
-   - `Build Windows executable`
+   - `Build Windows executable`;
 4. require the branch to be up to date;
 5. require review conversations to be resolved;
 6. block force pushes and deletion of `main`;
@@ -127,28 +132,58 @@ Until these steps are complete, PR #1 remains draft even when CI is green.
 
 ## Single-maintainer review record
 
-While the repository has one maintainer, an independent approval cannot be required without making merge impossible. The final merge record must therefore confirm:
+While the repository has one maintainer, an independent approval cannot be required without making merge impossible. The final merge record must confirm:
 
 - the public PR checklist was completed;
 - no unresolved review conversation remains;
 - the branch is current with `main`;
 - all required checks passed on the final head;
 - no release or contract promotion is bundled into the merge;
-- known exclusions and non-actions remain visible.
+- known exclusions and non-actions remain visible;
+- the secret-bearing local backup was not imported;
+- stale/prototype surfaces remain historical rather than active.
 
 When a second maintainer is appointed, governance and branch protection must be updated to require one non-author approval for normative changes.
 
-## Evidence-scope closure
+## AION evidence-scope closure
 
-`openrgd-v0.2-aion-ready.zip` is not an unresolved hidden dependency of this merge.
-
-Only its checksum record was available:
+The historical checksum record identifies:
 
 ```text
+expected ZIP SHA-256:
 8c8f4a7f9c3ff67504962fb255dd9652e60264538c97fb6a1a037a256d98351d
 ```
 
-Its bytes were unavailable, so its contents were not inspected or inferred. The archive is explicitly excluded from PR #1. Later recovery requires digest verification and a separate evidence-delta pull request.
+The exact archive bytes remain unavailable.
+
+The recovered full local backup has:
+
+```text
+observed ZIP SHA-256:
+f91ad48cd6a2e8a8bff5f3c559fb8f7fc475e9c4957864aeed6aa689d07615ae
+```
+
+The backup is structurally valid and supports the same AION-ready lineage, but it is not byte-identical to the expected archive. It contains a local `.env`, generated artifacts and a post-checksum source edit. The secret value is not retained in repository evidence.
+
+Decision:
+
+```text
+used by PR #1: no
+merge blocking: no
+automatic import: no
+future path: sanitized post-merge AION evidence-delta PR
+```
+
+## Draft specification content closure
+
+Unverified institutional/contact/model/dataset/citation/future-snapshot literals remain in the historical draft source and are registered in `SPEC_CONTENT_HYGIENE.json`.
+
+```text
+reconciliation merge blocking: no
+stable standard release blocking: yes
+```
+
+This avoids both silent historical rewriting and accidental promotion of draft claims.
 
 ## Contract-status closure
 
@@ -175,7 +210,7 @@ Python version: 0.2.0rc1
 Git tag:        toolchain-v0.2.0-rc.1
 ```
 
-That release remains subject to its own migration notes, final CI, artifact inventory and unsigned/signed provenance disclosure.
+A separate AION evidence-delta pull request must sanitize the recovered backup, compare every source file, resolve or explicitly defer AION-H-001 through AION-H-010 and preserve the distinction between codec evidence and runtime claims.
 
 ## Work outside PR #1
 
@@ -186,5 +221,6 @@ The following do not block this reconciliation merge because they are explicitly
 - live ROS 2 or hardware-bound validation;
 - embodied runtime and Body Adapter repositories;
 - promotion of Agent Contracts;
-- recovery and inspection of the excluded AION-ready archive;
-- stable release signing and attestations.
+- AION source integration;
+- stable release signing and attestations;
+- normative cleanup of registered draft-spec assertions.

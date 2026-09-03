@@ -1,21 +1,22 @@
 {
-  "inventory_version": "1.0.0",
+  "inventory_version": "1.1.0",
   "classification": "REMOVED_FROM_ACTIVE_TREE_HISTORICAL_PROVENANCE_RETAINED",
   "recorded_at": "2026-09-03",
   "base_commit": "e1644cfb295ef1e36303bd38fe58c4915ad4e9b5",
+  "authorship_inference": "NOT_REQUIRED_FOR_CLASSIFICATION",
   "items": [
     {
       "path": "ENTHUSIAST.md",
       "git_type": "blob",
       "git_sha": "8e3b11e84912d8d667c25987266d0d84f339083f",
-      "classification": "PROMOTIONAL_AI_GENERATED_DRAFT",
+      "classification": "PROMOTIONAL_DRAFT",
       "reason": "Overstated implementation maturity and advertised disabled or unverified workflows and domains."
     },
     {
       "path": "ONBOARDING.md",
       "git_type": "blob",
       "git_sha": "c967706e3562b22ad1318853a4df9aacb81c25fa",
-      "classification": "STALE_AI_GENERATED_GUIDE",
+      "classification": "STALE_GUIDE",
       "reason": "Advertised Python 3.8, Isaac export, a full AI/ROS2/Isaac stack and unsupported commands."
     },
     {

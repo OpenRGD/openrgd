@@ -68,9 +68,13 @@ def test_removed_promotional_and_plugin_surfaces_stay_absent() -> None:
         "src/openrgd/core/command_registry.py",
         "src/openrgd/core/plugins_policy.py",
         "src/rgd_schema.jsonc",
+        "docs/history/ai-generated-prototypes",
     ]
     for relative in removed:
         assert not (ROOT / relative).exists(), relative
+
+    assert (ROOT / "docs/history/stale-prototypes/README.md").is_file()
+    assert (ROOT / "docs/history/stale-prototypes/INVENTORY.json").is_file()
 
 
 def test_recovered_aion_backup_is_not_mislabeled_as_original_archive() -> None:

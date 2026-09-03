@@ -35,6 +35,7 @@ The uploaded backup contains 41 file entries with later archive timestamps:
 | `src/rgd.egg-info/` package metadata | 6 |
 | local `.env` | 1 |
 | later source file | 1 |
+| other | 0 |
 
 The later source file is:
 
@@ -43,7 +44,7 @@ src/openrgd/main.py
 timestamp: 2026-08-31 01:24:44
 ```
 
-It registers AION/Oracle/plugin commands that are not part of the historical public baseline. This is a substantive source delta, not ZIP metadata.
+It registers AION, Oracle and plugin command groups that are not part of the historical public baseline. This is a substantive source delta, not ZIP metadata.
 
 ## Archive integrity
 
@@ -53,6 +54,7 @@ The uploaded ZIP itself is structurally valid:
 ZIP integrity: PASS
 path traversal check: PASS
 symlink check: PASS
+embedded .git metadata: none
 total entries: 814
 regular files: 654
 directory entries: 160
@@ -70,9 +72,10 @@ Verified scope inside the uploaded archive:
 ```text
 exact credential occurrences: 1
 location: .env only
+.env.example real credential: no
 ```
 
-The repository snapshot itself says that `.env` should not be shipped and that users should copy `.env.example`, which confirms that this is local backup contamination rather than intended source.
+The backup's `.gitignore` already excludes `.env`, and its own reconciliation note says that `.env` should not be shipped. This supports classification as local backup contamination rather than intended source.
 
 Current GitHub evidence:
 
@@ -82,7 +85,7 @@ Current GitHub evidence:
 .env in PR #1 changed paths: no
 ```
 
-This supports the conclusion that the credential did not enter the current GitHub repository or PR. It does not remove the need to revoke it after exposure in the uploaded backup.
+Therefore **no evidence was found that this credential entered the current GitHub repository or PR**. That is not a proof about every external cache or historical copy, and the exposed credential still requires revocation.
 
 ## Content-level commitments
 
@@ -106,6 +109,20 @@ tree SHA-256:
 
 These commitments identify the inspected backup variant. They do not prove equality with the unavailable historical ZIP.
 
+## Local contamination inventory
+
+| Category | Files |
+|---|---:|
+| `.env` | 1 |
+| Python bytecode/cache | 33 |
+| `egg-info` metadata | 6 |
+| generated robot workspaces | 227 |
+| generated exports | 4 |
+| historical external examples | 5 |
+| incomplete MSIX material | 1 |
+
+These items must not be imported into a future evidence-delta branch.
+
 ## AION evidence found
 
 The backup contains a coherent experimental AION integration:
@@ -124,7 +141,9 @@ tests/test_aion.py
 Local inspection produced:
 
 ```text
-pytest: 6 passed
+Python: 3.13.5
+full snapshot pytest: 6 passed
+AION test module: 3 passed
 AION structural validation errors: 0
 T-512 64-byte roundtrip: PASS
 HyperAion 2080-byte roundtrip: PASS
@@ -134,20 +153,117 @@ The strongest defensible classification is:
 
 ```text
 IMPLEMENTED:
-experimental binary codec, roundtrip tests and structural validator
+experimental binary codec, roundtrip tests,
+semantic-dimension lookup and limited structural validator
 
 SPECIFIED:
-AION layouts, semantic map and module registry
+AION layouts, 512D semantic map and module registry
 
 NOT IMPLEMENTED BY THIS SNAPSHOT:
 production microkernel
 shared-memory zero-copy transport
-real-time scheduler
+real-time scheduler or latency enforcement
+process/kernel-space isolation
+dynamic priority runtime
+semantic engine for unmapped hard invariants
 Chronograf runtime bridge
 hardware middleware bridge
+text/vision/VLA → HyperAion encoder
+HyperAion → ActionIntent / somatic translation
 ```
 
-Several comments overstate implementation maturity—for example deterministic real-time guarantees, isolated processes, zero-copy transport and “100% integrity”. Those claims require hardening before any AION code is proposed upstream.
+Aion4096 is specified in JSONC but has no corresponding codec or roundtrip test in the recovered Python module.
+
+## Hardening findings
+
+### AION-H-001 — Non-finite and out-of-range HyperAion values
+
+`pack_hyper_aion` accepts:
+
+```text
+NaN
++Infinity
+-Infinity
+values outside [-1, 1]
+```
+
+even though the semantic map declares normalized `FLOAT32_NORMALIZED_MINUS_ONE_TO_ONE` values.
+
+Future action: reject non-finite values and decide explicitly whether range enforcement belongs to the codec profile or semantic validation layer.
+
+### AION-H-002 — Lossy uint64 coercion
+
+Header and payload fields pass through `int(value)`. The current implementation therefore accepts and converts values such as:
+
+```text
+1.5  → 1
+True → 1
+"7"  → 7
+```
+
+Future action: require a real integer type, decide boolean handling and reject lossy coercion.
+
+### AION-H-003 — Incomplete semantic-map validation
+
+The validator still reports success after removing one of the core dimensions and changing the reserved-dimension count to an inconsistent value.
+
+Future action: require the complete 0–7 octant, validate exact indices, reserved range, numeric profile and all source references.
+
+### AION-H-004 — Invalid hard-invariant mappings fail open
+
+Malformed threshold expressions, absent mappings and out-of-range dimension indices are silently skipped by `evaluate_alignment_vector`.
+
+Future action: validate the mapping configuration separately and fail closed for mapped hard-invariant errors.
+
+### AION-H-005 — Semantic-first authority is not implemented
+
+The executable evaluator checks only explicitly vector-mapped thresholds. It does not implement the documented semantic hard invariants that lack vector mappings.
+
+Future action: keep this evaluator non-authoritative until it sits behind the deterministic constitutional and Operation Safety contracts.
+
+### AION-H-006 — “100% integrity” overclaim
+
+`rgd aion check` reports:
+
+```text
+AION integrity: 100%
+```
+
+after a limited structural validation.
+
+Future action: report an exact validation profile and checks performed, not a readiness percentage.
+
+### AION-H-007 — Runtime claims without runtime evidence
+
+The module registry declares shared-memory zero-copy IPC, process isolation, dynamic priorities, kernel-space isolation and microsecond latency budgets. The recovered code does not implement or measure these properties.
+
+Future action: classify them as requirements or proposals until a runtime and benchmark evidence exist.
+
+### AION-H-008 — Direct HyperAion-to-actuation conflicts with convergence
+
+The recovered Work kernel describes translation from HyperAion directly to low-level actuation commands. That conflicts with the converged boundary:
+
+```text
+ActionIntent
+→ Somatic Translator
+→ CapabilityPlan
+→ Operation Safety Gate
+→ Body Adapter
+```
+
+Future action: do not import the module architecture wholesale; resolve it through a contract delta.
+
+### AION-H-009 — Anchor semantics conflict
+
+One source calls `anchor:uint64` a Chronograf timestamp; another calls it an opaque clock/causal anchor.
+
+Future action: align the future profile with `ChronografAnchorRef64` and never treat its handle as a timestamp.
+
+### AION-H-010 — Packet type/header consistency is unverified
+
+The codec does not prove that `meta_data` type identifiers match the selected packet layout.
+
+Future action: define the type-ID encoding and add incompatible-header/layout tests.
 
 ## Reconciliation decision
 
@@ -158,8 +274,9 @@ Reasons:
 1. its archive identity does not match the historical checksum;
 2. it contains local secret and generated-file contamination;
 3. it contains a source edit after the checksum time;
-4. AION codec/spec claims require independent hardening;
-5. the current governance already requires recovered excluded evidence to enter through a separate delta PR.
+4. AION validation and maturity claims require independent hardening;
+5. some module semantics conflict with the converged embodied boundary;
+6. the current governance requires recovered excluded evidence to enter through a separate delta PR.
 
 After PR #1 is merged:
 
@@ -172,7 +289,7 @@ sanitized source-only inventory
   ↓
 file-by-file comparison
   ↓
-codec and claim hardening
+AION-H-001 ... AION-H-010 resolution/defer record
   ↓
 independent CI
   ↓
