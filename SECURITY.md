@@ -10,19 +10,17 @@ Security fixes are applied to the active reconciliation/main lineage. Historical
 
 Do not publish exploitable details in a public issue.
 
-Use GitHub private vulnerability reporting when it is available for this repository. Otherwise email:
+Use GitHub private vulnerability reporting when it is enabled for this repository.
+
+If private vulnerability reporting is unavailable, open a minimal public issue that contains only:
 
 ```text
-rfc@openrgd.org
+[SECURITY CONTACT REQUEST]
 ```
 
-Use the subject prefix:
+and a request for a private disclosure channel. Do not include technical details, proof-of-concept code, secrets, affected device addresses or information that would enable exploitation. The repository steward will establish a private channel before receiving the report.
 
-```text
-[SECURITY] OpenRGD
-```
-
-Include:
+A private report should include:
 
 - affected commit, tag or file;
 - impact and preconditions;
