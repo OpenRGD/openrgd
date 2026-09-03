@@ -6,7 +6,7 @@
 |---|---:|---|
 | OpenRGD standard bundle | `0.2.0` | Draft; maturity is declared per domain |
 | `rgd` Python toolchain | `0.1.1` | Working alpha |
-| Agent interoperability contracts | `0.1.0` | Convergence candidate |
+| Agent interoperability contracts | `0.1.0` | Convergence candidate; non-normative |
 
 These versions are independent. See [`VERSIONING.md`](VERSIONING.md).
 
@@ -18,6 +18,7 @@ This repository is the proposed **non-actuating canonical/tooling root** for:
 - `standard/` — tracked strict-JSON leaf mirror;
 - `contracts/` — cross-component interfaces with explicit maturity and provenance;
 - `src/openrgd/` — validation, hashing, import, enrichment, deterministic compilation and static export tooling;
+- `governance/` — machine-readable repository governance;
 - `tests/fixtures/` — project-owned, non-normative test evidence;
 - historical and reconciliation records.
 
@@ -38,6 +39,30 @@ The repository also does not claim that HyperAion512 encoding, Chronograf produc
 ```
 
 The current bundle manifest marks Foundation and Operation as stable, Agency and Volition as experimental, and Evolution and Ether as proposals. Repository authority rules are documented in [`STRUCTURE.md`](STRUCTURE.md).
+
+## Governance status
+
+The reconciliation branch freezes these repository rules:
+
+- human maintainers remain accountable for normative acceptance, merge and release;
+- temporary AI design profiles are not governance authorities;
+- all changes enter `main` through pull requests;
+- granular reviewed commits are preserved by merge commit unless squash is explicitly justified;
+- new tags are scoped by artifact axis:
+
+```text
+standard-vMAJOR.MINOR.PATCH
+toolchain-vMAJOR.MINOR.PATCH
+contracts-agent-vMAJOR.MINOR.PATCH
+```
+
+- merge and release are separate decisions;
+- `contracts/agent/v0.1.0` remains `candidate` after merge;
+- the source-tree hash proves content identity, not authorship or approval.
+
+See [`GOVERNANCE.md`](GOVERNANCE.md), [`RELEASE_POLICY.md`](RELEASE_POLICY.md), [`SECURITY.md`](SECURITY.md) and [`docs/reconciliation/MERGE_READINESS.md`](docs/reconciliation/MERGE_READINESS.md).
+
+The only remaining merge-control gate for reconciliation PR #1 is server-side protection of `main`, tracked in GitHub issue #2. The PR remains draft until that control is applied and verified.
 
 ## Install the toolchain
 
@@ -175,6 +200,10 @@ Body Adapter
 Hardware
 ```
 
+## Evidence scope
+
+The archive `openrgd-v0.2-aion-ready.zip` is not part of reconciliation PR #1 because only its checksum record was available, not inspectable archive bytes. No content was inferred from its name or digest. A later recovery must verify the recorded SHA-256 and enter through a separate evidence-delta pull request. See [`docs/reconciliation/EVIDENCE_SCOPE.md`](docs/reconciliation/EVIDENCE_SCOPE.md).
+
 ## Documentation
 
 - [`CLI_GUIDE.md`](CLI_GUIDE.md) — current command behavior;
@@ -183,13 +212,16 @@ Hardware
 - [`STRUCTURE.md`](STRUCTURE.md) — authority model and component boundaries;
 - [`LAYOUT.md`](LAYOUT.md) — active repository tree;
 - [`GLOSSARIO.md`](GLOSSARIO.md) — shared terminology;
-- [`VERSIONING.md`](VERSIONING.md) — independent version axes;
-- [`docs/reconciliation/`](docs/reconciliation/) — current decisions and audits;
+- [`VERSIONING.md`](VERSIONING.md) — independent version axes and scoped tags;
+- [`GOVERNANCE.md`](GOVERNANCE.md) — normative change and contract-promotion process;
+- [`RELEASE_POLICY.md`](RELEASE_POLICY.md) — merge, tag, artifact and signing rules;
+- [`SECURITY.md`](SECURITY.md) — vulnerability and physical-safety reporting;
+- [`docs/reconciliation/`](docs/reconciliation/) — current decisions, evidence scope and audits;
 - [`docs/history/`](docs/history/) — preserved non-normative history.
 
-## Governance and contribution
+## Contribution
 
-OpenRGD follows an RFC-oriented development model. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing normative changes. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable: its maturity label controls its authority.
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing changes. A file being present in `contracts/` or `docs/reconciliation/` does not make it stable: its machine-readable maturity label controls its authority.
 
 ## Author
 

@@ -24,6 +24,14 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Deterministic `OPENRGD_PROFILE_VALIDATION` and `OPENRGD_NON_ACTUATING_GROUNDING_CONTEXT` JSON artifacts.
 - Deterministic ROS 2 static export manifest with explicit `CONFIGURATION_ONLY` / `HARDWARE_BOUND` status.
 - End-to-end non-actuating URDF/USDA lifecycles and seed-HAL collision tests.
+- Human-accountable governance model in `GOVERNANCE.md` and `governance/policy.json`.
+- Scoped release and tag rules in `RELEASE_POLICY.md`.
+- Security and physical-safety reporting policy.
+- CODEOWNERS, pull-request template and normative RFC template.
+- Machine-readable candidate status for Agent Contracts.
+- Explicit digest-only evidence exclusion for `openrgd-v0.2-aion-ready.zip`.
+- Merge-readiness record and documented server-side branch-protection gate.
+- CI-enforced governance validator and regression tests.
 
 ### Changed
 
@@ -47,6 +55,11 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Imported bodies are isolated from seed actuator/HAL mappings until explicit review.
 - The canonical repository is explicitly non-actuating; physical runtime ownership is external.
 - Quiet-mode CLI errors use deterministic plain stderr output.
+- New release tags are scoped to `standard-v*`, `toolchain-v*` or `contracts-agent-v*`.
+- Windows release assets are published only from `toolchain-v*` tags.
+- Merge commits are the default to preserve granular reviewed history; squash requires an explicit exception.
+- Agent Contracts validation now proves that candidate/non-normative status has not been silently promoted.
+- Single-maintainer review requirements are explicit and must become one non-author approval when a second maintainer is appointed.
 
 ### Removed
 
@@ -64,6 +77,7 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - USD convenience defaults and machine-local source paths.
 - Generic fallback driver/address behavior from the ROS 2 static exporter.
 - `check`/`boot` readiness language, warning-only module failures and integrity-blind loading.
+- Generic future tag trigger `v*.*.*` from the active workflow.
 
 ### Preserved
 
@@ -72,6 +86,17 @@ All notable changes to the OpenRGD repository and Python toolchain are documente
 - Superseded seed skill index.
 - Original tree/blob identities for removed generated artifacts, workspaces, packaging prototypes and external examples.
 - Historical importer/exporter and profile-inspection prototype identities under `docs/history/`.
+- Existing unscoped `v0.1.0` and `v0.1.1` tags as historical repository/toolchain evidence.
+- The granular reconciliation commit sequence for merge by merge commit.
+
+### Governance status
+
+- Repository-tree governance: frozen and CI-validated.
+- Agent Contracts: remain `candidate`, non-normative.
+- AION-ready archive: explicitly excluded as digest-only evidence; later recovery requires a separate delta PR.
+- Signing: not implemented and not claimed; remains a stable-release gate.
+- `main` protection: required before merge and tracked in issue #2.
+- Merge and release: separate; no tag or release is created by reconciliation PR #1.
 
 ## [0.1.1] — 2025-11-26
 

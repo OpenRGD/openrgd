@@ -1,49 +1,71 @@
 # OpenRGD repository layout
 
-This file describes the active tree after canonical-artifact, runtime-boundary, import/export and profile-inspection reconciliation.
+This file describes the active tree after canonical-artifact, runtime-boundary, import/export, profile-inspection and governance reconciliation.
 
 ```text
 openrgd/
-├── .github/workflows/       # Active CI
-├── assets/                  # Branding assets
-├── contracts/               # Versioned cross-component contracts
+├── .github/
+│   ├── workflows/                 # Active CI
+│   ├── ISSUE_TEMPLATE/rfc.md      # Normative RFC intake
+│   ├── CODEOWNERS                 # Current stewardship
+│   └── pull_request_template.md   # Evidence and governance checklist
+├── assets/                        # Branding assets
+├── contracts/                     # Versioned cross-component contracts
+│   └── agent/v0.1.0/
+│       └── STATUS.json            # Machine-readable candidate maturity
+├── governance/
+│   └── policy.json                # Machine-readable repository governance
 ├── docs/
+│   ├── governance/
+│   │   └── BRANCH_PROTECTION.md   # Required external GitHub controls
 │   ├── history/
 │   │   ├── generated-artifacts/       # Removed artifact/example inventory
 │   │   ├── import-export-prototypes/  # Superseded importer/exporter identities
 │   │   ├── profile-inspection-prototypes/ # Superseded check/boot identities
 │   │   ├── runtime-prototype/         # Quarantined runtime source evidence
 │   │   └── seed/                      # Superseded seed evidence
-│   └── reconciliation/      # Decisions, policies, boundaries and audits
-├── plugins/                 # Bundled plugin prototypes
-├── spec/                    # Normative modular JSONC source
+│   └── reconciliation/
+│       ├── DECISIONS.md
+│       ├── EVIDENCE_SCOPE.json
+│       ├── EVIDENCE_SCOPE.md
+│       ├── MERGE_READINESS.md
+│       └── policies, boundaries and audit reports
+├── plugins/                       # Bundled plugin prototypes
+├── spec/                          # Normative modular JSONC source
 ├── src/openrgd/
-│   ├── commands/            # Non-actuating CLI commands
-│   ├── core/                # Hashing, profile inspection and shared tooling
-│   ├── importers/           # Evidence-only URDF and text USDA ingestion
-│   ├── seeds/               # Packaged default profile
-│   └── synapses/            # Static interoperability generators
-├── standard/                # Tracked strict-JSON leaf mirror
+│   ├── commands/                  # Non-actuating CLI commands
+│   ├── core/                      # Hashing, profile inspection and shared tooling
+│   ├── importers/                 # Evidence-only URDF and text USDA ingestion
+│   ├── seeds/                     # Packaged default profile
+│   └── synapses/                  # Static interoperability generators
+├── standard/                      # Tracked strict-JSON leaf mirror
 ├── tests/
 │   ├── fixtures/
-│   │   ├── urdf/            # Owned hermetic URDF evidence
-│   │   └── usd/             # Owned hermetic USDA evidence
-│   └── test_*.py            # Automated contracts and lifecycle checks
-├── tools/                   # Reconciliation and validation tools
+│   │   ├── urdf/                  # Owned hermetic URDF evidence
+│   │   └── usd/                   # Owned hermetic USDA evidence
+│   ├── test_governance_freeze.py
+│   └── test_*.py                  # Automated contracts and lifecycle checks
+├── tools/
+│   ├── validate_governance.py
+│   └── reconciliation and validation tools
 ├── .gitattributes
 ├── .gitignore
 ├── CHANGELOG.md
 ├── CLI_GUIDE.md
+├── CONTRIBUTING.md
 ├── GLOSSARIO.md
+├── GOVERNANCE.md
 ├── GUIDE_EXPORT.md
 ├── GUIDE_IMPORT.md
 ├── LICENSE
 ├── README.md
+├── RELEASE_POLICY.md
+├── SECURITY.md
 ├── STRUCTURE.md
 ├── VERSIONING.md
 ├── pyproject.toml
-├── rgd.spec                 # Windows PyInstaller recipe
-└── run.py                   # PyInstaller entry point
+├── rgd.spec                       # Windows PyInstaller recipe
+└── run.py                         # PyInstaller entry point
 ```
 
 ## Deliberately absent from the active tree
@@ -65,14 +87,30 @@ src/openrgd/runtime/ historical prototype
 
 Original Git identities are recorded under `docs/history/`.
 
+## Authority map
+
+| Path | Authority |
+|---|---|
+| `spec/` | Normative standard source |
+| `standard/` | Derived strict-JSON mirror |
+| `contracts/` | Explicitly versioned/maturity-labelled interfaces |
+| `governance/` and root governance documents | Repository governance and release policy |
+| `src/openrgd/` | Non-actuating reference toolchain |
+| `tests/fixtures/` | Owned, non-normative evidence |
+| `docs/reconciliation/` | Current reconciliation decisions and audit |
+| `docs/history/` | Non-normative historical evidence |
+
 ## Where to make changes
 
 - Change the standard in modular `spec/` source files.
-- Run `rgd hash --write` after an intentional source change.
+- Run `rgd hash --write` after an intentional selected-source change.
 - Rebuild `standard/` through `rgd build-standard` and review the diff.
 - Change non-actuating toolchain behavior in `src/openrgd/`.
-- Add cross-component interfaces under `contracts/` with maturity and provenance.
+- Add cross-component interfaces under `contracts/` with machine-readable maturity and provenance.
+- Change governance through a normative pull request and, where required, an RFC.
 - Put test-owned inputs under `tests/fixtures/` only when they are minimal, hermetic and exercised by tests.
 - Record historical evidence under `docs/history/` and current decisions under `docs/reconciliation/`.
 
 Generated build products, machine bundles, robot workspaces and export outputs are excluded by `.gitignore`.
+
+Server-side protection of `main` is not represented by the Git tree. Its required configuration is documented under `docs/governance/BRANCH_PROTECTION.md` and tracked separately in GitHub issue #2.
