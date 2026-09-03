@@ -66,6 +66,7 @@ def test_recovered_aion_backup_is_not_mislabeled_as_original_archive() -> None:
 def test_active_toolchain_metadata_has_no_unverified_contact() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     main = (ROOT / "src/openrgd/main.py").read_text(encoding="utf-8")
-    assert ("@" + "openrgd.org") not in pyproject
+    unverified_domain = "openrgd" + ".org"
+    assert ("@" + unverified_domain) not in pyproject
     assert "Cognitive BIOS" not in pyproject
     assert "Cognitive BIOS" not in main
