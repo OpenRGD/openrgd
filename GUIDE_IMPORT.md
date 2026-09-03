@@ -1,103 +1,172 @@
-# 📥 OpenRGD Import Guide
+# OpenRGD Import Guide
 
-The **`rgd import`** command serves as the "Semantic Vacuum Cleaner."
-It allows you to ingest legacy robot definitions (URDF, USD) and automatically transpile them into a valid OpenRGD **Foundation Domain**.
+`rgd import` extracts facts from an external robot description into a **partial, non-actuating OpenRGD Foundation profile**.
 
-> **Philosophy:** We do not discard the past. We structure it.
-> The importer extracts the *physical truth* (mass, limits, geometry) from your existing files and wraps it in the *cognitive context* of OpenRGD.
+It does not create identity, constitutional alignment, safety policy, cognition, skills or hardware authorization. Those elements are not established by URDF or USD source data and must not be invented by an importer.
 
----
+## Supported inputs
 
-## 1. Supported Formats
+| Input | Current status | Boundary |
+|---|---|---|
+| URDF (`.urdf`, `.xml`) | Implemented and lifecycle-tested | XML robot topology/inertials/limits/dynamics subset |
+| USDA (`.usda`, UTF-8 text `.usd`) | Implemented and lifecycle-tested narrow subset | Text stage metadata plus revolute/prismatic UsdPhysics joint subset |
+| Binary USD/USDC | Not supported by this parser | Convert to USDA or use a future OpenUSD SDK adapter |
 
-The CLI currently supports the following industry standards via a lightweight, dependency-free parsing engine.
+Both paths emit only:
 
-| Format | Extension | Engine Used | Notes |
-| :--- | :--- | :--- | :--- |
-| **URDF** | `.urdf`, `.xml` | `xml.etree` | The standard for ROS1/ROS2. Extracts Links and Joints. |
-| **USD (ASCII)** | `.usda`, `.usd` | `regex` | Universal Scene Description (Isaac Sim). Must be text-based. |
-| **USD (Zip)** | `.usdz` | `zipfile` + `regex` | Automatically extracts and parses `.usda` files inside the archive. |
+```text
+spec/01_foundation/description.jsonc
+spec/01_foundation/actuation_dynamics.jsonc
+```
 
----
+Both record source filename, format, byte length and SHA-256 without embedding a machine-local absolute path.
 
-## 2. Usage
+## URDF evidence boundary
 
-The syntax is designed to be frictionless. You do not need to specify the format; the CLI detects it automatically based on the file extension.
+The URDF importer may extract:
 
-### Basic Import
+- robot name;
+- links;
+- inertial mass, origin and complete inertia tensor when present;
+- joint name and type;
+- parent/child connectivity;
+- origin and axis;
+- declared limits with type-correct units;
+- source damping and friction;
+- mimic relationships.
+
+It does not infer transmissions, controllers, vendor plugins, bus addresses or calibration.
+
+Missing numeric values remain absent. Malformed and non-finite values fail the import instead of receiving silent defaults.
+
+## USDA evidence boundary
+
+The text USDA importer intentionally implements a restricted, auditable profile:
+
+```text
+OPENUSD_USDA_LIGHTWEIGHT_V1
+```
+
+It currently recognizes:
+
+- stage `defaultPrim`;
+- stage `metersPerUnit`;
+- stage `kilogramsPerUnit`;
+- stage `upAxis`;
+- `PhysicsRevoluteJoint`;
+- `PhysicsPrismaticJoint`;
+- `physics:body0` and `physics:body1` relationships;
+- X/Y/Z joint axis tokens;
+- authored lower/upper limits;
+- local joint frames when directly authored;
+- angular/linear drive `maxForce`, stiffness and damping when directly authored.
+
+The parser preserves `body0` and `body1` as source relationships. It does not reinterpret them as a universal parent/child direction, because joint relationship ordering and scene composition require fuller USD semantics.
+
+### Unit rules
+
+UsdPhysics uses degrees as its angular unit, stage distance units scaled by `metersPerUnit`, and stage mass units scaled by `kilogramsPerUnit`. The importer therefore applies only conversions justified by authored stage metadata:
+
+```text
+revolute lower/upper:
+    degrees → radians
+
+prismatic lower/upper:
+    stage distance × metersPerUnit → metres
+
+linear drive maxForce:
+    source value × kilogramsPerUnit × metersPerUnit → newtons
+
+angular drive maxForce:
+    source value × kilogramsPerUnit × metersPerUnit² → newton-metres
+```
+
+Rules:
+
+1. prismatic SI limits are rejected when `metersPerUnit` is absent;
+2. drive effort is converted to SI only when both `metersPerUnit` and `kilogramsPerUnit` are authored;
+3. raw authored values remain in `source_usd_joint_map` even when SI effort cannot be derived;
+4. absent values remain absent;
+5. duplicate ambiguous attributes, inverted limits and malformed/non-finite numbers fail closed.
+
+External standards basis: the OpenUSD UsdPhysics specification defines the unit system and stage-level scaling behavior. The lightweight importer deliberately implements only the subset listed above.
+
+### Deliberate limitations
+
+This parser does not:
+
+- compose multiple USD layers;
+- resolve references or payloads;
+- evaluate variants;
+- resolve inherited opinions;
+- evaluate complete transform stacks;
+- discover all schema APIs applied to arbitrary prims;
+- compute body mass properties;
+- implement schema fallback/sentinel behavior comprehensively;
+- replace the OpenUSD SDK.
+
+A source requiring any of those semantics must use a future full OpenUSD adapter rather than silently accepting incomplete interpretation.
+
+## Partial import
+
 ```bash
-rgd import my_robot.urdf
-Action: Creates a folder named my_robot/ containing the full OpenRGD structure (spec/00_core, spec/01_foundation, etc.) populated with data extracted from the URDF.
+rgd import robot.urdf --out partial-robot
+rgd import robot.usda --out partial-robot
+```
 
-Custom Output Directory
-Bash
+The result is intentionally incomplete:
 
-rgd import assets/robot.usda --out ./projects/new_bot
-Action: Saves the generated RGD definition into ./projects/new_bot.
+```text
+partial-robot/
+└── spec/
+    └── 01_foundation/
+        ├── description.jsonc
+        └── actuation_dynamics.jsonc
+```
 
-3. Deep Dive: What gets imported?
-The importer maps legacy concepts to the 01_FOUNDATION domain.
+This is the preferred operation when reviewing what the source file actually proves.
 
-From URDF (.urdf)
-<robot name="..."> → Becomes the Project Name and Kernel ID.
+## Seed enrichment
 
-<link name="..."> → Populates kinematic_chain in description.jsonc.
+```bash
+rgd alive robot.urdf --out RGD-robot --seed default
+rgd alive robot.usda --out RGD-robot --seed default
+```
 
-<joint> Properties:
+`rgd alive` performs a separate, explicit operation:
 
-type → type_enum (revolute, prismatic, fixed).
+```text
+source-derived Foundation evidence
+              +
+reviewed packaged seed
+              ↓
+full integrity-addressed profile
+```
 
-<limit effort="..."> → torque_nm in actuation_dynamics.jsonc.
+The output project records:
 
-<limit velocity="..."> → velocity_rads.
+```text
+profile_kind = SEED_ENRICHED_IMPORTED_EVIDENCE
+seed_compatibility_status = UNVERIFIED
+```
 
-<limit lower/upper="..."> → range_rad.
+The current default seed contains reference assumptions. Successful enrichment and a valid source-tree hash do not prove that inherited calibration, HAL, safety or behavioral modules match the imported body. Review them before any hardware use.
 
-From USD / Isaac Sim (.usda, .usdz)
-defaultPrim → Robot Name.
+## Project-owned fixtures
 
-PhysicsRevoluteJoint → Actuator definitions.
+```text
+tests/fixtures/urdf/openrgd_minimal_arm.urdf
+tests/fixtures/usd/openrgd_minimal_arm.usda
+```
 
-drive:angular:physics:stiffness → Maps to advanced_impedance_model (PID tuning).
+Each fixture has provenance documented beside it. Both are synthetic, MIT-licensed, hermetic, free of network and machine-local references, and exercised through import, enrichment, hashing, profile inspection, deterministic compilation and static ROS 2 export.
 
-drive:angular:physics:damping → Maps to damping.
+## Profile inspection after enrichment
 
-maxForce → Maps to torque_nm.
+```bash
+cd RGD-robot
+rgd check --output json
+rgd boot --output json
+```
 
-4. Troubleshooting & Limitations
-⚠️ "Binary USD" Error
-If you try to import a binary USD file (.usdc), the CLI will reject it:
-
-❌ Critical: File is BINARY USD (.usdc). Cannot parse with lightweight importer.
-
-Solution: You must convert the file to ASCII format using Pixar's tools (bundled with Isaac Sim or Maya):
-
-Bash
-
-# Convert binary to text
-usdcat robot.usdc -o robot.usda
-
-# Then import
-rgd import robot.usda
-⚠️ "No Joints Found"
-If the importer runs but produces an empty actuation_dynamics.jsonc, your source file might define only visual meshes (geometry) without physical metadata (joints/limits).
-
-URDF: Check that <joint> tags exist and are not just type="fixed".
-
-USD: Ensure the stage has PhysicsAPI applied and joints are defined as PhysicsJoint, not just Xforms.
-
-5. Post-Import Workflow
-Importing is just the beginning ("Step 0"). Once ingested:
-
-Enrich: Open spec/04_volition/alignment.jsonc and define the robot's mission (the importer creates a generic placeholder).
-
-Compile: Run rgd compile-spec to generate the unified artifact.
-
-Boot: Run rgd boot to see how the LLM interprets your imported physics.
-
-Bash
-
-# The "Magical" Sequence
-rgd import frank.urdf
-cd frank
-rgd boot
+`check` validates source integrity and every kernel-selected JSONC module. `boot` creates a deterministic non-actuating grounding context. Neither command validates physical compatibility or authorizes hardware execution.

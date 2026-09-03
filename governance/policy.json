@@ -1,0 +1,79 @@
+{
+  "policy_version": "1.0.0-rc1",
+  "status": "ADOPTED_ON_RECONCILIATION_BRANCH",
+  "canonical_repository": "OpenRGD/openrgd",
+  "repository_role": "NON_ACTUATING_CANONICAL_AND_TOOLING_ROOT",
+  "default_branch": "main",
+  "normative_source_root": "spec",
+  "decision_register": "docs/reconciliation/DECISIONS.md",
+  "current_steward": {
+    "name": "Pasquale Ranieri",
+    "github": "phate6872"
+  },
+  "maturity_states": {
+    "candidate": {
+      "normative": false,
+      "stable_release_allowed": false
+    },
+    "accepted": {
+      "normative": true,
+      "stable_release_allowed": true
+    },
+    "deprecated": {
+      "normative": false,
+      "compatibility_only": true
+    },
+    "historical": {
+      "normative": false,
+      "evidence_only": true
+    }
+  },
+  "current_contract_packages": {
+    "agent/v0.1.0": "candidate"
+  },
+  "required_ci_checks": [
+    "Validate Python 3.10",
+    "Validate Python 3.12",
+    "Build Windows executable"
+  ],
+  "merge_policy": {
+    "pull_request_required": true,
+    "direct_pushes_to_main_allowed": false,
+    "status_checks_required": true,
+    "branch_must_be_up_to_date": true,
+    "conversation_resolution_required": true,
+    "single_maintainer_mode": true,
+    "required_approvals_current": 0,
+    "required_approvals_after_second_maintainer": 1,
+    "self_review_checklist_required": true,
+    "force_push_to_main_allowed": false,
+    "delete_main_allowed": false,
+    "default_merge_method": "merge_commit",
+    "squash_requires_explicit_decision": true,
+    "reconciliation_pr_1_merge_method": "merge_commit"
+  },
+  "tag_policy": {
+    "unscoped_new_tags_allowed": false,
+    "standard_prefix": "standard-v",
+    "toolchain_prefix": "toolchain-v",
+    "agent_contract_prefix": "contracts-agent-v"
+  },
+  "release_policy": {
+    "merge_is_release": false,
+    "candidate_contract_stable_tag_allowed": false,
+    "release_candidate_may_be_unsigned_if_disclosed": true,
+    "stable_trust_sensitive_release_requires_signing": true,
+    "windows_asset_axis": "toolchain"
+  },
+  "evidence_policy": {
+    "later_artifact_must_not_rewrite_history": true,
+    "digest_only_artifact_contents_may_be_inferred": false,
+    "recovered_excluded_artifact_requires_separate_delta_pr": true
+  },
+  "ai_contribution_policy": {
+    "ai_may_draft_review_and_test": true,
+    "human_acceptance_required": true,
+    "temporary_ai_profile_names_are_governance_authorities": false,
+    "private_chain_of_thought_required": false
+  }
+}

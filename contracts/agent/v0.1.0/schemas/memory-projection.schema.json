@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AION MemoryProjection v0.1",
+  "type": "object",
+  "required": [
+    "projection_id_str",
+    "memory_class_enum_str",
+    "payload_ref_str",
+    "payload_sha256_hex_str",
+    "evidence_chronon_ids_arr",
+    "confidence_float"
+  ],
+  "properties": {
+    "projection_id_str": {
+      "type": "string"
+    },
+    "memory_class_enum_str": {
+      "enum": [
+        "WORKING",
+        "EPISODIC",
+        "SEMANTIC",
+        "PROCEDURAL",
+        "AUTOBIOGRAPHICAL",
+        "RELATIONSHIP",
+        "DECISION",
+        "LESSONS"
+      ]
+    },
+    "payload_ref_str": {
+      "type": "string"
+    },
+    "payload_sha256_hex_str": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "evidence_chronon_ids_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence_float": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "canonical_bool": {
+      "type": "boolean"
+    },
+    "lifecycle_enum_str": {
+      "type": "string"
+    },
+    "supersedes_projection_ids_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "version_str": {
+      "const": "aion_memory_projection_v0.1"
+    }
+  }
+}

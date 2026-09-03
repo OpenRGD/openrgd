@@ -1,0 +1,66 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: skills/core/gentle_head_nod.jsonc
+ *
+ * SKILL:
+ *  - Name: gentle_head_nod
+ *  - Purpose: Non-threatening, slow head nod used as acknowledgement
+ *    or agreement gesture.
+ */
+
+{
+  "meta_group": {
+    "skill_id_str": "gentle_head_nod",
+    "version_semver_str": "1.0.0",
+    "category_enum": "SOCIAL_INTERACTION",
+    "capability_level_enum": "BASIC",
+    "is_core_skill_bool": true
+  },
+
+  "description_group": {
+    "summary_str": "Perform a small, slow head nod to signal acknowledgement or agreement.",
+    "intended_use_cases_list_str": [
+      "confirm_receipt_of_instruction",
+      "nonverbal_acknowledgement_in_dialogue",
+      "polite_social_presence"
+    ]
+  },
+
+  "preconditions_group": {
+    "required_world_model_tags_list_str": [
+      "has_head_actuator"
+    ],
+    "required_sensors_list_str": [
+      "front_camera",
+      "audio_microphones"
+    ],
+    "required_actuators_list_str": [
+      "neck_yaw_pitch"
+    ],
+    "disallowed_context_flags_list_str": [
+      "in_high_speed_motion"
+    ]
+  },
+
+  "safety_envelope_group": {
+    "max_joint_velocity_scale_float": 0.3,
+    "max_angular_accel_deg_s2_float": 80.0,
+    "human_proximity_mode_enum": "NORMAL_INTERACTION"
+  },
+
+  "control_profile_group": {
+    "policy_family_str": "expressive_head_motion_v1",
+    "control_mode_enum": "TRAJECTORY_PRIMITIVE",
+    "training_domain_str": "face_to_face_indoor",
+    "sim2real_calibration_level_enum": "STUDIO_TESTED"
+  },
+
+  "runtime_policy_group": {
+    "learning_allowed_bool": false,
+    "max_policy_drift_per_hour_float": 0.0
+  },
+
+  "fallback_group": {
+    "on_failure_action_enum": "ABORT_AND_RETURN_TO_NEUTRAL_POSE"
+  }
+}

@@ -1,101 +1,128 @@
-import typer
-import sys
-import threading
-import time
+"""Fail-closed compatibility boundary for the historical ``rgd run`` CLI.
+
+The canonical OpenRGD repository defines standards, contracts and reference
+ tooling. It intentionally does not ship a physical embodied runtime. The old
+ROS 2 / Viam prototype is preserved under ``docs/history/runtime-prototype``.
+"""
+
+from __future__ import annotations
+
+import json
 from pathlib import Path
-from ..core.visuals import log, print_header
+from typing import Any
 
-# Importiamo gli adapter (i driver per i vari mondi)
-# Nota: li importiamo dentro le funzioni per evitare errori se mancano le librerie (es. rclpy)
-# Ma per la struttura, assumiamo che esistano in src/openrgd/runtime/adapters/
+import typer
 
-app = typer.Typer(help="Runtime execution engines.")
+app = typer.Typer(
+    help=(
+        "Compatibility status for the external embodied-runtime boundary. "
+        "This package does not actuate hardware."
+    ),
+    no_args_is_help=True,
+)
+
+_RUNTIME_STATUS: dict[str, Any] = {
+    "schema_version": "1.0.0",
+    "component": "embodied-runtime",
+    "canonical_root": "OpenRGD/openrgd",
+    "status": "NOT_PROVIDED_BY_CANONICAL_ROOT",
+    "historical_prototype": "QUARANTINED",
+    "physical_actuation_available": False,
+    "contract_package": "contracts/agent/v0.1.0",
+    "implementation_repository": None,
+    "repository_name_decision": "OPEN",
+    "decision_ref": "docs/reconciliation/RUNTIME_BOUNDARY.md",
+}
+
+
+def _validate_output(output: str) -> str:
+    normalized = output.strip().lower()
+    if normalized not in {"text", "json"}:
+        raise typer.BadParameter("output must be 'text' or 'json'")
+    return normalized
+
+
+def _emit(payload: dict[str, Any], output: str, *, error: bool = False) -> None:
+    mode = _validate_output(output)
+    if mode == "json":
+        typer.echo(json.dumps(payload, sort_keys=True), err=error)
+        return
+
+    typer.echo(f"Embodied runtime: {payload['status']}", err=error)
+    typer.echo(
+        "Physical actuation in canonical toolchain: "
+        + ("available" if payload["physical_actuation_available"] else "disabled"),
+        err=error,
+    )
+    typer.echo(
+        f"Historical bundled prototype: {payload['historical_prototype']}",
+        err=error,
+    )
+    typer.echo(f"Contract package: {payload['contract_package']}", err=error)
+    typer.echo(
+        "Use a separately versioned embodied runtime after its repository and "
+        "contracts have been reconciled.",
+        err=error,
+    )
+
+
+def _fail_closed(adapter: str, output: str, **context: Any) -> None:
+    payload = {
+        **_RUNTIME_STATUS,
+        "requested_adapter": adapter,
+        "outcome": "BLOCKED",
+        "reason": "HISTORICAL_RUNTIME_QUARANTINED",
+        **context,
+    }
+    _emit(payload, output, error=True)
+    raise typer.Exit(code=2)
+
+
+@app.command("status")
+def runtime_status(
+    output: str = typer.Option(
+        "text", "--output", "-o", help="Output format: text or json"
+    ),
+) -> None:
+    """Report the non-actuating embodied-runtime ownership boundary."""
+
+    _emit(dict(_RUNTIME_STATUS), output)
+
 
 @app.command("ros2")
 def run_ros2(
-    kernel_path: Path = typer.Option(Path("spec/00_core/kernel.jsonc"), "--kernel", "-k", help="Path to RGD Kernel")
-):
-    """
-    Starts the RGD Runtime Engine attached to the ROS 2 ecosystem.
-    Dynamically subscribes to topics defined in hal_mapping.jsonc.
-    """
-    log("Initializing Cognitive Runtime (ROS 2 Adapter)...", "SYSTEM")
-    
-    # 1. Check Dependencies
-    try:
-        import rclpy
-    except ImportError:
-        log("Critical: 'rclpy' not found. Source your ROS 2 environment first.", "ERROR")
-        raise typer.Exit(1)
+    kernel_path: Path = typer.Option(
+        Path("spec/00_core/kernel.jsonc"),
+        "--kernel",
+        "-k",
+        help="Retained compatibility option; no runtime is started.",
+    ),
+    output: str = typer.Option(
+        "text", "--output", "-o", help="Output format: text or json"
+    ),
+) -> None:
+    """Fail closed; the historical ROS 2 runtime is quarantined."""
 
-    # 2. Load Core Logic (The Brain)
-    from ..runtime.core.engine import RGDEngine
-    from ..runtime.adapters.ros2.node import ROS2Adapter
+    _fail_closed("ros2", output, requested_kernel=str(kernel_path))
 
-    try:
-        # Initialize the Mind (Pure Python)
-        # Risolve il path relativo alla root se necessario
-        if not kernel_path.exists():
-             # Fallback smart search
-             from ..core.utils import find_default_kernel
-             kernel_path = find_default_kernel()
-             
-        engine = RGDEngine(kernel_path.parent.parent) # Passa la cartella 'spec'
-        
-        # Initialize the Body (ROS2 Middleware)
-        rclpy.init()
-        node = ROS2Adapter(engine)
-        
-        log("Neuro-Link Established. Listening to HAL mapping...", "SUCCESS")
-        
-        # 3. Spin (Blocking Loop)
-        try:
-            rclpy.spin(node)
-        except KeyboardInterrupt:
-            log("Shutting down runtime...", "SYSTEM")
-        finally:
-            node.destroy_node()
-            rclpy.shutdown()
-            
-    except Exception as e:
-        log(f"Runtime Crash: {e}", "ERROR")
-        raise typer.Exit(1)
-
-@app.command("hybrid")
-def run_hybrid():
-    """
-    [EXPERIMENTAL] Launches Multi-System Runtime (e.g. ROS2 + Viam + MQTT).
-    This proves OpenRGD can bridge worlds.
-    """
-    log("Starting Hybrid Runtime Cluster...", "SYSTEM")
-    # Qui in futuro useremo asyncio o threading per lanciare:
-    # - thread_ros2.start()
-    # - thread_viam.start()
-    # - thread_rest_api.start()
-    log("Feature coming in v0.6", "WARN")
 
 @app.command("viam")
-def run_viam():
-    """
-    Launches the Viam Runtime Adapter.
-    Requires VIAM_ADDRESS and VIAM_SECRET env vars.
-    """
-    log("Ignition Sequence: RGD-CORE (Viam Adapter)", "SYSTEM")
-    
-    try:
-        import viam
-    except ImportError:
-        log("Viam SDK not found. Run: pip install viam-sdk", "ERROR")
-        raise typer.Exit(1)
+def run_viam(
+    output: str = typer.Option(
+        "text", "--output", "-o", help="Output format: text or json"
+    ),
+) -> None:
+    """Fail closed; the historical Viam runtime is quarantined."""
 
-    from ..runtime.core.engine import RGDEngine
-    from ..runtime.adapters.viam.node import ViamAdapter
-    from ..core.utils import find_default_kernel
-    
-    # Load Brain
-    kernel_path = find_default_kernel()
-    engine = RGDEngine(kernel_path.parent.parent)
-    
-    # Start Body
-    adapter = ViamAdapter(engine)
-    adapter.spin()
+    _fail_closed("viam", output)
+
+
+@app.command("hybrid")
+def run_hybrid(
+    output: str = typer.Option(
+        "text", "--output", "-o", help="Output format: text or json"
+    ),
+) -> None:
+    """Fail closed; the historical hybrid runtime was never implemented."""
+
+    _fail_closed("hybrid", output)

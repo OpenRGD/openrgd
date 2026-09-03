@@ -1,0 +1,185 @@
+{
+  "audit_version": "1.1.0",
+  "audit_date": "2026-09-03",
+  "artifact_name": "openrgd-v0.2-aion-ready.zip",
+  "historical_expected_archive": {
+    "sha256": "8c8f4a7f9c3ff67504962fb255dd9652e60264538c97fb6a1a037a256d98351d",
+    "digest_record_created_utc": "2026-08-30T23:03:49Z",
+    "archive_bytes_available": false
+  },
+  "uploaded_backup_variant": {
+    "sha256": "f91ad48cd6a2e8a8bff5f3c559fb8f7fc475e9c4957864aeed6aa689d07615ae",
+    "size_bytes": 24065067,
+    "zip_integrity": "PASS",
+    "entry_count_total": 814,
+    "regular_file_count": 654,
+    "directory_entry_count": 160,
+    "uncompressed_regular_bytes": 28634118,
+    "safe_path_check": "PASS",
+    "symlink_check": "PASS",
+    "embedded_git_metadata_entries": 0
+  },
+  "identity_comparison": {
+    "archive_sha256_matches": false,
+    "classification": "POST_CHECKSUM_LOCAL_BACKUP_VARIANT",
+    "same_lineage_supported": true,
+    "byte_identity_with_historical_archive_proven": false,
+    "only_env_difference_proven": false,
+    "reason": "The backup contains files timestamped after the historical checksum record, including generated Python artifacts, package metadata, a source edit to src/openrgd/main.py and a local .env."
+  },
+  "post_checksum_entries": {
+    "count": 41,
+    "python_bytecode_or_cache": 33,
+    "egg_info_files": 6,
+    "local_env_files": 1,
+    "source_files": 1,
+    "other_files": 0,
+    "source_file_paths": [
+      "src/openrgd/main.py"
+    ]
+  },
+  "local_contamination": {
+    "env_files": 1,
+    "python_bytecode_or_cache_files": 33,
+    "egg_info_files": 6,
+    "generated_robot_workspace_files": 227,
+    "generated_export_files": 4,
+    "historical_example_files": 5,
+    "incomplete_msix_files": 1
+  },
+  "secret_handling": {
+    "nonempty_openai_api_key_present": true,
+    "env_example_contains_real_credential": false,
+    "secret_value_recorded_in_audit": false,
+    "secret_fingerprint_recorded_in_audit": false,
+    "exact_secret_occurrences_inside_archive": 1,
+    "occurrence_scope": ".env only",
+    "current_github_main_contains_env": false,
+    "current_reconciliation_branch_contains_env": false,
+    "pull_request_1_contains_env_change": false,
+    "evidence_key_reached_github": "NOT_FOUND",
+    "absolute_non_exposure_proven": false,
+    "credential_rotation_required": true
+  },
+  "content_commitments": {
+    "all_regular_files_except_env": {
+      "file_count": 653,
+      "uncompressed_bytes": 28633834,
+      "tree_sha256": "6288bcd8ef4e14f1518da65cc32e2ed701b61dc298af6f83734d211f7ea944da"
+    },
+    "source_like_tree_excluding_env_bytecode_and_egg_info": {
+      "file_count": 614,
+      "uncompressed_bytes": 28435456,
+      "tree_sha256": "1ca51bc0ec5f8c486e5fd078206ee53fad189d99625f088df2017d560f6c46cd"
+    }
+  },
+  "aion_evidence": {
+    "structural_files_present": [
+      "docs/AION_V0_2.md",
+      "spec/00_core/aion_structs.jsonc",
+      "spec/00_core/kernel_modules_registry.jsonc",
+      "spec/04_volition/hyper_aion_semantic_map.jsonc",
+      "src/openrgd/core/aion.py",
+      "src/openrgd/commands/aion.py",
+      "tests/test_aion.py"
+    ],
+    "local_tests": {
+      "python_version": "3.13.5",
+      "full_snapshot_pytest": "6 passed",
+      "aion_test_module": "3 passed",
+      "aion_spec_validation_error_count": 0,
+      "t512_roundtrip": true,
+      "hyperaion_roundtrip": true
+    },
+    "maturity_classification": "EXECUTABLE_EXPERIMENTAL_CODEC_AND_VALIDATOR",
+    "implemented": [
+      "32-byte big-endian four-uint64 header codec",
+      "64-byte Aion512/T-512 codec",
+      "2080-byte header-plus-512-float32 HyperAion codec",
+      "basic semantic-dimension lookup",
+      "explicit vector-threshold violation extraction",
+      "limited structural source validator",
+      "in-memory CLI binary probe"
+    ],
+    "specified_but_not_implemented": [
+      "Aion4096 codec",
+      "shared-memory zero-copy transport",
+      "real-time scheduler and latency enforcement",
+      "process or kernel-space isolation",
+      "dynamic priority and preemption runtime",
+      "semantic hard-invariant engine for unmapped rules",
+      "Chronograf runtime integration",
+      "hardware middleware integration",
+      "text vision or VLA to HyperAion encoder",
+      "HyperAion to ActionIntent or somatic translation"
+    ]
+  },
+  "aion_hardening_findings": [
+    {
+      "id": "AION-H-001",
+      "severity": "HIGH",
+      "finding": "pack_hyper_aion accepts NaN, positive/negative infinity and values outside the declared normalized range [-1, 1].",
+      "required_action": "Reject non-finite values; decide whether range enforcement belongs to the codec profile or semantic validator; add adversarial tests."
+    },
+    {
+      "id": "AION-H-002",
+      "severity": "MEDIUM",
+      "finding": "uint64 fields silently coerce floats, booleans and numeric strings through int(value).",
+      "required_action": "Require an actual integer type, explicitly decide boolean handling and reject lossy coercion."
+    },
+    {
+      "id": "AION-H-003",
+      "severity": "HIGH",
+      "finding": "validate_aion_spec can pass when a core semantic dimension is removed and reserved_protocol_dimensions_int is inconsistent.",
+      "required_action": "Validate required dimension identifiers and indices 0..7, reserved range, declared numeric profile and source references."
+    },
+    {
+      "id": "AION-H-004",
+      "severity": "HIGH",
+      "finding": "Malformed threshold expressions, absent dimension mappings and out-of-range indices are silently skipped by evaluate_alignment_vector.",
+      "required_action": "Separate configuration validation from evaluation and fail closed for mapped hard-invariant configuration errors."
+    },
+    {
+      "id": "AION-H-005",
+      "severity": "HIGH",
+      "finding": "The executable evaluator checks only explicitly vector-mapped thresholds; it does not implement the documented semantic-first hard-invariant authority.",
+      "required_action": "Keep the codec/evaluator non-authoritative until integrated behind the deterministic constitutional and operation-safety contracts."
+    },
+    {
+      "id": "AION-H-006",
+      "severity": "MEDIUM",
+      "finding": "The CLI reports 'AION integrity: 100%' after a limited structural check.",
+      "required_action": "Replace percentage/readiness language with an exact validation profile and list of checks performed."
+    },
+    {
+      "id": "AION-H-007",
+      "severity": "ARCHITECTURAL",
+      "finding": "The module registry declares shared-memory zero-copy IPC, microservices, process isolation, real-time priorities and latency budgets without executable scheduler or transport evidence.",
+      "required_action": "Classify these fields as requirements or proposals; do not describe them as runtime behavior until measured and tested."
+    },
+    {
+      "id": "AION-H-008",
+      "severity": "ARCHITECTURAL",
+      "finding": "The Work kernel describes direct HyperAion-to-low-level actuation, which conflicts with the converged ActionIntent, Somatic Translator, CapabilityPlan, Safety Gate and Body Adapter boundary.",
+      "required_action": "Do not import the module architecture wholesale; reconcile it through a dedicated contract delta."
+    },
+    {
+      "id": "AION-H-009",
+      "severity": "MEDIUM",
+      "finding": "The universal anchor is described in one source as a Chronograf timestamp and elsewhere as an opaque uint64 clock/causal anchor.",
+      "required_action": "Align the future AION profile with ChronografAnchorRef64 and avoid treating the handle as a timestamp."
+    },
+    {
+      "id": "AION-H-010",
+      "severity": "MEDIUM",
+      "finding": "The codec does not prove that meta_data type identifiers agree with the selected packet layout.",
+      "required_action": "Define type-ID encoding, validate header/layout consistency and add incompatible-type tests."
+    }
+  ],
+  "reconciliation_decision": {
+    "used_as_source_for_pull_request_1": false,
+    "merge_blocking_for_pull_request_1": false,
+    "automatic_import_allowed": false,
+    "next_step": "After PR #1 is merged, create a separate AION evidence-delta branch from main; sanitize the backup; compare all source files against the merged canonical root; fix AION-H-001 through AION-H-010 or explicitly defer them; then propose only evidence-supported deltas."
+  }
+}

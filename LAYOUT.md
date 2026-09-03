@@ -1,92 +1,124 @@
-# OpenRGD Project Layout
+# OpenRGD repository layout
 
-This document describes the directory structure of the OpenRGD repository.
-It helps contributors locate the core logic, the standard definitions, and the tooling modules.
-
-## 📂 High-Level Overview
-
-The repository is divided into two main realms:
-1.  **`spec/`**: The **Data** (The Standard, Reference Implementation, and Templates).
-2.  **`src/`**: The **Code** (The CLI, Compilers, and Bridges).
+This file describes the active tree after canonical-artifact, runtime-boundary, import/export, profile-inspection, governance and hygiene reconciliation.
 
 ```text
 openrgd/
-├── assets/                 # Static resources (Icons, Wallpapers, Logos)
-├── spec/                   # The Reference Implementation (JSONC)
-├── src/                    # The Python Package Source Code
-├── .gitignore              # Git configuration
-├── CHANGELOG.md            # Version history
-├── CLI_GUIDE.md            # User manual for the 'rgd' command
-├── CONTRIBUTING.md         # Governance and contribution rules
-├── GUIDE_EXPORT.md         # Documentation for ROS2/Isaac bridges
-├── GUIDE_IMPORT.md         # Documentation for URDF/USD ingestion
-├── LAYOUT.md               # This file
-├── LICENSE                 # MIT License
-├── pyproject.toml          # Python build configuration (PEP 621)
-├── README.md               # The Vision and Manifesto
-├── run.py                  # Dev launcher script
-└── SECURITY.md             # Vulnerability reporting policy
-🏗️ Directory Details
-spec/ (The Standard)
-Contains the "Golden Standard" definition of a robot. This folder serves two purposes: it documents the schema via example (Reference Implementation) and provides the default template for new projects.
+├── .github/
+│   ├── workflows/                 # Active CI
+│   ├── ISSUE_TEMPLATE/rfc.md      # Normative RFC intake
+│   ├── CODEOWNERS                 # Current stewardship
+│   └── pull_request_template.md   # Evidence and governance checklist
+├── assets/branding/               # Selected project branding only
+├── contracts/                     # Versioned cross-component contracts
+│   └── agent/v0.1.0/
+│       └── STATUS.json            # Machine-readable candidate maturity
+├── governance/
+│   └── policy.json                # Machine-readable repository governance
+├── docs/
+│   ├── governance/
+│   │   └── BRANCH_PROTECTION.md   # Required external GitHub controls
+│   ├── history/
+│   │   ├── stale-prototypes/          # Removed stale/prototype identities
+│   │   ├── generated-artifacts/       # Removed artifact/example inventory
+│   │   ├── import-export-prototypes/  # Superseded importer/exporter identities
+│   │   ├── profile-inspection-prototypes/ # Superseded check/boot identities
+│   │   ├── runtime-prototype/         # Quarantined runtime source evidence
+│   │   └── seed/                      # Superseded seed evidence
+│   └── reconciliation/
+│       ├── AION_READY_BACKUP_AUDIT.json
+│       ├── AI_HYGIENE_AUDIT.md
+│       ├── DECISIONS.md
+│       ├── DECISIONS_HYGIENE.md
+│       ├── EVIDENCE_SCOPE.json
+│       ├── MERGE_READINESS.md
+│       ├── SPEC_CONTENT_HYGIENE.json
+│       └── policies, boundaries and audit reports
+├── spec/                          # Normative modular JSONC source
+├── src/openrgd/
+│   ├── commands/                  # Non-actuating CLI commands
+│   ├── core/                      # Hashing, profile inspection and shared tooling
+│   ├── importers/                 # Evidence-only URDF and text USDA ingestion
+│   ├── seeds/                     # Packaged default profile
+│   └── synapses/                  # Static interoperability generators
+├── standard/                      # Tracked strict-JSON leaf mirror
+├── tests/
+│   ├── fixtures/
+│   │   ├── urdf/                  # Owned hermetic URDF evidence
+│   │   └── usd/                   # Owned hermetic USDA evidence
+│   └── test_*.py                  # Automated contracts, lifecycle and hygiene checks
+├── tools/
+│   ├── validate_governance.py
+│   ├── validate_hygiene.py
+│   └── reconciliation and validation tools
+├── .gitattributes
+├── .gitignore
+├── CHANGELOG.md
+├── CLI_GUIDE.md
+├── CONTRIBUTING.md
+├── GLOSSARIO.md
+├── GOVERNANCE.md
+├── GUIDE_EXPORT.md
+├── GUIDE_IMPORT.md
+├── LICENSE
+├── README.md
+├── RELEASE_POLICY.md
+├── SECURITY.md
+├── STRUCTURE.md
+├── VERSIONING.md
+├── pyproject.toml
+├── rgd.spec                       # Windows PyInstaller recipe
+└── run.py                         # PyInstaller entry point
+```
 
-00_core/: The Kernel and Meta-Governance (e.g., kernel.jsonc).
+## Deliberately absent from the active tree
 
-01_foundation/ to 06_ether/: The 6 normative domains of the OpenRGD protocol.
+The following are generated, stale, unaccepted or quarantined and must not be committed as current authority:
 
-src/openrgd/ (The Toolchain)
-The Python package source.
+```text
+.env and private key material
+spec/01_spec.jsonc ... spec/06_spec.jsonc
+spec/openrgd_unified_spec*.json*
+standard/01_spec.json ... standard/06_spec.json
+standard/openrgd_unified_spec*.json
+standard/benchmarks/
+RGD-*/
+my-robots/
+export/
+example/ historical external robot files
+src/openrgd/runtime/ historical prototype
+plugins/ and permissive plugin-loader prototypes
+unselected branding proposals
+stale promotional, onboarding, Docker and maintenance drafts
+```
 
-commands/: The CLI verbs. Each file corresponds to an rgd [verb] command.
+Original Git identities are recorded under `docs/history/`.
 
-init.py: Scaffolding engine (uses seeds/).
+## Authority map
 
-check.py: Semantic validator and linter.
+| Path | Authority |
+|---|---|
+| `spec/` | Normative draft standard source; known unverified assertion literals are registered separately |
+| `standard/` | Derived strict-JSON mirror |
+| `contracts/` | Explicitly versioned/maturity-labelled interfaces |
+| `governance/` and root governance documents | Repository governance and release policy |
+| `src/openrgd/` | Non-actuating reference toolchain |
+| `tests/fixtures/` | Owned, non-normative evidence |
+| `docs/reconciliation/` | Current reconciliation decisions, evidence scope and hygiene registries |
+| `docs/history/` | Non-normative historical evidence |
 
-boot.py: Cognitive BIOS simulator (Prompt generation).
+## Where to make changes
 
-compiler.py: Logic for compile-spec (Twin generation).
+- Change the standard in modular `spec/` source files.
+- Run `rgd hash --write` after an intentional selected-source change.
+- Rebuild `standard/` through `rgd build-standard` and review the diff.
+- Change non-actuating toolchain behavior in `src/openrgd/`.
+- Add cross-component interfaces under `contracts/` with machine-readable maturity and provenance.
+- Change governance through a normative pull request and, where required, an RFC.
+- Put test-owned inputs under `tests/fixtures/` only when they are minimal, hermetic and exercised by tests.
+- Record historical evidence under `docs/history/` and current decisions under `docs/reconciliation/`.
+- Never commit local credentials, `.env`, private keys, bytecode, package metadata or generated workspaces.
 
-bridge.py: Router for the Export system.
+Generated build products, machine bundles, robot workspaces and export outputs are excluded by `.gitignore` and checked by `tools/validate_hygiene.py`.
 
-importer.py: Router for the Import system.
-
-studio.py: Web server for the GUI.
-
-core/: Shared utilities and internal logic.
-
-config.py: Global state (Quiet/Verbose flags).
-
-visuals.py: UI helpers (Rich logs, ASCII art, Progress bars).
-
-utils.py: Robust JSONC parser, Path resolution.
-
-templates.py: Dynamic text generation helpers.
-
-bridges/: The Export Plugins (Adapters).
-
-ros2/: Generates .yaml and .xacro.
-
-isaac/: Generates Python ArticulationCfg classes.
-
-base.py: Abstract Interface for new bridges.
-
-importers/: The Ingestion Plugins (Parsers).
-
-urdf/: XML parser for ROS robots.
-
-usd/: Regex parser for Isaac/Omniverse stages (.usda).
-
-seeds/: Static assets included in the binary build.
-
-default/: The copy of spec/ used by rgd init to generate new robots.
-
-assets/ (Resources)
-branding/: Official logos and vector graphics.
-
-windows/: Integration scripts (setup.bat) and icons (.ico) for Windows Explorer support.
-
-⚙️ Configuration Files
-pyproject.toml: The modern replacement for setup.py. It defines dependencies (typer, rich), metadata, and the entry point script (rgd = openrgd.main:run).
-
-SECURITY.md: Defines the Responsible Disclosure policy and PGP keys.
+Server-side protection of `main` is not represented by the Git tree. Its required configuration is documented under `docs/governance/BRANCH_PROTECTION.md` and tracked separately in GitHub issue #2.

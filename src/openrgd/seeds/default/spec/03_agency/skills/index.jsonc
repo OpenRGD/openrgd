@@ -1,0 +1,38 @@
+/**
+ * OPEN R.G.D. STANDARD v0.1 - Reference Implementation
+ * FILE: skills/index.jsonc
+ *
+ * PURPOSE:
+ * Lightweight index of available skills and their file locations.
+ * Used for discovery, documentation and tooling.
+ */
+
+{
+  "meta_group": {
+    "skills_index_id_str": "bhl_core_skills_index_v1",
+    "version_semver_str": "1.0.0"
+  },
+
+  "core_skills_index_map": {
+    "safe_stance": {
+      "file_ref_str": "03_agency/skills/core/safe_stance.jsonc",
+      "category_enum": "SAFETY_AND_RECOVERY"
+    },
+    "generic_container_grasp": {
+      "file_ref_str": "03_agency/skills/core/generic_container_grasp.jsonc",
+      "category_enum": "MANIPULATION"
+    },
+    "gentle_head_nod": {
+      "file_ref_str": "03_agency/skills/core/gentle_head_nod.jsonc",
+      "category_enum": "SOCIAL_INTERACTION"
+    },
+    "polite_idle_gaze": {
+      "file_ref_str": "03_agency/skills/core/polite_idle_gaze.jsonc",
+      "category_enum": "SOCIAL_INTERACTION"
+    }
+  },
+
+  "extension_packages_index_map": {
+    // Initially empty; populated when extension packages are installed.
+  }
+}

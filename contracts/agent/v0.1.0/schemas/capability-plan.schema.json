@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenRGD CapabilityPlan v0.1",
+  "type": "object",
+  "required": [
+    "version_str",
+    "plan_id_str",
+    "source_intent_id_str",
+    "translator_id_str",
+    "steps_arr"
+  ],
+  "properties": {
+    "version_str": {
+      "const": "openrgd_somatic_contract_v0.1"
+    },
+    "plan_id_str": {
+      "type": "string"
+    },
+    "source_intent_id_str": {
+      "type": "string"
+    },
+    "translator_id_str": {
+      "type": "string"
+    },
+    "steps_arr": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "source_chronon_ids_arr": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at_float": {
+      "type": "number"
+    }
+  }
+}

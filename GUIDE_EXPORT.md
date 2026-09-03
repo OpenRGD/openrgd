@@ -1,104 +1,97 @@
-# 📤 OpenRGD Export Guide
+# OpenRGD Static Export Guide
 
-The **`rgd export`** command acts as the "Semantic Bridge" (or Transpiler).
-It transforms your high-level OpenRGD definition into low-level configuration files required by specific robotic ecosystems (ROS2, Isaac Sim, MuJoCo).
+`rgd export` generates **static interoperability configuration files** from a verified OpenRGD machine bundle. It does not start middleware, connect to hardware or actuate a robot.
 
-> **Philosophy:** "Define Once, Deploy Anywhere."
-> You shouldn't have to manually write `ros2_control.yaml` or Python configuration classes. OpenRGD generates them from the single source of truth.
+## Active targets
 
----
+| Target | Status | Output |
+|---|---|---|
+| `ros2` | Implemented and lifecycle-tested | controller configuration, limits, export manifest; hardware Xacro only with complete explicit HAL evidence |
+| `isaac` | Not implemented | command fails explicitly with exit code `2` |
 
-## 1. Supported Targets
+The historical Isaac generator was a placeholder and is not advertised as an active target.
 
-The CLI uses a plugin-based architecture to support multiple ecosystems.
+## Required sequence
 
-| Target | Output Format | Description |
-| :--- | :--- | :--- |
-| **ros2** | `.yaml`, `.xacro` | Generates `ros2_control` configuration and physical limits injection. |
-| **isaac** | `.py` | Generates `ArticulationCfg` classes for Isaac Lab / Omniverse training. |
-| **mujoco** | `.xml` | *(Coming Soon)* Generates MJCF physical definitions. |
-
----
-
-## 2. Prerequisites: The Compilation Step
-
-**CRITICAL:** Before exporting, you must compile your project.
-The exporter does NOT read the raw `.jsonc` files directly. It reads the **Machine Twin** (`openrgd_unified_spec.json`) to ensure data integrity.
+From an OpenRGD project root:
 
 ```bash
-# 1. Enter your robot directory
-cd MyRobot
-
-# 2. Compile the spec (creates the Machine Twin)
+rgd hash
 rgd compile-spec
+rgd export ros2 --out export/ros2
+```
 
-# 3. Now you can export
-rgd export ros2
-3. Usage & Workflows
-A. Exporting for ROS2 (Real Hardware)
-This generates the configuration needed to run the robot with ros2_control.
+Export fails if:
 
-Bash
+- the canonical source-tree root does not match the manifest;
+- the deterministic machine bundle is missing;
+- the machine bundle was generated from a different source root;
+- required modules are missing or duplicated;
+- the destination would overwrite the canonical `spec/` tree.
 
-rgd export ros2
-Output (export/ folder):
+## Generated ROS 2 artifacts
 
-ros2_control.yaml: Defines the Controller Manager, update rate, and PID gains.
+Every successful ROS 2 export produces:
 
-rgd_limits.xacro: Contains physical limits (torque, velocity, damping) as Xacro properties.
+```text
+ros2_control.yaml
+rgd_limits.xacro
+export_manifest.json
+```
 
-rgd_hardware.xacro: Defines the <ros2_control> tag with hardware drivers and CAN bus IDs.
+`rgd_hardware.xacro` is generated only when every exported joint has explicit HAL interfaces and the complete joint set resolves to exactly one system driver plugin.
 
-How to use it in ROS2: In your robot's main URDF file:
+The export manifest declares one of:
 
-XML
+```text
+CONFIGURATION_ONLY
+HARDWARE_BOUND
+```
 
-<robot xmlns:xacro="[http://www.ros.org/wiki/xacro](http://www.ros.org/wiki/xacro)">
-  <xacro:include filename="$(find my_robot)/config/rgd_limits.xacro" />
-  
-  <joint name="knee_joint">
-    <limit effort="${knee_joint_effort}" velocity="${knee_joint_velocity}" ... />
-  </joint>
-</robot>
-B. Exporting for Isaac Lab (Simulation / RL)
-This generates the Python class required to spawn the robot in NVIDIA Isaac Lab.
+`CONFIGURATION_ONLY` means that physical limits and controller structure were exported, but hardware bindings are incomplete or intentionally withheld. It is a successful static export, not permission to execute.
 
-Bash
+## Imported-body isolation
 
-rgd export isaac
-Output (export/ folder):
+A body created from imported partial evidence cannot inherit actuator mappings, driver plugins, bus IDs or interfaces from the selected seed merely because a joint name happens to match.
 
-isaac_robot_cfg.py: A Python file containing the ArticulationCfg class.
+For imported bodies:
 
-Key Features:
+```text
+source-derived joint topology and limits
+              ↓
+static configuration export
 
-Automatically groups joints by Control Profile (e.g., HEAVY_LEG, LIGHT_ARM).
+seed actuator/HAL bindings
+              ✕ not inherited by name collision
+```
 
-Translates PID gains into Isaac's Stiffness/Damping model.
+Hardware bindings must be reviewed and added explicitly.
 
-Sets the correct drive mode (FORCE vs ACCELERATION).
+## Determinism and provenance
 
-4. How Mapping Works
-The exporter uses a "Smart Extract" logic to find the right values even if your JSON structure varies slightly.
+The ROS 2 output is path-independent and deterministic for the same machine bundle. `export_manifest.json` records:
 
-Hierarchy of Truth
-When generating a value (e.g., Max Torque), the bridge looks in this order:
+- canonical source-tree root;
+- machine-bundle SHA-256;
+- robot identity;
+- exported joint set;
+- units and limits;
+- hardware-binding completeness;
+- missing bindings and reason;
+- generated filenames.
 
-Application Limits (in actuation_topology.jsonc) -> Highest priority (Software cap)
+## Non-actuating boundary
 
-Physical Limits (in actuation_dynamics.jsonc) -> Hardware ceiling
+The generated files are build artifacts. They may be consumed by a separately reviewed ROS 2 package or embodied runtime, but this repository does not launch `ros2_control`, publish commands or open device buses.
 
-Default Fallback -> Safe minimums (e.g. 0.0)
+A complete execution path still belongs below the canonical contracts:
 
-Inheritance
-If you use Profiles in actuation_topology.jsonc (e.g., use_profile_ref_str: "heavy_leg"), the exporter automatically resolves the inheritance, applying any overrides you defined for that specific joint.
-
-5. Troubleshooting
-❌ "Machine Twin not found"
-You forgot to run rgd compile-spec before exporting. The exporter needs the compiled JSON to guarantee it's using the latest valid data.
-
-❌ "Critical: module missing"
-Your specification is incomplete. Ensure you have 01_foundation/actuation_dynamics.jsonc and 01_foundation/actuation_topology.jsonc defined.
-
-❌ Zero values in output
-If your output files show value="0.0", check your variable names. The bridge looks for standard keys like torque_nm, effort, max_torque. If you used a custom key like my_custom_force_val, the bridge won't find it.
+```text
+ActionIntent
+→ Somatic Translator
+→ CapabilityPlan
+→ Operation Safety Gate
+→ DecisionTrace
+→ Body Adapter
+→ hardware
+```

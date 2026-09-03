@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+  SPDX-License-Identifier: MIT
+  Copyright (c) 2026 OpenRGD contributors
+
+  Project-owned hermetic URDF fixture for importer and static-export tests.
+  It intentionally contains no mesh, package, network or machine-local path.
+-->
+<robot name="openrgd_minimal_arm">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <mass value="1.25"/>
+      <inertia ixx="0.010" iyy="0.012" izz="0.008"
+               ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+
+  <link name="arm_link">
+    <inertial>
+      <origin xyz="0 0 0.10" rpy="0 0 0"/>
+      <mass value="0.45"/>
+      <inertia ixx="0.002" iyy="0.003" izz="0.001"
+               ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+
+  <link name="slider_link"/>
+  <link name="tool_link"/>
+
+  <joint name="shoulder_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="arm_link"/>
+    <origin xyz="0 0 0.10" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.0" upper="1.5" effort="4.5" velocity="2.0"/>
+    <dynamics damping="0.10" friction="0.02"/>
+  </joint>
+
+  <joint name="slide_joint" type="prismatic">
+    <parent link="arm_link"/>
+    <child link="slider_link"/>
+    <origin xyz="0 0 0.20" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0.0" upper="0.20" effort="50.0" velocity="0.30"/>
+  </joint>
+
+  <joint name="tool_fixed" type="fixed">
+    <parent link="slider_link"/>
+    <child link="tool_link"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+  </joint>
+</robot>

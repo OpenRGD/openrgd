@@ -1,101 +1,238 @@
-# OpenRGD CLI: Operator's Manual
+# OpenRGD CLI guide
 
-The **OpenRGD Command Line Interface** (`rgd`) is the primary tool for managing the lifecycle of a cognitive robot definition. It acts as the bridge between your file system and the AI Agent.
+The `rgd` CLI manages OpenRGD specification profiles and derived static artifacts. The canonical package is non-actuating.
 
----
-
-## ⚡ Installation
-
-If you are developing locally (from the source):
+## Install
 
 ```bash
-cd openrgd
-pip install -e .
-Verify the installation:
-
-Bash
-
+python -m pip install -e .
 rgd --help
-🎮 Core Commands
-1. Genesis (init)
-Scaffolds a new robot project ("Containment Field") populated with the internal Gold Standard templates.
+```
 
-Bash
+Use the global `--quiet` flag for deterministic machine-readable output and stderr-only errors.
 
-# Interactive mode (will ask for the project name)
-rgd init
+## Core profile lifecycle
 
-# Fast mode (creates the folder immediately)
-rgd init my_robot_v1
-What it does:
+### `rgd init NAME`
 
-Creates the standard folder structure (spec/01_foundation, spec/02_operation, etc.).
+Creates a project from the packaged default profile, personalizes its DID and recalculates `OPENRGD_SOURCE_TREE_SHA256_V1`.
 
-Injects a valid kernel.jsonc in spec/00_core.
+```bash
+rgd init my_robot
+```
 
-Populates domains with reference templates (actuation dynamics, safety supervisors, ethical alignment).
+### `rgd hash`
 
-2. Diagnostics (check)
-Validates the semantic integrity of your robot definition.
+```bash
+rgd hash
+rgd hash --output json
+rgd hash --write
+```
 
-Bash
+Without `--write`, a mismatch exits non-zero. `--write` is for an intentional source change.
 
-# Auto-detects the kernel in the current folder
+### `rgd check`
+
+```bash
 rgd check
+rgd check --output json
+rgd check spec/00_core/kernel.jsonc --output json
+```
 
-# Targets a specific kernel file
-rgd check path/to/kernel.jsonc
-What it does:
+`check` is an integrity-aware static profile validator. It requires:
 
-Auto-discovery: Finds kernel.jsonc automatically (searching in root, spec/, or 00_core/).
+- the canonical kernel path `spec/00_core/kernel.jsonc`;
+- a matching `OPENRGD_SOURCE_TREE_SHA256_V1` root;
+- a non-empty kernel identity;
+- safe, unique, relative JSONC module references;
+- every selected module to exist;
+- every selected module to parse as a JSON object without non-finite values.
 
-Link Verification: Ensures every module referenced in the Kernel actually exists on the disk.
+It returns a structured `OPENRGD_PROFILE_VALIDATION` artifact in JSON mode.
 
-Syntax Validation: Checks for valid JSONC syntax using a robust parser.
+It does **not** assess:
 
-Visuals: Displays a hierarchical, color-coded tree of the robot's "cortex".
+- hardware compatibility;
+- operational safety;
+- embodied-runtime readiness;
+- permission to actuate.
 
-3. Awakening (boot)
-Simulates the robot's cognitive boot sequence and generates the System Prompt for Large Language Models.
+### `rgd boot`
 
-Bash
-
-# Standard Boot (Cinematic UI)
+```bash
 rgd boot
-
-# Pipeable Output (for software pipelines)
 rgd boot --output json
-Use Case: Copy the output of rgd boot (Text Mode) and paste it into the System Message of GPT-4, Claude, or your local VLA model to "ground" it in physical reality.
+rgd boot spec/00_core/kernel.jsonc --output json
+```
 
-4. Compilation (compile-spec)
-Compiles the fragmented .jsonc files into a Unified Specification Artifact. This is essential for training or fine-tuning models on the robot's definition.
+`boot` reuses the same integrity and module-loading checks, then builds a deterministic:
 
-Bash
+```text
+OPENRGD_NON_ACTUATING_GROUNDING_CONTEXT
+```
 
+The JSON context contains the selected modules, source-root commitment, physical/joint summary and alignment summary. It always records:
+
+```text
+physical_execution.assessed = false
+physical_execution.authorized = false
+physical_execution.status = NOT_AUTHORIZED_BY_BOOT
+```
+
+`boot` is not a hardware bootloader, runtime startup command, safety authorization or claim that the robot is ready.
+
+## Import and enrichment
+
+### `rgd import`
+
+Imports only facts supported by a source description:
+
+```bash
+rgd import robot.urdf --out partial-robot
+rgd import robot.usda --out partial-robot
+```
+
+Both current importers emit partial Foundation evidence only:
+
+```text
+spec/01_foundation/description.jsonc
+spec/01_foundation/actuation_dynamics.jsonc
+```
+
+They do not create kernel identity, safety, alignment, cognition, HAL or hardware authorization.
+
+#### URDF
+
+The reconciled URDF path preserves supported:
+
+- link inertials;
+- joint topology and type;
+- revolute/prismatic limits with type-correct units;
+- source dynamics;
+- mimic relationships.
+
+Absent values remain absent. Malformed and non-finite physical values fail closed.
+
+#### Text USDA
+
+The USDA path is deliberately narrow. It accepts UTF-8 text beginning with `#usda` and currently extracts supported `PhysicsRevoluteJoint` and `PhysicsPrismaticJoint` declarations.
+
+It records source and stage provenance, including authored `metersPerUnit`, `kilogramsPerUnit`, `upAxis` and `defaultPrim` when present.
+
+Conversion rules:
+
+```text
+revolute position     authored degrees → radians
+prismatic position    stage distance × metersPerUnit → metres
+drive maxForce        converted to N/Nm only when both
+                      metersPerUnit and kilogramsPerUnit are authored
+```
+
+Raw source values remain available in `source_usd_joint_map`. Missing values are never replaced with convenience defaults. Ambiguous duplicate attributes, malformed values and non-finite values fail closed.
+
+The lightweight parser does not perform USD layer composition, reference/payload resolution, variant evaluation, transform-stack evaluation or full schema fallback processing. Use a full OpenUSD-based adapter when those capabilities are required.
+
+### `rgd alive`
+
+Explicitly enriches imported evidence with a selected packaged seed:
+
+```bash
+rgd alive robot.urdf --out RGD-robot --seed default
+rgd alive robot.usda --out RGD-robot --seed default
+```
+
+It personalizes kernel/bundle identity and recalculates the source root. The project manifest retains:
+
+```text
+seed_compatibility_status = UNVERIFIED
+```
+
+Review inherited physical, HAL, safety and behavioral modules before hardware use.
+
+## Derived artifacts
+
+### `rgd build-standard`
+
+Builds a deterministic strict-JSON leaf mirror:
+
+```bash
+rgd build-standard
+rgd build-standard --src ./Robot --dest ./Robot/standard
+```
+
+Destructive source/ancestor/descendant destinations are rejected.
+
+### `rgd compile-spec`
+
+Creates one deterministic machine bundle:
+
+```bash
 rgd compile-spec
-The "Twin" System: This command generates two files in your spec/ folder:
+rgd compile-spec --out ./artifacts/robot.json
+rgd compile-spec --output json
+```
 
-openrgd_unified_spec.jsonc (Human Twin): Contains the raw source code (comments included) of all modules. Optimized for LLM context injection (the AI can read the comments).
+Default output:
 
-openrgd_unified_spec.json (Machine Twin): Contains clean, minified JSON data. Optimized for validators and software tools.
+```text
+spec/openrgd_unified_spec.json
+```
 
-🤖 Automation & CI/CD
-The CLI supports "Robotic Modes" for integration into pipelines (GitHub Actions, Jenkins, Docker).
+The output contains the source root and source index, has no wall-clock timestamp and is ignored by Git.
 
-Quiet Mode (-q / --quiet)
-Disables all animations, ASCII art, and "personality" logs. Only critical errors or requested data are printed to stdout.
+## Static interoperability
 
-Bash
+### `rgd export ros2`
 
-# Example: Extract JSON configuration silently to a file
-rgd boot -q --output json > robot_config.json
-Verbose Mode (-v / --verbose)
-Enables deep debugging logs, showing exact file paths, parsing steps, and internal state changes.
+```bash
+rgd export ros2 --out export/ros2
+rgd export ros2 --out export/ros2 --output json
+```
 
-Bash
+Prerequisites:
 
-rgd check -v
-🧠 "Cinematic" Experience
-By default, the CLI runs in Cinematic Mode. It simulates system initialization delays, displays ASCII art, and occasionally "chats" via randomized status messages (e.g., "Checking my limbs...").
+```bash
+rgd hash
+rgd compile-spec
+```
 
-This is designed to give the developer a sense of connection with the machine being defined. To disable this permanently for a session, use -q.
+The exporter verifies both the source tree and the compiled bundle. It generates deterministic non-actuating files and reports either `CONFIGURATION_ONLY` or `HARDWARE_BOUND`.
+
+Hardware Xacro is omitted unless all exported joints have complete explicit HAL interfaces and one system driver plugin.
+
+### Unavailable target
+
+`rgd export isaac` fails explicitly with exit code `2`: the historical Isaac generator was a placeholder and is not an active implementation.
+
+## Runtime compatibility boundary
+
+```bash
+rgd run status
+rgd run status --output json
+```
+
+Historical physical adapter commands fail closed:
+
+```bash
+rgd run ros2
+rgd run viam
+rgd run hybrid
+```
+
+They return exit code `2`; the embodied runtime belongs in an independent implementation repository.
+
+## Verified non-actuating lifecycles
+
+CI exercises project-owned URDF and USDA fixtures through:
+
+```text
+import
+→ alive
+→ hash
+→ check
+→ boot
+→ compile-spec
+→ export ros2
+```
+
+This verifies evidence extraction, provenance, integrity, module loading and deterministic static output. It does not prove seed/body compatibility or physical safety.

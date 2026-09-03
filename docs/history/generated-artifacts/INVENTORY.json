@@ -1,0 +1,98 @@
+{
+  "status": "HISTORICAL_EVIDENCE",
+  "inventory_version": "1.0.0",
+  "captured_from_branch": "reconciliation-canonical-core-v0.1",
+  "captured_from_commit": "64f8700ed408b336c258c718147c9175d3f213de",
+  "captured_at": "2026-09-02",
+  "preservation_method": "Git history plus this path/tree/blob inventory; large and externally sourced files are not duplicated in the active tree.",
+  "groups": [
+    {
+      "classification": "SUPERSEDED_RECURSIVE_GENERATED_OUTPUT",
+      "reason": "Per-domain JSONC bundles had ingested earlier copies of themselves. The unified JSONC bundle then ingested those recursive bundles, so these files were neither canonical sources nor clean deterministic products.",
+      "items": [
+        {"path": "spec/01_spec.jsonc", "git_blob": "1f9573f4b5e607fcc7a2128a2ff4e4745abb1768", "size_bytes": 178236},
+        {"path": "spec/02_spec.jsonc", "git_blob": "caffb1152536035fdeed6542c03d1565a899b597", "size_bytes": 41629},
+        {"path": "spec/03_spec.jsonc", "git_blob": "652e7835b2716dd334c4b20a7c4339827432ec94", "size_bytes": 100296},
+        {"path": "spec/04_spec.jsonc", "git_blob": "cd61c5e96f32a1cf756ab9d4dcfa293dfa1b4c41", "size_bytes": 58445},
+        {"path": "spec/05_spec.jsonc", "git_blob": "ef1e7a0cfb41506a33e53c8dd9ee5088c25450c3", "size_bytes": 21200},
+        {"path": "spec/06_spec.jsonc", "git_blob": "9060005d6c08c85e5e48640b68f65c6ca689b2b5", "size_bytes": 69653},
+        {"path": "spec/openrgd_unified_spec.json", "git_blob": "b5a96d1743e9fc43095724bea5f959ed02f65001", "size_bytes": 262387},
+        {"path": "spec/openrgd_unified_spec.jsonc", "git_blob": "1f7d2e3611fb1439e21bfc7fce6c44085b0075a6", "size_bytes": 963963}
+      ]
+    },
+    {
+      "classification": "SUPERSEDED_GENERATED_MIRROR_OR_BENCHMARK",
+      "reason": "These strict-JSON aggregates and benchmark copies were derived from a generator with volatile timestamps and no independent authority. Leaf strict-JSON mirrors remain tracked and validated.",
+      "items": [
+        {"path": "standard/01_spec.json", "git_blob": "00f307d7d32c71c8598eb3355f6402b1fa7400f1", "size_bytes": 115627},
+        {"path": "standard/02_spec.json", "git_blob": "f085e18fddef7588f62bb7211c1dabb820efcbe8", "size_bytes": 26476},
+        {"path": "standard/03_spec.json", "git_blob": "30b52e83c2d1a66519a44507c0280812bda7ffe4", "size_bytes": 60632},
+        {"path": "standard/04_spec.json", "git_blob": "4535a160f144d5b6157de79e1453f608326cc29d", "size_bytes": 30472},
+        {"path": "standard/05_spec.json", "git_blob": "0ef8d8fca7b6c6226f79782743e78e346a9f2274", "size_bytes": 9956},
+        {"path": "standard/06_spec.json", "git_blob": "350974513f2ccefe7f2364c5c3a4ae3eb28daaed", "size_bytes": 40006},
+        {"path": "standard/openrgd_unified_spec.json", "git_blob": "df53269c62761a4fc1f3afb10595f80a86da923f", "size_bytes": 262629},
+        {"path": "standard/benchmarks/openrgd_unified_spec.json", "git_blob": "6de84121344e76ee9d6a9081cdc235a36f2d56f4", "size_bytes": 262629},
+        {"path": "standard/benchmarks/openrgd_unified_spec.jsonc", "git_blob": "16df8d196b84c555a3e0c7e0210b7d8c91336b82", "size_bytes": 916351}
+      ],
+      "tree_refs": [
+        {"path": "standard/benchmarks", "git_tree": "284e9815b8a537bc33a3ac73d034965bdc4ada91"}
+      ]
+    },
+    {
+      "classification": "DUPLICATE_GENERATED_ROBOT_PROFILE",
+      "reason": "Two UR5 profile outputs shared the exact same spec tree and differed only in generated metadata timestamps. Both targeted OpenRGD 0.1.0 and were not canonical examples.",
+      "items": [
+        {"path": "RGD-ur5", "git_tree": "9a2bc384fdb08a23bb1c8f39103d2e90fd38a0ab", "spec_tree": "965da1c257c8199e26ad47f102e0b111b55a018a", "manifest_blob": "0819f01dc16aa025bc38c574740e33a1d7604dca"},
+        {"path": "my-robots/RGD-ur5", "git_tree": "159ff6b48d9d0c940bc3b87290b9265a0a5ed17a", "spec_tree": "965da1c257c8199e26ad47f102e0b111b55a018a", "manifest_blob": "305c5d6b196858b5e8fa04957551b2d104d06dff"}
+      ]
+    },
+    {
+      "classification": "GENERATED_EXPORT_OUTPUT",
+      "reason": "The export directory contained generated ROS 2 and Isaac artifacts with no source authority or fixture assertion.",
+      "tree_refs": [
+        {"path": "export", "git_tree": "c5c17e6b1e7c65464a95220c2377b4d2ed449bb1"}
+      ],
+      "items": [
+        {"path": "export/isaac_robot_cfg.py", "git_blob": "265a4528a0e12ca6acffb243d3e0fa437bb00d8e"},
+        {"path": "export/rgd_hardware.xacro", "git_blob": "56018e268a3687f1f30182aff9e9d133ead1bd07"},
+        {"path": "export/rgd_limits.xacro", "git_blob": "6e5b8082eabd7c3e4fa98de778d6d645a7a89a46"},
+        {"path": "export/ros2_control.yaml", "git_blob": "d3553aba224628054b36b8e04a4bdbd0dc05b278"}
+      ]
+    },
+    {
+      "classification": "UNVERIFIED_EXTERNAL_EXAMPLE",
+      "reason": "The three large URDF files were not owned, minimal, hermetic, license-audited fixtures. They referenced missing external mesh assets; the UR5 file also contained a local controller IP and installation paths. They remain recoverable through Git history but are not distributed as canonical examples.",
+      "tree_refs": [
+        {"path": "example", "git_tree": "23494a5b7cf9e2324f05378e907a9a37478e0c5c"}
+      ],
+      "items": [
+        {"path": "example/bhl/berkeley_humanoid_lite.urdf", "git_blob": "55103db7783f5eb53dc9392bf0ead4c23e96807b", "size_bytes": 32416},
+        {"path": "example/icub/icubgenova11.urdf", "git_blob": "8a51ebf894eb7d9db396672c5c23dbd370c52f37", "size_bytes": 178155},
+        {"path": "example/ur5/ur5.urdf", "git_blob": "4f2a43914ce4ef407246dd6aea263d97a881678d", "size_bytes": 23622}
+      ]
+    },
+    {
+      "classification": "INCOMPLETE_PACKAGING_PROTOTYPE",
+      "reason": "The MSIX tree contained only an Appx manifest referencing an absent dummy executable and absent Assets files.",
+      "tree_refs": [
+        {"path": "msix", "git_tree": "529f76b93c4fa07081cda42ecce8bd13d7298fc3"}
+      ],
+      "items": [
+        {"path": "msix/OpenRGD.ShellIntegration/AppxManifest.xml", "git_blob": "de838c46b0abf0bfa830f09aeeda522df0b0a8b9"}
+      ]
+    },
+    {
+      "classification": "SUPERSEDED_GENERATOR_OR_ENTRYPOINT",
+      "reason": "Multiple mutually inconsistent compilers and an unreachable parallel CLI existed beside the installed Python entrypoint. They were replaced by one deterministic Python implementation.",
+      "items": [
+        {"path": "package.json", "git_blob": "d0ebd525a211700241e9883123f6677a5d1fc0c8"},
+        {"path": "tools/spec-builder/build-uni-spec.mjs", "git_blob": "6d718e9bd407d75ad03e9a333ff028b9d6e236c7"},
+        {"path": "src/openrgd/core/spec_unifier.py", "git_blob": "bc3a73f36ad77f54b0d9ce352afb264afc97e594"},
+        {"path": "src/openrgd/commands/integrity.py", "git_blob": "5d331607c40e678fc35a317ceb7c312741a0e2fb"},
+        {"path": "src/cli.py", "git_blob": "0df5508e48a236c7972f1f7d941bfe6fa8f42414"},
+        {"path": "requirements.txt", "git_blob": "82c0a71ee3135f502f5129168211e5f846df5c9f"},
+        {"path": "tools/generate_requirements/generate_requirements.py", "git_blob": "177086c33027035833cf715867dc790a5582e204"}
+      ]
+    }
+  ]
+}

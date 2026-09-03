@@ -5,10 +5,11 @@
     "description_str": "First reference implementation of OpenRGD Standard v0.2.",
     "author_str": "OpenRGD Foundation",
     "license_enum": "MIT",
-    "integrity_hash_str": "sha256:placeholder_auto_generated",
+    "integrity_profile_str": "OPENRGD_SOURCE_TREE_SHA256_V1",
+    "integrity_hash_str": "sha256:c049dc3fb91c19e668ef0d35b9b40d9052caf1a458b1a108d58b1896189dd5f9",
     "created_at_iso8601_str": "2025-11-23T05:10:14.795731Z",
     "rgd_schema_ref_str": "rgd_schema.jsonc",
-    "kernel_ref_str": "kernel.jsonc"
+    "kernel_ref_str": "00_core/kernel.jsonc"
   },
   "domains_map": {
     "01_foundation": {
