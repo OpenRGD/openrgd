@@ -125,7 +125,7 @@ def test_rgd_init_materializes_and_rehashes_default_seed(tmp_path: Path) -> None
 def test_candidate_contract_validator_passes() -> None:
     result = run_script("contracts/agent/v0.1.0/validate.py")
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "PASS: 4 schemas" in result.stdout
+    assert "PASS: candidate status + 4 schemas" in result.stdout
 
 
 def test_so101_flow_keeps_cognition_and_actuation_separate() -> None:
