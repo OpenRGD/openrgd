@@ -6,7 +6,9 @@ on:
       - main
       - "reconciliation-*"
     tags:
-      - "v*.*.*"
+      - "standard-v*"
+      - "toolchain-v*"
+      - "contracts-agent-v*"
   pull_request:
     branches:
       - main
@@ -61,6 +63,9 @@ jobs:
       - name: Validate fail-closed runtime boundary
         run: python tools/validate_runtime_boundary.py
 
+      - name: Validate governance freeze
+        run: python tools/validate_governance.py
+
       - name: Validate convergence candidate contracts
         run: python contracts/agent/v0.1.0/validate.py
 
@@ -113,8 +118,8 @@ jobs:
           path: dist/rgd.exe
           if-no-files-found: error
 
-      - name: Publish tagged release asset
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Publish tagged toolchain release asset
+        if: startsWith(github.ref, 'refs/tags/toolchain-v')
         uses: softprops/action-gh-release@v2
         with:
           files: dist/rgd.exe

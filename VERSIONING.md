@@ -1,6 +1,6 @@
 # OpenRGD Versioning Model
 
-OpenRGD is a repository containing several independently versioned artifacts. A version from one layer MUST NOT be silently projected onto another layer.
+OpenRGD contains independently versioned artifacts. A version from one layer MUST NOT be silently projected onto another layer.
 
 ## Current version axes
 
@@ -9,29 +9,75 @@ OpenRGD is a repository containing several independently versioned artifacts. A 
 | Standard bundle | `spec/manifest.jsonc` | `0.2.0` | Version targeted by the reference OpenRGD bundle |
 | Kernel profile | `spec/00_core/kernel.jsonc` | `0.1.0` | Version of that kernel profile, not of the whole standard |
 | Python distribution | `pyproject.toml` | `0.1.1` | Version of the installable `rgd` toolchain |
-| Agent contracts | `contracts/agent/v0.1.0/` | `0.1.0` | Version of a convergence-candidate interface package |
+| Agent contracts | `contracts/agent/v0.1.0/STATUS.json` | `0.1.0 candidate` | Non-normative convergence-candidate package |
 
 ## Rules
 
 1. The standard version describes the data model and normative bundle.
 2. The toolchain version describes Python code and packaging.
 3. A profile or contract version describes only that profile or contract.
-4. Compatibility MUST be declared explicitly; matching numbers are not sufficient evidence of compatibility.
-5. A Git tag MUST NOT be interpreted as a standard release unless its scope is explicit in the release notes.
-6. Candidate contracts do not become stable merely because the repository or CLI is released.
+4. Compatibility MUST be declared explicitly; matching numbers are not sufficient evidence.
+5. Merge is not release.
+6. Candidate contracts do not become accepted merely because the repository or CLI is released.
+7. A source-tree root change does not, by itself, determine the semantic version increment.
+8. New unscoped tags are prohibited.
 
 ## Historical tags
 
-The existing unscoped tags `v0.1.0` and `v0.1.1` belong to the public repository/toolchain lineage. They do not establish that the OpenRGD standard bundle is version `0.1.1`; the bundle itself declares `0.2.0`.
-
-## Future release naming
-
-Scoped tags are recommended for future releases, for example:
+The existing unscoped tags:
 
 ```text
-standard-v0.2.0
-toolchain-v0.1.2
-contracts-agent-v0.1.0
+v0.1.0
+v0.1.1
 ```
 
-This naming recommendation is not yet a frozen governance rule. It should be confirmed before the next public release.
+belong to the public repository/toolchain lineage. They do not establish that the OpenRGD standard bundle is version `0.1.1`; the bundle itself declares `0.2.0`.
+
+They remain historical and must not be moved or reused.
+
+## Frozen scoped tag names
+
+Future tags use one of these prefixes:
+
+```text
+standard-vMAJOR.MINOR.PATCH
+toolchain-vMAJOR.MINOR.PATCH
+contracts-agent-vMAJOR.MINOR.PATCH
+```
+
+Pre-release identifiers follow SemVer-style syntax, for example:
+
+```text
+toolchain-v0.2.0-rc.1
+contracts-agent-v0.1.0-candidate.1
+```
+
+A candidate contract cannot receive a stable contract tag.
+
+## Toolchain release preparation
+
+The reconciliation branch intentionally retains Python distribution version `0.1.1` until a separate release pull request.
+
+Because the CLI behavior and artifact boundaries changed materially, the next proposed toolchain release candidate is:
+
+```text
+pyproject version: 0.2.0rc1
+Git tag:           toolchain-v0.2.0-rc.1
+```
+
+This is a release-plan decision, not a release performed by the reconciliation merge.
+
+## Standard release behavior
+
+A `standard-v*` tag may be created only by an explicit standard release pull request that identifies:
+
+- normative semantic changes;
+- canonical source-tree root;
+- compatibility and migration impact;
+- maturity of every bundled domain and contract.
+
+## Contract release behavior
+
+Contract maturity remains independent from version. The current `agent/v0.1.0` package remains `candidate` and non-normative. Promotion requires the process in `GOVERNANCE.md` and a machine-readable status update.
+
+See `RELEASE_POLICY.md` for artifact, signing and publication rules.

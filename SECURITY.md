@@ -1,49 +1,59 @@
 # Security Policy
 
-OpenRGD defines the "Cognitive BIOS" for physical machines. Vulnerabilities in this standard—whether in the CLI toolchain or the semantic logic—can lead to physical harm. We take this responsibility with extreme seriousness.
+## Supported security scope
 
-## 🛡️ Reporting a Vulnerability
+The current repository contains a draft standard and a non-actuating alpha toolchain. It does not provide a production physical runtime or certify any robot for safe operation.
 
-**DO NOT** report security issues via public GitHub Issues.
+Security fixes are applied to the active reconciliation/main lineage. Historical files under `docs/history/` are evidence and are not supported implementations.
 
-If you believe you have found a vulnerability in the OpenRGD Standard, the CLI, or any reference implementation, please report it via our dedicated security portal:
+## Reporting a vulnerability
 
-👉 **[https://vulnerabilities.openrgd.org](https://vulnerabilities.openrgd.org)**
+Do not publish exploitable details in a public issue.
 
-If the portal is inaccessible, you may email the Security Stewardship Council directly at:
-🔒 **security@openrgd.org**
+Use GitHub private vulnerability reporting when it is available for this repository. Otherwise email:
 
-### What to Report
-We accept reports regarding:
-* **Cognitive Bypasses:** Logic flaws in `02_operation` or `04_volition` that allow an AI to ignore safety constraints.
-* **Integrity Failures:** Methods to bypass the `verify-twins` check or spoof the `kernel.jsonc` signature.
-* **Toolchain Exploits:** Code execution or injection vulnerabilities in the `rgd` CLI or Bridge modules.
-* **Privilege Escalation:** Flaws in the `02_operation/oversight_interface.jsonc` role definitions.
+```text
+rfc@openrgd.org
+```
 
----
+Use the subject prefix:
 
-## 📦 Supported Versions
+```text
+[SECURITY] OpenRGD
+```
 
-Security patches are prioritized for the current stable release and the immediate previous version.
+Include:
 
-| Version | Status | Security Updates |
-| :--- | :--- | :--- |
-| **v0.x (Alpha)** | **Active** | **Critical Only** |
-| v0.0.x | EOL | No |
+- affected commit, tag or file;
+- impact and preconditions;
+- minimal reproduction evidence;
+- whether physical hardware, middleware or an external Body Adapter is involved;
+- any known safe mitigation;
+- whether disclosure could create immediate physical risk.
 
----
+Do not include secrets, personal data or unnecessary chain-of-thought transcripts.
 
-## ⏳ Disclosure Policy (Responsible Disclosure)
+## Physical-safety reports
 
-We adhere to a standard **90-day disclosure deadline**:
-1.  Upon receiving a report via `vulnerabilities.openrgd.org`, the relevant Domain Maintainer (e.g., the *Volition Architect* for ethics bypasses) will triage the issue within 48 hours.
-2.  We will work with you to verify and fix the vulnerability.
-3.  Once fixed, we will publish a **Security Advisory** on the vulnerabilities portal and issue a new release.
-4.  We will publicly acknowledge your contribution (unless you request anonymity).
+A vulnerability involving actuation must also be reported to the responsible embodied-runtime or Body Adapter repository once that implementation is identified.
 
-## 🔑 PGP Key
-For sensitive email communication, please use our PGP public key available at:
-`https://openrgd.org/.well-known/openrgd_public_key.asc`
+Do not reproduce a suspected actuation vulnerability on live hardware unless the system is isolated, independently supervised and the test is necessary to establish the issue. Prefer simulation, static fixtures and fail-closed reproduction.
 
-The fingerprint is:
-`F642 B5CE FF72 F477 FAC3 AD66 5C55 7CA1 6AD3 D115`
+The canonical repository cannot authorize hardware execution and must not be treated as a safety certification authority.
+
+## Supply-chain reports
+
+Report unexpected changes to:
+
+- canonical source-tree hashes;
+- release tags;
+- CI workflows;
+- generated artifacts or checksums;
+- dependency resolution;
+- signing or provenance metadata.
+
+A SHA-256 digest demonstrates content identity, not trusted authorship.
+
+## Public disclosure
+
+A public advisory or issue should be created only after a safe fix or mitigation is available, or when coordinated disclosure is no longer possible. The public record should distinguish confirmed facts, affected versions and unresolved risk.

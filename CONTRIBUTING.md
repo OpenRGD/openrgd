@@ -1,98 +1,136 @@
 # Contributing to OpenRGD
 
-First off, **thank you**.
+OpenRGD is an open standard and toolchain for cognitive embodiment. Contributions are welcome, but source evidence, normative decisions, generated artifacts and physical execution must remain clearly separated.
 
-By being here, you are not just looking at a repository; you are stepping into the engine room of the future. OpenRGD is not a product—it is a movement to give Artificial Intelligence a physical body, safely, openly, and democratically.
+Read these files before proposing a change:
 
-We believe that the interface between Cognitive Intelligence (LLMs) and Physical Reality (Robotics) must not belong to a single corporation. It must be a shared language—an open standard that anyone can use, audit, and improve.
+- `GOVERNANCE.md`
+- `RELEASE_POLICY.md`
+- `STRUCTURE.md`
+- `docs/reconciliation/DECISIONS.md`
+- `docs/reconciliation/EXAMPLES_AND_FIXTURES.md`
 
-By contributing to OpenRGD, you are helping to ensure that the robots of tomorrow are built on transparent, understandable foundations. You are building a better, more accessible future.
+## Choose the change class
 
----
+### Normative specification or governance
 
-## Why Your Contribution Matters
+Changes to `spec/`, accepted contracts, canonical hashing, governance, conformance or repository ownership are normative.
 
-Robotics is transitioning from hard‑coded logic to cognitive agents.
+Open an RFC for breaking or cross-component changes using:
 
-- If we leave this to closed silos, we risk a fragmented, opaque, and unsafe future.
-- If we build it together, we democratize embodied AI.
-
-Whether you fix a typo, propose a new sensor schema, or optimize our CLI parser, you’re adding a brick to the “Rosetta Stone” of robotics.
-
----
-
-## How You Can Help
-
-We welcome every kind of contribution. Choose the path that fits you best.
-
-### 1. The Architect (Schema Proposals)
-
-OpenRGD is a living standard. If you are an expert in a specific field (Soft Robotics, Drone Dynamics, Haptics, etc.) we need your insight.
-
-- **Task:** Propose improvements to the JSONC definitions inside the `spec/` domains.
-- **Method:** Open an issue titled `[RFC] Proposal for…` and describe the missing or incorrect area.
-- **Goal:** Expand the `.rgd` format until it can describe any physical machine.
-
-### 2. The Engineer (CLI & Tooling)
-
-Our reference implementation (`src/cli.py`) must be robust and fail‑safe.
-
-- **Task:** Improve the Python CLI, add validation rules, or build converters (e.g., URDF → RGD).
-- **Method:** Fork the repository, write clean Python code, include tests, and open a PR.
-
-### 3. The Scribe (Examples & Documentation)
-
-A standard is only useful if people can use it.
-
-- **Task:** Create `.rgd` files for known robots (Unitree, Spot, TurtleBot, Panda Arm) and place them in `examples/`.
-- **Goal:** Show that OpenRGD supports real-world hardware.
-
----
-
-## Become a Maintainer
-
-We use a domain-based governance model led by specialists, not generalists.
-
-If you consistently contribute to a specific area—such as `01_foundation`, `02_operation`, or `04_volition`—you may apply to become the **Official Maintainer** of that domain.
-
-To apply, open an issue titled:
-
-```
-[MAINTAINER APPLICATION] Domain X
+```text
+.github/ISSUE_TEMPLATE/rfc.md
 ```
 
-Your name will be recorded in the schema as the guardian of that domain.
+The pull request must include evidence, compatibility impact, migration notes, tests and a decision-record update.
 
----
+### Candidate contract or experiment
 
-## Submission Guidelines
+Candidate material must declare its maturity and provenance. Its implementation must not silently alter accepted behavior.
 
-1. **Fork & Branch:**  
-   Create a branch for your contribution, for example:  
-   `git checkout -b feature/amazing-idea`
+A candidate becomes accepted only through the promotion process in `GOVERNANCE.md`.
 
-2. **Commit Messages:**  
-   Keep them clear and meaningful.
+### Toolchain
 
-3. **Code Style:**  
-   - **Python:** Follow PEP8.  
-   - **JSONC:** Keep comments helpful; ensure the structure validates.
+Toolchain code lives under:
 
-4. **Pull Request:**  
-   Submit your PR to the `main` branch and explain why the change is needed.
+```text
+src/openrgd/
+```
 
----
+Importers extract source-supported evidence. Static exporters generate non-actuating interoperability artifacts. Tooling must fail closed when required evidence is missing and must not redefine the standard privately.
 
-## A Note on “Heart”
+### Fixture or example
 
-Technical excellence matters, but intent matters more. This project is built for humanity.  
-Be respectful, help newcomers, and always keep safety in mind.
+Test-owned fixtures belong under:
 
----
+```text
+tests/fixtures/
+```
 
-> *“The best way to predict the future is to invent it.  
-> The best way to secure it is to open‑source it.”*
+A fixture or example must be:
 
----
+- owned by the project or explicitly redistribution-audited;
+- minimal and reviewable;
+- hermetic or explicit about external dependencies;
+- free of secrets, local IP addresses and machine-specific paths;
+- used by an automated test;
+- clearly labelled non-normative unless the specification explicitly says otherwise.
 
-## OpenRGD Maintainers
+Do not commit generated robot workspaces, exports, compiled bundles or build products as source.
+
+## Development workflow
+
+1. fork or branch from the current protected default branch;
+2. make the smallest coherent change;
+3. add or update tests;
+4. update documentation and the changelog;
+5. update the canonical source root and strict mirror only when selected `spec/` bytes change;
+6. run the validation suite;
+7. open a pull request and complete the template.
+
+Recommended local checks:
+
+```bash
+python -m pip install -e .
+python tools/validate_repository.py
+python tools/reconcile_artifacts.py
+python tools/validate_canonical_hash.py
+python tools/validate_runtime_boundary.py
+python tools/validate_governance.py
+python contracts/agent/v0.1.0/validate.py
+python -m pytest -q
+```
+
+## Source-tree changes
+
+After an intentional selected `spec/` change:
+
+```bash
+rgd hash --write
+rgd build-standard
+```
+
+Review every resulting diff. The packaged default seed must remain aligned unless an explicit digest-pinned `RUNTIME_PROFILE_OVERRIDE` is approved.
+
+## Import and static export changes
+
+Importer changes must distinguish source evidence from inferred policy. Missing physical values remain unknown; malformed or non-finite values fail closed.
+
+Static exporters must:
+
+- remain non-actuating;
+- verify the canonical source and machine-bundle roots;
+- expose incomplete hardware binding explicitly;
+- avoid generic drivers, fake addresses and convenient physical defaults.
+
+## Physical-runtime changes
+
+This repository does not implement physical execution. Changes that belong to an embodied runtime or Body Adapter should be proposed there and, when they expose a missing OpenRGD contract, returned here as a documented Contract Delta or RFC.
+
+Do not connect cognition directly to motors, middleware publishers or device buses from this repository.
+
+## Pull requests
+
+All changes enter `main` through pull requests. Direct and force pushes to `main` are prohibited by policy.
+
+During the current single-maintainer phase, the public checklist, required CI, resolved conversations and final merge-readiness record substitute for an impossible self-approval. When a second maintainer is appointed, normative changes require one non-author approval.
+
+## Security and safety
+
+Do not disclose exploitable vulnerabilities in public issues. Follow `SECURITY.md`.
+
+Do not use a repository/tooling test as permission to actuate hardware. A valid hash, successful import, `rgd check`, `rgd boot` or static export does not certify physical safety.
+
+## Commit messages
+
+Use clear, scoped messages such as:
+
+```text
+feat(import): ...
+fix(integrity): ...
+docs(governance): ...
+test(export): ...
+```
+
+Historical evidence must not be rewritten to match later decisions.

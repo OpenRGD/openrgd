@@ -1,0 +1,25 @@
+{
+  "scope_version": "1.0.0",
+  "scope_date": "2026-09-03",
+  "reconciliation_pull_request": 1,
+  "policy": {
+    "digest_only_contents_may_be_inferred": false,
+    "excluded_artifact_is_merge_blocking": false,
+    "later_recovery_requires_separate_evidence_delta_pull_request": true,
+    "non_retroactivity_required": true
+  },
+  "excluded_artifacts": [
+    {
+      "artifact_name": "openrgd-v0.2-aion-ready.zip",
+      "classification": "DIGEST_ONLY_BYTES_UNAVAILABLE",
+      "expected_sha256": "8c8f4a7f9c3ff67504962fb255dd9652e60264538c97fb6a1a037a256d98351d",
+      "digest_evidence_name": "openrgd-v0.2-aion-ready.sha256",
+      "archive_bytes_available_in_reconciliation_workspace": false,
+      "contents_inspected": false,
+      "used_as_source_for_pull_request": false,
+      "merge_blocking": false,
+      "decision": "EXCLUDED_FROM_RECONCILIATION_PR_1",
+      "future_action": "Verify recovered bytes against the recorded digest and open a separate evidence-delta pull request."
+    }
+  ]
+}

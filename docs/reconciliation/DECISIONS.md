@@ -201,3 +201,48 @@ Statuses in this register describe the reconciliation branch. `ADOPTED ON BRANCH
 
 **Status:** IMPLEMENTED ON BRANCH  
 **Decision:** Admit `tests/fixtures/usd/openrgd_minimal_arm.usda` as a project-owned MIT test fixture. It is hermetic, non-normative and non-actuating, and verifies stage metadata, evidence-bound unit conversion, profile inspection and deterministic static ROS 2 output.
+
+## R-041 — Canonical governance remains human-accountable
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** AI systems may assist drafting, analysis, review and testing, but a human maintainer remains accountable for accepting normative changes, merging pull requests and publishing releases. Temporary AI profile names are not governance authorities and are omitted from canonical architecture unless needed as historical provenance.
+
+## R-042 — Single-maintainer governance is explicit
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** While one maintainer exists, normative pull requests require the public self-review checklist, green required checks, resolved conversations and a final merge-readiness record, but zero independent approvals. After a second maintainer is appointed, require at least one non-author approval for normative changes.
+
+## R-043 — Granular commit history is preserved
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** Use merge commits by default so reviewed granular commits and pull-request boundaries remain reachable. Squash merge requires an explicit decision that intermediate commits contain no useful provenance. Reconciliation PR #1 must use a merge commit.
+
+## R-044 — Scoped release tags are mandatory
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** New tags must use `standard-v`, `toolchain-v` or `contracts-agent-v`. Existing unscoped `v0.1.0` and `v0.1.1` remain historical. A tag on one axis must not publish artifacts belonging to another axis.
+
+## R-045 — Agent Contracts remain candidate after merge
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** `contracts/agent/v0.1.0` remains non-normative `candidate` material. Merge preserves this status. Promotion requires complete normative text, compatibility rules, producer/consumer conformance, a validated reference flow and an explicit accepted RFC or governance decision.
+
+## R-046 — Digest-only AION-ready evidence is excluded
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** The checksum record for `openrgd-v0.2-aion-ready.zip` is retained as digest-only evidence, but unavailable archive bytes cannot support content claims. The archive is excluded from PR #1 and is not merge-blocking. Later recovery requires digest verification and a separate evidence-delta pull request.
+
+## R-047 — Branch protection is a pre-merge repository control
+
+**Status:** REQUIRED OUTSIDE GIT TREE  
+**Decision:** Before PR #1 merges, protect `main` with pull-request enforcement, up-to-date required checks, conversation resolution, and force-push/deletion blocking. Required checks are `Validate Python 3.10`, `Validate Python 3.12` and `Build Windows executable`.
+
+## R-048 — Integrity and signing remain separate
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** `OPENRGD_SOURCE_TREE_SHA256_V1` proves content identity under its profile, not authorship. Signing is not a merge requirement for the historical reconciliation, but stable trust-sensitive releases require a separately implemented signing and artifact-provenance lifecycle.
+
+## R-049 — Merge and release are separate decisions
+
+**Status:** ADOPTED ON BRANCH  
+**Decision:** Merging PR #1 creates no tag, release, standard promotion or contract promotion. A later release PR may prepare Python `0.2.0rc1` and tag `toolchain-v0.2.0-rc.1` with independent migration and provenance review.
