@@ -25,6 +25,7 @@ FORBIDDEN_EXACT_PATHS = {
     "src/openrgd/commands/plugins.py",
     "src/openrgd/core/command_registry.py",
     "src/openrgd/core/plugins_policy.py",
+    "src/rgd_schema.jsonc",
 }
 FORBIDDEN_PREFIXES = (
     "plugins/",
@@ -113,7 +114,7 @@ UNVERIFIED_CONTACT_DOMAIN = "@openrgd" + ".org"
 UNVERIFIED_URL_DOMAIN = "openrgd" + ".org"
 LOCAL_PATH_PATTERNS = (
     re.compile(r"(?<![A-Za-z0-9_])/home/[A-Za-z0-9._-]+/"),
-    re.compile(r"(?<![A-Za-z0-9_])/mnt/data/"),
+    re.compile(r"(?<![A-Za-z0-9_])" + "/mnt" + r"/data/"),
     re.compile(r"(?i)\b[A-Z]:\\Users\\[^\\\r\n]+\\"),
 )
 

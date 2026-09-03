@@ -87,6 +87,13 @@
       "git_sha": "5565be8ceab215301eedd2799c1eb1711231e04e",
       "classification": "UNSELECTED_BRANDING_DRAFTS",
       "reason": "Large design proposals were not selected canonical assets and do not belong in the standard or tooling root."
+    },
+    {
+      "path": "src/rgd_schema.jsonc",
+      "git_type": "blob",
+      "git_sha": "20b4291497bbf44f10e99b50707a4d706db7c3c0",
+      "classification": "DUPLICATE_SCHEMA_COPY",
+      "reason": "Byte-identical duplicate of spec/rgd_schema.jsonc outside the normative spec and outside the packaged Python package."
     }
   ]
 }

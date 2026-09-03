@@ -41,6 +41,7 @@ def test_removed_promotional_and_plugin_surfaces_stay_absent() -> None:
         "src/openrgd/commands/plugins.py",
         "src/openrgd/core/command_registry.py",
         "src/openrgd/core/plugins_policy.py",
+        "src/rgd_schema.jsonc",
     ]
     for relative in removed:
         assert not (ROOT / relative).exists(), relative
@@ -65,6 +66,6 @@ def test_recovered_aion_backup_is_not_mislabeled_as_original_archive() -> None:
 def test_active_toolchain_metadata_has_no_unverified_contact() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     main = (ROOT / "src/openrgd/main.py").read_text(encoding="utf-8")
-    assert "@openrgd.org" not in pyproject
+    assert ("@" + "openrgd.org") not in pyproject
     assert "Cognitive BIOS" not in pyproject
     assert "Cognitive BIOS" not in main
