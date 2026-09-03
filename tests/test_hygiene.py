@@ -1,11 +1,21 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_hygiene_module():
+    module_path = ROOT / "tools/validate_hygiene.py"
+    spec = importlib.util.spec_from_file_location("openrgd_validate_hygiene", module_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_repository_hygiene_validator_passes() -> None:
@@ -17,6 +27,22 @@ def test_repository_hygiene_validator_passes() -> None:
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "PASS: repository hygiene" in result.stdout
+
+
+def test_secret_assignment_parser_does_not_cross_lines() -> None:
+    module = _load_hygiene_module()
+    template = "OPENAI_API_KEY=\nOPENRGD_ORACLE_MODEL=gpt-4o-mini\n"
+    assert list(module.SECRET_ASSIGNMENT.finditer(template)) == []
+
+    fake_value = "sk-" + ("x" * 30)
+    matches = list(
+        module.SECRET_ASSIGNMENT.finditer(
+            f"OPENAI_API_KEY={fake_value}\nOPENRGD_ORACLE_MODEL=gpt-4o-mini\n"
+        )
+    )
+    assert len(matches) == 1
+    assert matches[0].group("name") == "OPENAI_API_KEY"
+    assert matches[0].group("value") == fake_value
 
 
 def test_secret_files_are_ignored_and_not_tracked_as_examples() -> None:

@@ -82,7 +82,7 @@ SECRET_PATTERNS = (
     ),
 )
 SECRET_ASSIGNMENT = re.compile(
-    r"""(?im)^\s*
+    r"""(?im)^[ \t]*
     (?P<name>
         OPENAI_API_KEY|
         ANTHROPIC_API_KEY|
@@ -94,7 +94,7 @@ SECRET_ASSIGNMENT = re.compile(
         DATABASE_URL|
         SUPABASE_SERVICE_ROLE_KEY
     )
-    \s*[:=]\s*
+    [ \t]*[:=][ \t]*
     ["']?(?P<value>[^\s"'#]+)
     """,
     re.VERBOSE,
