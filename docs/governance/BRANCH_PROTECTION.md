@@ -1,48 +1,56 @@
 # Main Branch Protection
 
-## Observed repository state
+## Status
 
-At the governance freeze checkpoint, GitHub reports:
+The required server-side protection for `main` was applied and verified on 2026-09-03. GitHub issue #2 was closed as completed.
 
 ```text
 branch: main
-protected: false
-repository rulesets: none
+protected: true
+required status-check enforcement: everyone
 ```
 
-Repository files cannot enforce server-side branch protection. These settings must be applied in GitHub before reconciliation PR #1 is merged.
+## Verified configuration
 
-## Required protection for `main`
-
-Configure a branch protection rule or repository ruleset targeting exactly:
+The active rule requires:
 
 ```text
-main
+strict / branch up to date:       true
+pull request before merge:        required
+required approving reviews:       0
+review conversations resolved:    true
+enforce administrators:           true
+force pushes allowed:             false
+branch deletion allowed:          false
+required linear history:          false
 ```
 
-Required settings:
+Required status-check contexts:
 
-1. require a pull request before merging;
-2. require the branch to be up to date before merging;
-3. require status checks:
-   - `Validate Python 3.10`
-   - `Validate Python 3.12`
-   - `Build Windows executable`
-4. require all review conversations to be resolved;
-5. block force pushes;
-6. block deletion of `main`;
-7. apply the rule to administrators where operationally possible;
-8. do not permit direct pushes as the normal workflow.
+```text
+Validate Python 3.10
+Validate Python 3.12
+Build Windows executable
+```
 
-## Approval count during single-maintainer mode
+This configuration preserves merge commits while blocking direct unreviewed changes to `main` and requiring the final pull-request head to pass all three checks.
 
-Current required approvals:
+## Single-maintainer mode
+
+The required approval count remains:
 
 ```text
 0
 ```
 
-Reason: the repository currently has one steward and GitHub does not allow a pull-request author to approve their own pull request. Governance compensates through a public self-review checklist, required CI, resolved conversations and a final merge-readiness record.
+Reason: the repository currently has one steward and GitHub does not allow a pull-request author to approve their own pull request. Governance compensates through:
+
+- the public pull-request checklist;
+- required CI;
+- strict branch freshness;
+- resolved review conversations;
+- a final merge-readiness record;
+- explicit human merge authorization.
 
 When a second maintainer is appointed, update protection to require:
 
@@ -52,24 +60,31 @@ When a second maintainer is appointed, update protection to require:
 
 and enable required CODEOWNERS review for normative surfaces.
 
-## Signed commits
-
-Do not enable a signed-commit requirement as part of this merge unless the existing unsigned history and contributor workflow have first been migrated deliberately.
-
-Signing remains a stable-release gate under `RELEASE_POLICY.md`; it is not represented as already implemented.
-
 ## Merge method
 
-The repository default is a merge commit so granular reviewed commits and the pull-request boundary remain in history. Squash merge requires an explicit decision that the intermediate commits contain no useful provenance.
+The repository default remains a merge commit so granular reviewed commits and the pull-request boundary remain reachable.
 
-Reconciliation PR #1 must use a merge commit.
-
-## Verification
-
-After applying the settings, verify that GitHub reports:
+Reconciliation PR #1 must be merged with:
 
 ```text
-protected: true
+merge method: merge commit
 ```
 
-and that the three required status-check contexts are present. Record the completed repository-control issue in `docs/reconciliation/MERGE_READINESS.md` before merging PR #1.
+Squash merge requires an explicit future decision that intermediate commits contain no useful implementation or provenance evidence.
+
+## Signed commits
+
+Signed commits are not required for this historical reconciliation merge. Existing history is unsigned and the signing lifecycle has not yet been implemented.
+
+Signing remains a stable trust-sensitive release gate under `RELEASE_POLICY.md`. The source-tree SHA-256 commitment proves content identity, not authorship.
+
+## Verification record
+
+Evidence is retained in:
+
+- GitHub issue #2 and its closing comment;
+- reconciliation PR #1;
+- `docs/reconciliation/MERGE_READINESS.md`;
+- the GitHub branch endpoint, which reports `protected: true` and the three required status-check contexts.
+
+Any future change to these controls must follow repository governance and must not silently weaken the protections.
