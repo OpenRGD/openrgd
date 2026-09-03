@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail closed on tracked secrets, generated debris and unclassified AI-era claims."""
+"""Fail closed on tracked secrets, generated debris and unclassified stale claims."""
 
 from __future__ import annotations
 
@@ -30,6 +30,7 @@ FORBIDDEN_EXACT_PATHS = {
 FORBIDDEN_PREFIXES = (
     "plugins/",
     "assets/branding/proposal/",
+    "docs/history/ai-generated-prototypes/",
 )
 GENERATED_PARTS = {
     "__pycache__",
@@ -338,7 +339,7 @@ def main() -> int:
 
     print(
         "PASS: repository hygiene; no tracked secret paths or token patterns; "
-        "obsolete AI-generated surfaces absent; draft spec assertions registered"
+        "obsolete promotional/prototype surfaces absent; draft spec assertions registered"
     )
     return 0
 
