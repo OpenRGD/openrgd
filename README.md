@@ -62,7 +62,7 @@ contracts-agent-vMAJOR.MINOR.PATCH
 
 See [`GOVERNANCE.md`](GOVERNANCE.md), [`RELEASE_POLICY.md`](RELEASE_POLICY.md), [`SECURITY.md`](SECURITY.md) and [`docs/reconciliation/MERGE_READINESS.md`](docs/reconciliation/MERGE_READINESS.md).
 
-The only remaining merge-control gate for reconciliation PR #1 is server-side protection of `main`, tracked in GitHub issue #2. The PR remains draft until that control is applied and verified.
+Server-side protection of `main` is active and verified: pull requests and strict required checks are enforced, review conversations must be resolved, and force pushes and branch deletion are blocked. GitHub issue #2 records the completed setup.
 
 ## Repository hygiene
 
