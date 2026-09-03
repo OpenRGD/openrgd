@@ -54,6 +54,9 @@ jobs:
       - name: Validate repository invariants
         run: python tools/validate_repository.py
 
+      - name: Validate repository and secret hygiene
+        run: python tools/validate_hygiene.py
+
       - name: Validate canonical artifact mirrors
         run: python tools/reconcile_artifacts.py
 

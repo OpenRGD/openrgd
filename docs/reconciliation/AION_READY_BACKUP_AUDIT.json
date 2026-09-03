@@ -1,0 +1,103 @@
+{
+  "audit_version": "1.0.0",
+  "audit_date": "2026-09-03",
+  "artifact_name": "openrgd-v0.2-aion-ready.zip",
+  "historical_expected_archive": {
+    "sha256": "8c8f4a7f9c3ff67504962fb255dd9652e60264538c97fb6a1a037a256d98351d",
+    "digest_record_created_utc": "2026-08-30T23:03:49Z",
+    "archive_bytes_available": false
+  },
+  "uploaded_backup_variant": {
+    "sha256": "f91ad48cd6a2e8a8bff5f3c559fb8f7fc475e9c4957864aeed6aa689d07615ae",
+    "size_bytes": 24065067,
+    "zip_integrity": "PASS",
+    "entry_count_total": 814,
+    "regular_file_count": 654,
+    "directory_entry_count": 160,
+    "uncompressed_regular_bytes": 28634118,
+    "safe_path_check": "PASS",
+    "symlink_check": "PASS"
+  },
+  "identity_comparison": {
+    "archive_sha256_matches": false,
+    "classification": "POST_CHECKSUM_LOCAL_BACKUP_VARIANT",
+    "same_lineage_supported": true,
+    "byte_identity_with_historical_archive_proven": false,
+    "only_env_difference_proven": false,
+    "reason": "The backup contains files timestamped after the historical checksum record, including generated Python artifacts, package metadata, a source edit to src/openrgd/main.py and a local .env."
+  },
+  "post_checksum_entries": {
+    "count": 41,
+    "python_bytecode_or_cache": 33,
+    "egg_info_files": 6,
+    "local_env_files": 1,
+    "source_files": 1,
+    "source_file_paths": [
+      "src/openrgd/main.py"
+    ]
+  },
+  "local_contamination": {
+    "env_files": 1,
+    "python_bytecode_or_cache_files": 33,
+    "egg_info_files": 6,
+    "generated_robot_workspace_files": 227,
+    "generated_export_files": 4,
+    "historical_example_files": 5,
+    "incomplete_msix_files": 1
+  },
+  "secret_handling": {
+    "nonempty_openai_api_key_present": true,
+    "secret_value_recorded_in_audit": false,
+    "secret_fingerprint_recorded_in_audit": false,
+    "exact_secret_occurrences_inside_archive": 1,
+    "occurrence_scope": ".env only",
+    "current_github_main_contains_env": false,
+    "current_reconciliation_branch_contains_env": false,
+    "pull_request_1_contains_env_change": false,
+    "credential_rotation_required": true
+  },
+  "content_commitments": {
+    "all_regular_files_except_env": {
+      "file_count": 653,
+      "uncompressed_bytes": 28633834,
+      "tree_sha256": "6288bcd8ef4e14f1518da65cc32e2ed701b61dc298af6f83734d211f7ea944da"
+    },
+    "source_like_tree_excluding_env_bytecode_and_egg_info": {
+      "file_count": 614,
+      "uncompressed_bytes": 28435456,
+      "tree_sha256": "1ca51bc0ec5f8c486e5fd078206ee53fad189d99625f088df2017d560f6c46cd"
+    }
+  },
+  "aion_evidence": {
+    "structural_files_present": [
+      "docs/AION_V0_2.md",
+      "spec/00_core/aion_structs.jsonc",
+      "spec/00_core/kernel_modules_registry.jsonc",
+      "spec/04_volition/hyper_aion_semantic_map.jsonc",
+      "src/openrgd/core/aion.py",
+      "src/openrgd/commands/aion.py",
+      "tests/test_aion.py"
+    ],
+    "local_tests": {
+      "python_version": "3.13.5",
+      "pytest": "6 passed",
+      "aion_spec_validation_error_count": 0,
+      "t512_roundtrip": true,
+      "hyperaion_roundtrip": true
+    },
+    "maturity_classification": "EXECUTABLE_EXPERIMENTAL_CODEC_AND_VALIDATOR",
+    "not_proven": [
+      "production microkernel",
+      "shared-memory zero-copy transport",
+      "real-time scheduling",
+      "Chronograf runtime integration",
+      "hardware middleware integration"
+    ]
+  },
+  "reconciliation_decision": {
+    "used_as_source_for_pull_request_1": false,
+    "merge_blocking_for_pull_request_1": false,
+    "automatic_import_allowed": false,
+    "next_step": "After PR #1 is merged, create a separate AION evidence-delta branch from main; sanitize the backup; harden codec validation and claims; compare all source files against the merged canonical root; then propose only evidence-supported deltas."
+  }
+}

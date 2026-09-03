@@ -22,7 +22,7 @@ from .core.config import state
 from .core.visuals import log, print_header
 
 app = typer.Typer(
-    help="OpenRGD: The Cognitive BIOS for Robotics",
+    help="OpenRGD standard validation and interoperability toolchain",
     add_completion=True,
     no_args_is_help=True,
 )

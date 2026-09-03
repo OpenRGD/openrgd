@@ -31,16 +31,22 @@ def test_agent_contracts_remain_candidate_and_non_normative() -> None:
     assert status["stable_release_allowed"] is False
 
 
-def test_aion_ready_digest_only_evidence_is_explicitly_excluded() -> None:
+def test_aion_ready_expected_archive_and_backup_variant_remain_distinct() -> None:
     scope = json.loads(
         (ROOT / "docs/reconciliation/EVIDENCE_SCOPE.json").read_text(
             encoding="utf-8"
         )
     )
     artifact = scope["excluded_artifacts"][0]
+    recovered = artifact["recovered_backup_variant"]
     assert artifact["artifact_name"] == "openrgd-v0.2-aion-ready.zip"
-    assert artifact["classification"] == "DIGEST_ONLY_BYTES_UNAVAILABLE"
-    assert artifact["contents_inspected"] is False
+    assert artifact["classification"] == (
+        "EXPECTED_IDENTITY_UNAVAILABLE_RECOVERED_BACKUP_VARIANT_MISMATCH"
+    )
+    assert artifact["expected_sha256"] != recovered["sha256"]
+    assert artifact["expected_archive_contents_inspected"] is False
+    assert recovered["contents_inspected"] is True
+    assert recovered["contains_local_env_secret"] is True
     assert artifact["used_as_source_for_pull_request"] is False
     assert artifact["merge_blocking"] is False
 

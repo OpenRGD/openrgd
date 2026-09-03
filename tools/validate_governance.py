@@ -115,24 +115,58 @@ def validate_contract_status(policy: dict[str, Any]) -> None:
 
 def validate_evidence_scope() -> None:
     scope = load_json("docs/reconciliation/EVIDENCE_SCOPE.json")
-    if scope["policy"]["digest_only_contents_may_be_inferred"] is not False:
+    policy = scope["policy"]
+    if policy["digest_only_contents_may_be_inferred"] is not False:
         raise GovernanceError("digest-only contents must not be inferred")
+    if policy["mismatched_recovered_variant_may_be_treated_as_expected_archive"] is not False:
+        raise GovernanceError("mismatched archive variants must retain separate identity")
+    if policy["secrets_must_not_be_imported_or_recorded"] is not True:
+        raise GovernanceError("evidence policy must exclude secret material")
+
     artifacts = scope["excluded_artifacts"]
     if len(artifacts) != 1:
         raise GovernanceError("unexpected evidence-exclusion set")
     artifact = artifacts[0]
     if artifact["artifact_name"] != "openrgd-v0.2-aion-ready.zip":
         raise GovernanceError("AION-ready evidence record missing")
-    if not HEX64.fullmatch(artifact["expected_sha256"]):
-        raise GovernanceError("AION-ready digest is not lowercase SHA-256")
-    if artifact["archive_bytes_available_in_reconciliation_workspace"] is not False:
-        raise GovernanceError("unavailable archive incorrectly marked available")
-    if artifact["contents_inspected"] is not False:
-        raise GovernanceError("unavailable archive cannot be marked inspected")
+    if artifact["classification"] != (
+        "EXPECTED_IDENTITY_UNAVAILABLE_RECOVERED_BACKUP_VARIANT_MISMATCH"
+    ):
+        raise GovernanceError("AION-ready archive identity classification drifted")
+    expected = artifact["expected_sha256"]
+    if not HEX64.fullmatch(expected):
+        raise GovernanceError("AION-ready expected digest is not lowercase SHA-256")
+    if artifact["expected_archive_bytes_available_in_reconciliation_workspace"] is not False:
+        raise GovernanceError("expected AION-ready archive incorrectly marked available")
+    if artifact["expected_archive_contents_inspected"] is not False:
+        raise GovernanceError("unavailable expected archive cannot be marked inspected")
+
+    recovered = artifact["recovered_backup_variant"]
+    observed = recovered["sha256"]
+    if not HEX64.fullmatch(observed):
+        raise GovernanceError("recovered backup digest is not lowercase SHA-256")
+    if observed == expected:
+        raise GovernanceError("mismatched backup variant was relabelled as expected archive")
+    if recovered["bytes_available"] is not True or recovered["contents_inspected"] is not True:
+        raise GovernanceError("recovered backup inspection state is inconsistent")
+    if recovered["contains_local_env_secret"] is not True:
+        raise GovernanceError("recovered backup secret contamination is not recorded")
+    if recovered["contains_post_checksum_source_delta"] is not True:
+        raise GovernanceError("post-checksum source delta is not recorded")
+    if recovered["relationship"] != "SAME_LINEAGE_SUPPORTED_BYTE_IDENTITY_NOT_PROVEN":
+        raise GovernanceError("recovered backup relationship classification drifted")
+
+    audit = load_json("docs/reconciliation/AION_READY_BACKUP_AUDIT.json")
+    if audit["historical_expected_archive"]["sha256"] != expected:
+        raise GovernanceError("AION-ready audit expected digest drifted")
+    if audit["uploaded_backup_variant"]["sha256"] != observed:
+        raise GovernanceError("AION-ready audit observed digest drifted")
+    if audit["secret_handling"]["secret_value_recorded_in_audit"] is not False:
+        raise GovernanceError("AION-ready audit must not retain secret values")
     if artifact["used_as_source_for_pull_request"] is not False:
-        raise GovernanceError("excluded archive cannot be a PR source")
+        raise GovernanceError("excluded backup variant cannot be a PR source")
     if artifact["merge_blocking"] is not False:
-        raise GovernanceError("explicitly excluded archive must not remain ambiguous")
+        raise GovernanceError("explicitly excluded backup variant must not remain ambiguous")
 
 
 def validate_repository_controls(policy: dict[str, Any]) -> None:
@@ -155,6 +189,8 @@ def validate_repository_controls(policy: dict[str, Any]) -> None:
     require_file("GOVERNANCE.md")
     require_file("RELEASE_POLICY.md")
     require_file("SECURITY.md")
+    require_file("docs/reconciliation/SPEC_CONTENT_HYGIENE.md")
+    require_file("docs/reconciliation/SPEC_CONTENT_HYGIENE.json")
     protection = require_file("docs/governance/BRANCH_PROTECTION.md")
     for check in policy["required_ci_checks"]:
         if check not in protection:
@@ -176,6 +212,8 @@ def validate_workflow_and_versioning() -> None:
         raise GovernanceError("Windows release is not scoped to toolchain tags")
     if "python tools/validate_governance.py" not in workflow:
         raise GovernanceError("governance validator is not enforced by CI")
+    if "python tools/validate_hygiene.py" not in workflow:
+        raise GovernanceError("hygiene validator is not enforced by CI")
 
     versioning = require_file("VERSIONING.md")
     for prefix in ["standard-v", "toolchain-v", "contracts-agent-v"]:
@@ -192,14 +230,20 @@ def main() -> int:
         validate_evidence_scope()
         validate_repository_controls(policy)
         validate_workflow_and_versioning()
-    except (GovernanceError, FileNotFoundError, KeyError, TypeError, json.JSONDecodeError) as exc:
+    except (
+        GovernanceError,
+        FileNotFoundError,
+        KeyError,
+        TypeError,
+        json.JSONDecodeError,
+    ) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
 
     print(
         "PASS: governance freeze; canonical root non-actuating; "
-        "Agent Contracts candidate; evidence exclusion explicit; "
-        "scoped release policy enforced"
+        "Agent Contracts candidate; recovered evidence identity separated; "
+        "scoped release and hygiene policy enforced"
     )
     return 0
 

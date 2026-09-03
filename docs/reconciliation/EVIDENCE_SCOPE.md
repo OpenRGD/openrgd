@@ -1,55 +1,74 @@
-# Reconciliation Evidence Scope
+# Reconciliation evidence scope
 
-## Purpose
+## AION-ready archive identity
 
-This record closes the ambiguity around evidence mentioned during the historical reconciliation but not available as inspectable bytes.
-
-## `openrgd-v0.2-aion-ready.zip`
-
-Available evidence:
+The historical checksum record identifies:
 
 ```text
-checksum record: openrgd-v0.2-aion-ready.sha256
-expected SHA-256: 8c8f4a7f9c3ff67504962fb255dd9652e60264538c97fb6a1a037a256d98351d
+openrgd-v0.2-aion-ready.zip
+sha256:
+8c8f4a7f9c3ff67504962fb255dd9652e60264538c97fb6a1a037a256d98351d
 ```
 
-Unavailable evidence:
+The exact ZIP bytes represented by that checksum are still unavailable.
+
+A full local backup was recovered and inspected on 2026-09-03:
 
 ```text
-archive bytes
-file tree
-individual file contents
-independent archive verification
+uploaded backup SHA-256:
+f91ad48cd6a2e8a8bff5f3c559fb8f7fc475e9c4957864aeed6aa689d07615ae
 ```
 
-Classification:
+The digests do not match.
+
+The recovered file is classified as:
 
 ```text
-DIGEST_ONLY_BYTES_UNAVAILABLE
+EXPECTED_IDENTITY_UNAVAILABLE
++
+RECOVERED_BACKUP_VARIANT_MISMATCH
 ```
 
-## Decision for reconciliation PR #1
+It strongly supports the same AION-ready working lineage, but it is not relabelled as the historical archive.
 
-The archive is explicitly excluded from PR #1.
+## Why the variant is not treated as identical
 
-The checksum proves that an archive with the stated name and digest was produced or referenced. It does not reveal the archive contents and cannot support claims about files, architecture or implementation.
+The backup contains file timestamps after the checksum record, including:
 
-Therefore:
+- Python bytecode/cache;
+- `src/rgd.egg-info/`;
+- a later edit to `src/openrgd/main.py`;
+- a local `.env`.
 
-- no content is reconstructed from the filename;
-- no diff is inferred from the checksum;
-- no current file is attributed to this archive;
-- the missing bytes do not block merging the evidence already inspected;
-- the exclusion is disclosed in the audit and pull request.
+The `.env` includes a non-empty credential and is excluded from all source/evidence imports. The secret value is not recorded in repository documentation.
 
-## Future recovery
+The complete technical audit is:
 
-If the archive is recovered later:
+- `AION_READY_BACKUP_AUDIT.md`
+- `AION_READY_BACKUP_AUDIT.json`
 
-1. verify its SHA-256 against the recorded digest;
-2. inspect it independently;
-3. classify every relevant delta against the merged baseline;
-4. open a separate evidence-delta pull request;
-5. preserve non-retroactivity: newly recovered material may correct the historical record but must not be described as having been reviewed in PR #1.
+## PR #1 decision
 
-The machine-readable record is `EVIDENCE_SCOPE.json`.
+Neither the unavailable expected archive nor the mismatched backup variant is used as a source for reconciliation PR #1.
+
+```text
+used as PR #1 source: no
+merge blocking: no
+automatic import: no
+```
+
+This prevents a late recovered artifact from rewriting the already-audited reconciliation history.
+
+## Future handling
+
+After PR #1 is merged:
+
+1. create a separate AION evidence-delta branch from the merged `main`;
+2. remove `.env`, caches, bytecode, package metadata and generated workspaces;
+3. preserve a source-only inventory commitment;
+4. compare every remaining source file with the merged canonical root;
+5. harden validation and implementation claims;
+6. add independent tests;
+7. open a separate pull request.
+
+If the exact historical ZIP is later recovered, verify it against the recorded `8c8f4a7f…` digest and compare it independently. Do not overwrite the backup-variant record.

@@ -1,0 +1,92 @@
+{
+  "inventory_version": "1.0.0",
+  "classification": "REMOVED_FROM_ACTIVE_TREE_HISTORICAL_PROVENANCE_RETAINED",
+  "recorded_at": "2026-09-03",
+  "base_commit": "e1644cfb295ef1e36303bd38fe58c4915ad4e9b5",
+  "items": [
+    {
+      "path": "ENTHUSIAST.md",
+      "git_type": "blob",
+      "git_sha": "8e3b11e84912d8d667c25987266d0d84f339083f",
+      "classification": "PROMOTIONAL_AI_GENERATED_DRAFT",
+      "reason": "Overstated implementation maturity and advertised disabled or unverified workflows and domains."
+    },
+    {
+      "path": "ONBOARDING.md",
+      "git_type": "blob",
+      "git_sha": "c967706e3562b22ad1318853a4df9aacb81c25fa",
+      "classification": "STALE_AI_GENERATED_GUIDE",
+      "reason": "Advertised Python 3.8, Isaac export, a full AI/ROS2/Isaac stack and unsupported commands."
+    },
+    {
+      "path": "MAINTENANCE.md",
+      "git_type": "blob",
+      "git_sha": "84c18defa7de858ed06aa73dc8afc208ef467d34",
+      "classification": "UNMATERIALIZED_OPERATIONAL_POLICY",
+      "reason": "Referenced security.txt, PGP identities, legal entities and files not present or verified."
+    },
+    {
+      "path": "GUIDE_DOCKER.md",
+      "git_type": "blob",
+      "git_sha": "25842d754318fd6a2af1baa510c5753402b7297c",
+      "classification": "STALE_UNTESTED_DISTRIBUTION_GUIDE",
+      "reason": "Claimed an image or distribution and commands not built or tested by the repository."
+    },
+    {
+      "path": "Dockerfile",
+      "git_type": "blob",
+      "git_sha": "4c31354f79b278af31961e1c5d6cad498bd27080",
+      "classification": "UNTESTED_PACKAGING_SURFACE",
+      "reason": "Not exercised in CI and contained an unverified maintainer contact."
+    },
+    {
+      "path": "PLUGIN_GUIDE.md",
+      "git_type": "blob",
+      "git_sha": "ea7ae4f0998ad4acb2bdd914b2fddea2eaea0247",
+      "classification": "UNACCEPTED_PLUGIN_ABI_GUIDE",
+      "reason": "Documented automatic plugin behavior and safety-affecting extensions not provided by the current CLI."
+    },
+    {
+      "path": "plugins.toml",
+      "git_type": "blob",
+      "git_sha": "fe7fabf5d02590419d95793c3b4e518bf660b26b",
+      "classification": "PERMISSIVE_UNUSED_PLUGIN_POLICY",
+      "reason": "Allowed unlisted plugins and was not part of the current registered CLI path."
+    },
+    {
+      "path": "plugins/rgd_timetravel",
+      "git_type": "tree",
+      "git_sha": "318b3598de51589083e98293e443e49e0789c6a1",
+      "classification": "UNTESTED_PLUGIN_PROTOTYPE",
+      "reason": "Bundled dead prototype with local snapshot output and no accepted plugin contract."
+    },
+    {
+      "path": "src/openrgd/commands/plugins.py",
+      "git_type": "blob",
+      "git_sha": "6d8666d744ac913dd0f8a3a86357c491017af1de",
+      "classification": "UNREACHABLE_PLUGIN_MANAGER",
+      "reason": "Not registered by the reconciled CLI and depended on an unaccepted permissive plugin policy."
+    },
+    {
+      "path": "src/openrgd/core/command_registry.py",
+      "git_type": "blob",
+      "git_sha": "4b5cbd436f17e593f4a659a28a0797a7c9ec5dc8",
+      "classification": "UNREACHABLE_PLUGIN_LOADER",
+      "reason": "Not called by the reconciled CLI and could load third-party entry points without an accepted extension contract."
+    },
+    {
+      "path": "src/openrgd/core/plugins_policy.py",
+      "git_type": "blob",
+      "git_sha": "c5ec43a7ec5fc3eb0f103e6231587b32a6dbb0fe",
+      "classification": "PERMISSIVE_PLUGIN_POLICY_PROTOTYPE",
+      "reason": "Defaulted to allow_all and accepted unlisted plugins; unsuitable for the canonical non-actuating root."
+    },
+    {
+      "path": "assets/branding/proposal",
+      "git_type": "tree",
+      "git_sha": "5565be8ceab215301eedd2799c1eb1711231e04e",
+      "classification": "UNSELECTED_BRANDING_DRAFTS",
+      "reason": "Large design proposals were not selected canonical assets and do not belong in the standard or tooling root."
+    }
+  ]
+}

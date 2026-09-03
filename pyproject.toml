@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rgd"
 version = "0.1.1"
-description = "The Cognitive BIOS for Robotics - Standard CLI"
+description = "OpenRGD standard validation and interoperability toolchain"
 authors = [
-  { name = "Pasquale Ranieri", email = "rfc@openrgd.org" },
+  { name = "Pasquale Ranieri" },
 ]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,15 +24,9 @@ dependencies = [
 [project.scripts]
 rgd = "openrgd.main:run"
 
-# ---------------------------------------------------------
-# Entry points here are RESERVED for EXTERNAL plugins ONLY.
-# The OpenRGD Core MUST keep this section empty.
-#
-# External plugins (e.g., rgd-timetravel) will register
-# themselves here in *their own* pyproject.toml.
-# ---------------------------------------------------------
+# External command plugins are not enabled in the canonical toolchain.
+# A future plugin ABI requires an accepted contract and fail-closed loader.
 [project.entry-points."rgd.commands"]
-# (leave empty)
 
 [tool.setuptools.packages.find]
 where = ["src"]
