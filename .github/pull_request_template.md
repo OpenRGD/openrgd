@@ -1,60 +1,38 @@
-## Change classification
+## What does this change improve?
 
-- [ ] Normative specification or governance
-- [ ] Candidate / experimental contract
-- [ ] Toolchain / validator / importer / static exporter
-- [ ] Documentation only
-- [ ] Historical evidence / reconciliation
-- [ ] Security or safety fix
+Tell us what you changed and why it matters.
 
-## Problem and evidence
+## Type of change
 
-Describe the concrete problem, the evidence used and the scope deliberately left unchanged.
+- [ ] Standard / specification
+- [ ] Toolchain / CLI
+- [ ] Importer / interoperability
+- [ ] Example / documentation
+- [ ] Candidate contract / experiment
+- [ ] Security / safety
 
-## Authority impact
+## Compatibility
 
-- Normative source paths changed:
-- Contract maturity changed:
-- Repository ownership boundary changed:
-- Canonical source-tree root changed:
-- Version axis affected:
+Does this change break an existing profile, command, schema or integration? If yes, explain the migration path.
 
-## Compatibility and migration
+## Safety and claims
 
-Describe compatibility, breaking changes, migration steps and external repository impact. Write `NONE` when there is no impact.
-
-## Safety boundary
-
-- [ ] This change does not enable physical actuation in the canonical repository.
-- [ ] Observations do not silently mutate actuation state.
-- [ ] Missing hardware/safety evidence fails closed.
-- [ ] Any physical-runtime delta is marked `EXPERIMENTAL` or `PROPOSED_UPSTREAM` and linked.
-
-## Generated artifacts
-
-- [ ] No generated bundle, robot workspace, export, build output or machine-local file was committed as source.
-- [ ] `standard/` and the packaged seed were regenerated only from the canonical source policy.
-- [ ] Canonical hashing was updated intentionally when selected source bytes changed.
-
-## Contracts and reasoning evidence
-
-- [ ] Candidate contracts remain labelled candidate unless an accepted RFC promotes them.
-- [ ] Audit evidence is structured; private chain-of-thought is neither requested nor persisted.
+- [ ] Engineering targets are labelled as targets, not measured results.
+- [ ] Missing physical evidence is not replaced with invented values.
+- [ ] This change does not silently grant physical actuation authority.
 
 ## Validation
 
-List commands and CI runs. For code changes, include the final commit tested.
+What did you run or test?
 
 ```text
 commands:
 result:
-workflow:
 ```
 
-## Governance checklist
+## Checklist
 
-- [ ] Relevant RFC or decision record is linked, or the change explains why none is required.
-- [ ] Documentation and changelog are updated.
-- [ ] All required CI checks pass on the final head.
-- [ ] Review conversations are resolved.
-- [ ] Release is handled separately; this PR does not create an implicit release.
+- [ ] Tests pass.
+- [ ] User-facing docs are updated when needed.
+- [ ] Generated/local files and secrets are not committed.
+- [ ] If `spec/` changed, the canonical hash and strict mirror were updated intentionally.

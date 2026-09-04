@@ -1,0 +1,97 @@
+/**
+ * OPEN R.G.D. STANDARD v0.2 — AION WIRE STRUCTURES
+ *
+ * Defines experimental fixed-size AION interchange containers and anchor semantics.
+ *
+ * This file is human-readable JSONC. Fields marked as TARGET, PROPOSED,
+ * EXPERIMENTAL or UNVERIFIED describe engineering intent, not measured
+ * performance or certification.
+ */
+
+{
+  "meta_group": {
+    "spec_id_str": "rgd_aion_wire_structures_v1",
+    "alignment_str": "64_BIT_WORD_ALIGNED",
+    "endianness_enum": "BIG_ENDIAN",
+    "version_semver_str": "1.0.0",
+    "maturity_enum": "EXPERIMENTAL_PROTOCOL",
+    "implementation_scope_enum": "CODEC_AND_INTEROPERABILITY_CONTRACT",
+    "latency_guarantee_enum": "NONE_BY_SPECIFICATION"
+  },
+  "universal_header_struct": {
+    "total_size_bytes_int": 32,
+    "fields_ordered_list": [
+      {
+        "offset_00_int": "anchor",
+        "type_str": "uint64",
+        "description_str": "ChronografAnchorRef64: opaque temporal/causal reference. It is not an inline wall-clock timestamp."
+      },
+      {
+        "offset_08_int": "metric_lo",
+        "type_str": "uint64",
+        "description_str": "Spatial Coordinate X/Y (Fixed Point 32.32 packed)."
+      },
+      {
+        "offset_16_int": "metric_hi",
+        "type_str": "uint64",
+        "description_str": "Spatial Coordinate Z/W (Fixed Point 32.32 packed)."
+      },
+      {
+        "offset_24_int": "meta_data",
+        "type_str": "uint64",
+        "description_str": "Encoded Laws (High 32) + Aion Type ID (Low 32)."
+      }
+    ]
+  },
+  "aion_512_struct": {
+    "type_id_hex": "0x0200",
+    "total_size_bytes_int": 64,
+    "layout_map": {
+      "header": {
+        "ref": "universal_header_struct",
+        "size_bytes": 32
+      },
+      "payload": {
+        "type_str": "uint64_array[4]",
+        "size_bytes_int": 32,
+        "semantic_hint_str": "Vital State (Position, Velocity, Torque, Temp)"
+      }
+    }
+  },
+  "aion_4096_struct": {
+    "type_id_hex": "0x1000",
+    "total_size_bytes_int": 512,
+    "layout_map": {
+      "header": {
+        "ref": "universal_header_struct",
+        "size_bytes": 32
+      },
+      "payload": {
+        "type_str": "uint64_array[60]",
+        "size_bytes_int": 480,
+        "semantic_hint_str": "Dense Physical State (Full Body Dynamics)"
+      }
+    }
+  },
+  "aion_16k_hyper_struct": {
+    "type_id_hex": "0x4000",
+    "total_size_bytes_int": 2080,
+    "layout_map": {
+      "header": {
+        "ref": "universal_header_struct",
+        "size_bytes": 32
+      },
+      "payload": {
+        "type_str": "uint64_array[256]",
+        "size_bytes_int": 2048,
+        "cast_interpretation_str": "FLOAT32_ARRAY[512]",
+        "description_str": "The 512-dimensional vector of state. Maps to hyper_aion_semantic_map.jsonc."
+      }
+    }
+  },
+  "engineering_notes": {
+    "fixed_size_goal_str": "Fixed-size records are intended to support predictable transport and allocation behavior.",
+    "determinism_note_str": "Deterministic latency must be measured by the embodied runtime; this layout alone does not guarantee it.",
+    "authorization_note_str": "AION records carry state or representation. They never authorize physical actuation by themselves."
+  }
+}

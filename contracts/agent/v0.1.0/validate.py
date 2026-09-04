@@ -14,8 +14,7 @@ def main() -> int:
     assert status["normative"] is False
     assert status["accepted"] is False
     assert status["stable_release_allowed"] is False
-    assert status["merge_behavior"] == "PRESERVE_CANDIDATE_STATUS"
-    assert status["non_retroactivity"] is True
+    assert len(status["source_snapshot_sha256"]) == 64
     assert len(status["promotion_requires"]) >= 6
 
     schemas = sorted((ROOT / "schemas").glob("*.json"))
@@ -26,9 +25,7 @@ def main() -> int:
         assert data.get("title"), f"missing title in {path.name}"
 
     example = json.loads(
-        (ROOT / "examples" / "so101-causal-flow.json").read_text(
-            encoding="utf-8"
-        )
+        (ROOT / "examples" / "so101-causal-flow.json").read_text(encoding="utf-8")
     )
     assert len(example["chronon_flow"]) >= 6
 

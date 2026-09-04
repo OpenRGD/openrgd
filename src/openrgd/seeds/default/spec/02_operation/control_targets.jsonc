@@ -1,0 +1,51 @@
+/**
+ * OPEN R.G.D. STANDARD v0.2 — LOW-LEVEL CONTROL TARGETS
+ *
+ * Defines performance objectives such as the 1 kHz safety/reflex loop without representing them as measured achievements.
+ *
+ * This file is human-readable JSONC. Fields marked as TARGET, PROPOSED,
+ * EXPERIMENTAL or UNVERIFIED describe engineering intent, not measured
+ * performance or certification.
+ */
+
+{
+  "meta_group": {
+    "profile_id_str": "openrgd_low_level_control_targets_v1",
+    "version_semver_str": "1.0.0",
+    "domain_id_str": "02_operation",
+    "maturity_enum": "ENGINEERING_TARGET",
+    "certification_status_enum": "NOT_A_CERTIFICATION",
+    "implementation_owner_enum": "EMBODIED_RUNTIME_AND_BODY_ADAPTER"
+  },
+  "safety_reflex_loop": {
+    "target_frequency_hz_int": 1000,
+    "target_period_us_int": 1000,
+    "target_decision_budget_us_int": 500,
+    "target_sensor_to_safe_action_max_us_int": 5000,
+    "measurement_required_bool": true
+  },
+  "native_io_loop": {
+    "target_frequency_hz_int": 1000,
+    "target_transport_overhead_us_int": 100,
+    "measurement_required_bool": true
+  },
+  "temporal_alignment": {
+    "chronograf_sync_target_ns_int": 1000,
+    "anchor_semantics_enum": "CHRONOGRAF_ANCHOR_REF64",
+    "measurement_required_bool": true
+  },
+  "measurement_contract": {
+    "required_statistics_list_enum": [
+      "P50",
+      "P95",
+      "P99",
+      "WORST_OBSERVED"
+    ],
+    "target_values_must_not_be_reported_as_measured_bool": true,
+    "measured_results_belong_in_runtime_evidence_bool": true
+  },
+  "fallback_principle": {
+    "when_target_not_met_enum": "DEGRADE_OR_FAIL_CLOSED_ACCORDING_TO_OPERATION_POLICY",
+    "high_level_cognition_must_not_block_reflex_loop_bool": true
+  }
+}

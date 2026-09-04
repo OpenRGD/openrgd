@@ -1,0 +1,86 @@
+/**
+ * OPEN R.G.D. STANDARD v0.2 — HYPERAION SEMANTIC PROJECTION
+ *
+ * Defines an experimental 512-dimensional semantic projection while leaving alignment and actuation authority outside the vector itself.
+ *
+ * This file is human-readable JSONC. Fields marked as TARGET, PROPOSED,
+ * EXPERIMENTAL or UNVERIFIED describe engineering intent, not measured
+ * performance or certification.
+ */
+
+{
+  "meta_group": {
+    "map_id_str": "rfc_32_core_dimensions_v1",
+    "standard_version_str": "0.2.0",
+    "last_updated_iso8601_str": "2025-12-07T23:00:00Z",
+    "governance": {
+      "lead_architect_str": "Pasquale Ranieri",
+      "stewardship_project_str": "OpenRGD"
+    },
+    "maturity_enum": "EXPERIMENTAL_PROJECTION",
+    "authorization_semantics_enum": "REPRESENTATION_ONLY"
+  },
+  "vector_topology_config": {
+    "total_dimensions_int": 512,
+    "reserved_protocol_dimensions_int": 32,
+    "data_type_enum": "FLOAT32_NORMALIZED_MINUS_ONE_TO_ONE",
+    "zero_value_meaning_str": "NEUTRAL_OR_UNKNOWN"
+  },
+  "semantic_dimensions_map": {
+    "DIM_00_VALENCE": {
+      "index_int": 0,
+      "concept_str": "THERMODYNAMIC_ALIGNMENT",
+      "range_guide_str": "-1.0 (Destructive/Entropy) <-> +1.0 (Constructive/Negentropy)",
+      "source_ref_str": "04_volition/alignment.jsonc"
+    },
+    "DIM_01_LEGALITY": {
+      "index_int": 1,
+      "concept_str": "COMPLIANCE_SCORE",
+      "range_guide_str": "0.0 (Violation) -> 1.0 (Fully Compliant)",
+      "source_ref_str": "02_operation/compliance.jsonc"
+    },
+    "DIM_02_ALTRUISM": {
+      "index_int": 2,
+      "concept_str": "SOCIAL_VECTOR",
+      "range_guide_str": "-1.0 (Selfish) <-> +1.0 (Altruistic)",
+      "source_ref_str": "04_volition/social_synergy.jsonc"
+    },
+    "DIM_03_URGENCY": {
+      "index_int": 3,
+      "concept_str": "TEMPORAL_PRESSURE",
+      "range_guide_str": "0.0 (Strategic/Long-term) -> 1.0 (Tactical/Immediate)",
+      "source_ref_str": "02_operation/safety_critical.jsonc"
+    },
+    "DIM_04_CONFIDENCE": {
+      "index_int": 4,
+      "concept_str": "EPISTEMIC_CERTAINTY",
+      "range_guide_str": "0.0 (Pure Guess) -> 1.0 (Verified Fact)",
+      "source_ref_str": "03_agency/world_model.jsonc"
+    },
+    "DIM_05_REVERSIBILITY": {
+      "index_int": 5,
+      "concept_str": "ACTION_CONSEQUENCE_COST",
+      "range_guide_str": "0.0 (Irreversible/Fatal) -> 1.0 (Fully Reversible)",
+      "source_ref_str": "04_volition/ledger.jsonc"
+    },
+    "DIM_06_AUTHORITY": {
+      "index_int": 6,
+      "concept_str": "SOURCE_OF_INTENT",
+      "range_guide_str": "-1.0 (External Command) <-> +1.0 (Internal Volition)",
+      "source_ref_str": "02_operation/oversight_interface.jsonc"
+    },
+    "DIM_07_COMPLEXITY": {
+      "index_int": 7,
+      "concept_str": "COMPUTATIONAL_ENERGY_COST",
+      "range_guide_str": "0.0 (Reflex) -> 1.0 (Deep Simulation)",
+      "source_ref_str": "01_foundation/compute_topology.jsonc"
+    }
+  },
+  "projection_contract": {
+    "alignment_authority_ref_str": "04_volition/alignment.jsonc",
+    "hard_invariants_remain_authoritative_bool": true,
+    "vector_values_may_authorize_actuation_bool": false,
+    "projection_conflicts_fail_closed_bool": true,
+    "unmapped_dimensions_semantics_enum": "RESERVED_OR_PROFILE_DEFINED"
+  }
+}

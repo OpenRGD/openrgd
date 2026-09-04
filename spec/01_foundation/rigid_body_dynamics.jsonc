@@ -1,0 +1,115 @@
+/**
+ * OPEN R.G.D. STANDARD v0.2 — RIGID BODY DYNAMICS
+ *
+ * Adds explicit mass/inertia quality and preserves later body-mass data as a design target rather than an asserted current body fact.
+ *
+ * This file is human-readable JSONC. Fields marked as TARGET, PROPOSED,
+ * EXPERIMENTAL or UNVERIFIED describe engineering intent, not measured
+ * performance or certification.
+ */
+
+{
+  "meta_group": {
+    "rigid_body_profile_id_str": "bhl_reference_rbd_v0_2_partial",
+    "version_semver_str": "0.2.0",
+    "domain_id_str": "01_foundation",
+    "file_role_enum": "RIGID_BODY_DYNAMICS_PROFILE",
+    "profile_completeness_enum": "PARTIAL_REFERENCE_PROFILE",
+    "related_files_map": {
+      "description_ref_str": "01_foundation/description.jsonc",
+      "actuation_dynamics_ref_str": "01_foundation/actuation_dynamics.jsonc",
+      "soft_body_dynamics_ref_str": "01_foundation/soft_body_dynamics.jsonc",
+      "surface_properties_ref_str": "01_foundation/surface_properties.jsonc"
+    }
+  },
+  "robot_mass_profile_group": {
+    "description_total_mass_kg_float": 12.5,
+    "described_links_mass_kg_float": 7.4,
+    "unmodeled_mass_kg_float": 5.1,
+    "data_quality_enum": "PARTIAL_REFERENCE_MODEL"
+  },
+  "links_rigid_body_map": {
+    "torso_base_link": {
+      "data_quality_enum": "REFERENCE_DATA_FROM_DESCRIPTION",
+      "mass_kg_float": 4.2,
+      "center_of_mass_offset_m_vec3_float": [
+        0.0,
+        0.0,
+        0.15
+      ],
+      "inertia_tensor_kg_m2_mat3x3_row_major_arr": [
+        0.05,
+        0.0,
+        0.0,
+        0.0,
+        0.05,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ]
+    },
+    "thigh_right_link": {
+      "data_quality_enum": "REFERENCE_DATA_FROM_DESCRIPTION",
+      "mass_kg_float": 1.8,
+      "center_of_mass_offset_m_vec3_float": [
+        0.0,
+        0.0,
+        -0.15
+      ],
+      "inertia_tensor_kg_m2_mat3x3_row_major_arr": [
+        0.01,
+        0.0,
+        0.0,
+        0.0,
+        0.01,
+        0.0,
+        0.0,
+        0.0,
+        0.002
+      ]
+    },
+    "shin_right_link": {
+      "data_quality_enum": "REFERENCE_DATA_FROM_DESCRIPTION",
+      "mass_kg_float": 1.0,
+      "center_of_mass_offset_m_vec3_float": [
+        0.0,
+        0.0,
+        -0.18
+      ],
+      "inertia_tensor_kg_m2_mat3x3_row_major_arr": [
+        0.008,
+        0.0,
+        0.0,
+        0.0,
+        0.008,
+        0.0,
+        0.0,
+        0.0,
+        0.0015
+      ]
+    },
+    "foot_right_link": {
+      "data_quality_enum": "PARTIAL_REFERENCE_DATA",
+      "mass_kg_float": 0.4,
+      "center_of_mass_offset_m_vec3_float": [
+        0.02,
+        0.0,
+        -0.02
+      ]
+    }
+  },
+  "later_reference_design_target_group": {
+    "maturity_enum": "ENGINEERING_TARGET_UNMERGED_WITH_DESCRIPTION",
+    "target_total_mass_kg_float": 22.0,
+    "target_mass_breakdown_map": {
+      "torso_segment_mass_kg_float": 9.0,
+      "left_leg_segment_mass_kg_float": 5.5,
+      "right_leg_segment_mass_kg_float": 5.5,
+      "left_arm_segment_mass_kg_float": 1.0,
+      "right_arm_segment_mass_kg_float": 1.0
+    },
+    "requires_body_description_update_bool": true,
+    "note_str": "Recovered from a later rigid-body snapshot. It is preserved as a design target and does not override the current partial BHL description."
+  }
+}

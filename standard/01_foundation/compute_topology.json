@@ -1,25 +1,26 @@
 {
   "meta_group": {
     "topology_id_str": "bhl_compute_stack_v2_iso_compliant",
-    "version_semver_str": "1.2.0",
+    "version_semver_str": "1.3.0",
     "last_verified_iso8601_str": "2025-11-23T12:00:00Z",
     "domain_id_str": "01_foundation",
     "file_role_enum": "COMPUTE_HARDWARE_TOPOLOGY",
     "governance": {
       "stewardship_organization_str": "Italia Robotica",
-      "lead_architect_str": "Pasquale Ranieri",
-      "contact_uri_str": "mailto:engineering@italiarobotica.it"
+      "lead_architect_str": "Pasquale Ranieri"
     },
     "related_files_map": {
       "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
       "safety_policies_ref_str": "02_operation/safety_critical.jsonc",
       "compute_federation_ref_str": "06_ether/compute_federation.jsonc",
-      "swarm_protocol_ref_str": "06_ether/swarm_protocol.jsonc"
+      "swarm_protocol_ref_str": "03_agency/swarm_protocol.jsonc",
+      "control_targets_ref_str": "02_operation/control_targets.jsonc"
     },
     "interpretation_guides": {
       "for_humans_str": "Describes on-board compute resources, buses, and timing constraints. Use it to check if planned behaviors are compatible with hardware limits.",
       "for_llms_str": "Treat these values as HARD constraints for safety and latency. If a requested behavior exceeds ai_processing_budget_max_us_int or safety_loop_frequency_min_hz_int, suggest using reflex-level control or offloading according to compute_federation.jsonc."
-    }
+    },
+    "claim_semantics_str": "Hardware models are reference configurations. Safety levels and timing values marked TARGET are goals, not certification or benchmark results."
   },
   "compute_nodes_map": {
     "main_brain_unit": {
@@ -49,17 +50,20 @@
         "cpu_clock_max_mhz_float": 480.0,
         "control_loop_max_frequency_hz_float": 20000.0
       },
-      "safety_certified_bool": true,
       "logical_hosting_capabilities": {
         "can_host_llm_planner_bool": false,
         "supports_reflex_policies_bool": true
-      }
+      },
+      "certification_status_enum": "NOT_ASSERTED_BY_OPENRGD_SPEC",
+      "safety_certification_target_enum": "ISO_13849_PL_D_OR_EQUIVALENT"
     },
     "safety_monitor_fpga": {
       "role_enum": "SAFETY_CORE_CHANNEL_A",
       "hardware_model_str": "Dedicated_Safety_FPGA",
-      "architecture_enum": "SIL_3_CERTIFIED",
-      "redundancy_channel_int": 1
+      "architecture_enum": "FPGA_SAFETY_MONITOR_REFERENCE",
+      "redundancy_channel_int": 1,
+      "certification_status_enum": "NOT_ASSERTED_BY_OPENRGD_SPEC",
+      "safety_certification_target_enum": "ISO_13849_PL_D_OR_EQUIVALENT"
     },
     "diagnostics_check_unit": {
       "role_enum": "DIAGNOSTIC_CORE_CHANNEL_B",
@@ -101,9 +105,12 @@
     }
   },
   "timing_constraints": {
-    "sensor_to_actuator_max_latency_us_int": 50000,
-    "safety_loop_frequency_min_hz_int": 200,
-    "ai_processing_budget_max_us_int": 10000,
-    "safety_architecture_enum": "DUAL_CHANNEL_CAT3"
+    "control_targets_ref_str": "02_operation/control_targets.jsonc",
+    "safety_reflex_loop_target_hz_int": 1000,
+    "safety_reflex_period_target_us_int": 1000,
+    "sensor_to_safe_action_target_max_latency_us_int": 5000,
+    "high_level_ai_processing_budget_target_us_int": 10000,
+    "measurement_status_enum": "ENGINEERING_TARGETS_NOT_BENCHMARK_RESULTS",
+    "safety_architecture_target_enum": "DUAL_CHANNEL_CAT3_OR_BETTER"
   }
 }

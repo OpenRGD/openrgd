@@ -1,20 +1,13 @@
 # OpenRGD Cross-Component Contracts
 
-This directory is the canonical repository location for interfaces shared across OpenRGD components.
+Some OpenRGD ideas cross repository and runtime boundaries. This directory gives those interfaces a place to be written down, versioned, tested and discussed.
 
-Contract maturity is explicit and machine-readable:
+Contract maturity is explicit:
 
-- **candidate** — recovered or converged material under review; non-normative and subject to breaking change;
-- **accepted** — approved through the OpenRGD governance process and normative within its declared version;
-- **deprecated** — retained for compatibility and provenance, but no longer recommended;
-- **historical** — evidence only and never current authority.
+- **candidate** — ready for experimentation and review, but still free to change;
+- **accepted** — approved as a stable OpenRGD interface within its declared version;
+- **deprecated** — kept for compatibility but no longer recommended.
 
-The current `agent/v0.1.0` package is a **convergence candidate**. Its status is frozen in:
+The current `agent/v0.1.0` package is a **candidate**. It describes the proposed path between cognition, somatic translation, safety, temporal evidence and body execution.
 
-```text
-contracts/agent/v0.1.0/STATUS.json
-```
-
-Its presence in this repository does not imply that its decisions existed in the 2025 lineage, does not silently promote open questions and does not make it part of a stable standard or release.
-
-Promotion to `accepted` requires the process defined in `GOVERNANCE.md`, including complete normative text, compatibility rules, producer/consumer conformance tests, a validated reference flow and an explicit accepted RFC or governance decision.
+Candidate means exactly that: useful enough to build against and test, not frozen forever.

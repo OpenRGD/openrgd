@@ -1,149 +1,121 @@
 /**
- * ------------------------------------------------------------------
- * OPEN R.G.D. STANDARD - REFERENCE IMPLEMENTATION v0.2
- * ------------------------------------------------------------------
- * FILE: calibration.jsonc
- * CONTEXT: 01_FOUNDATION (The Body)
+ * OPEN R.G.D. STANDARD v0.2 — CALIBRATION DELTAS
  *
- * PURPOSE:
- * - This file defines the "Delta" between the Ideal CAD model
- *   (01_foundation/description.jsonc) and the physical reality of
- *   THIS SPECIFIC ROBOT INSTANCE.
+ * Stores instance-specific measured/empirical deltas without turning design targets into hardware facts.
  *
- * RUNTIME EQUATION:
- *   Runtime_Value = Ideal_Value (description) + Calibration_Delta (this file)
- *
- * LIFECYCLE:
- * - This file is MUTABLE and INSTANCE-SPECIFIC.
- * - It should be updated automatically by calibration routines
- *   (visual markers, end-stop homing, force/torque sensing, etc.).
- * - Never edit Ideal geometry or design intent here: only deviations.
- *
- * HUMAN INTERPRETATION:
- * - Think of this as the "medical record" of the robot's body:
- *   misalignments, wear, lens reality, mass shifts.
- *
- * LLM INTERPRETATION:
- * - Never overwrite or redefine the ideal model from description.jsonc.
- * - When asked for the current physical state, you MUST conceptually
- *   apply: runtime = ideal + delta.
- * - Do not invent new fields: extend via new maps only if the schema
- *   has been updated.
+ * This file is human-readable JSONC. Fields marked as TARGET, PROPOSED,
+ * EXPERIMENTAL or UNVERIFIED describe engineering intent, not measured
+ * performance or certification.
  */
 
 {
-  // ==============================================================
-  // 1. CALIBRATION METADATA
-  // Traceability of the calibration process and linkage to the ideal model.
-  // ==============================================================
   "meta_group": {
     "robot_serial_number_str": "BHL_UNIT_0042",
     "calibration_profile_id_str": "default_factory_profile_v1",
-
     "domain_id_str": "01_foundation",
     "file_role_enum": "CALIBRATION_DELTA_INSTANCE",
-
     "last_calibrated_iso8601_str": "2025-11-23T14:30:00Z",
-
-    // How was this file generated?
-    "calibration_method_enum": "AUTOMATED_VISUAL_MARKERS", // or MANUAL_FEELER_GAUGE
+    "calibration_method_enum": "AUTOMATED_VISUAL_MARKERS",
     "technician_id_str": "auto_calib_routine_v2.1",
-
-    // Security & consistency:
-    // Ensures this calibration belongs to the correct description version.
     "target_description_ref_str": "01_foundation/description.jsonc",
-    "target_description_hash_str": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-
-    // Optional confidence and health scores
-    "calibration_confidence_score_float": 0.92,      // 0.0–1.0
-    "calibration_health_status_enum": "GREEN_OK",    // GREEN_OK | YELLOW_WARN | RED_REVIEW
-
+    "target_description_hash_str": "sha256:6a15b5d7712ad311fd0d60d36556b4017853e9ac054c624e765b55a99332c9ff",
+    "calibration_confidence_score_float": 0.92,
+    "calibration_health_status_enum": "GREEN_OK",
+    "has_unknown_actuator_models_bool": false,
+    "has_unknown_sensor_models_bool": false,
     "interpretation_guides": {
-      "for_humans_str": "Apply these deltas on top of the ideal description to reconstruct the real robot geometry and dynamics.",
-      "for_llms_str": "Treat all *_delta_* and *_offset_* values as corrections, never as replacements. When reasoning about reality, mentally compose ideal + delta."
-    }
+      "for_humans_str": "Apply these deltas on top of the ideal description and actuator models to reconstruct the real robot geometry and dynamics.",
+      "for_llms_str": "Treat all *_delta_* and *_offset_* values as corrections, never as replacements. When reasoning about reality, mentally compose: ideal (description + actuation_library) + calibration (this file). If an actuator model is marked as VIRTUAL_PLACEHOLDER, calibration remains valid but capabilities are still uncertain."
+    },
+    "version_semver_str": "0.3.0",
+    "planned_actuator_models_unverified_bool": true
   },
-
-  // ==============================================================
-  // 2. KINEMATIC OFFSETS (Joint Zeroing)
-  // No robot is assembled perfectly. The 'zero' angle is never exactly vertical.
-  // These offsets correct the joint configuration space.
-  // ==============================================================
   "kinematic_offsets_map": {
     "knee_joint_right": {
-      // The software thinks 0 is straight, but reality is +1.2 degrees off
       "zero_point_offset_rad_float": 0.021,
-
-      // Mechanical play/slop in the gears due to wear
       "backlash_hysteresis_rad_float": 0.005
     },
-
     "hip_pitch_right": {
       "zero_point_offset_rad_float": -0.015,
       "backlash_hysteresis_rad_float": 0.002
     }
   },
-
-  // ==============================================================
-  // 3. SENSOR EXTRINSICS (Mounting Errors)
-  // Cameras and IMUs are never mounted exactly where the CAD says.
-  // We define the DELTA (error) relative to the ideal mount pose.
-  // ==============================================================
   "sensor_extrinsics_delta_map": {
     "head_camera_main": {
-      // The camera is shifted 1mm right and 2mm down compared to CAD
-      "mount_delta_xyz_m_vec3_float": [0.001, -0.002, 0.0],
-
-      // The camera is tilted slightly up (~0.5 deg)
-      "mount_delta_rpy_rad_vec3_float": [0.0, 0.0087, 0.0]
+      "mount_delta_xyz_m_vec3_float": [
+        0.001,
+        -0.002,
+        0.0
+      ],
+      "mount_delta_rpy_rad_vec3_float": [
+        0.0,
+        0.0087,
+        0.0
+      ]
     },
-
     "torso_imu": {
-      // IMU misalignment correction
-      "mount_delta_rpy_rad_vec3_float": [0.001, 0.001, 0.0]
-    }
-  },
-
-  // ==============================================================
-  // 4. SENSOR INTRINSICS (Lens Reality)
-  // Every lens is unique. These are the measured optical properties
-  // for this specific sensor unit.
-  // ==============================================================
-  "sensor_intrinsics_map": {
-    "head_camera_main": {
-      "distortion_model_enum": "PLUMB_BOB", // Standard OpenCV model
-
-      // Distortion Coefficients [k1, k2, p1, p2, k3]
-      "distortion_coeffs_vec5_float": [-0.2, 0.05, 0.001, 0.0, 0.0],
-
-      // Camera Matrix K [fx, 0, cx, 0, fy, cy, 0, 0, 1]
-      // Measured focal length and optical center
-      "camera_matrix_k_vec9_float": [
-        520.1, 0.0, 320.5,
-        0.0, 520.1, 240.5,
-        0.0, 0.0, 1.0
+      "mount_delta_rpy_rad_vec3_float": [
+        0.001,
+        0.001,
+        0.0
       ]
     }
   },
-
-  // ==============================================================
-  // 5. DYNAMICS CORRECTION (Friction & Mass)
-  // As the robot ages, grease dries (more friction) and cables shift
-  // (CoM change). These multipliers adjust the physics engine.
-  // ==============================================================
+  "sensor_intrinsics_map": {
+    "head_camera_main": {
+      "distortion_model_enum": "PLUMB_BOB",
+      "distortion_coeffs_vec5_float": [
+        -0.2,
+        0.05,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "camera_matrix_k_vec9_float": [
+        520.1,
+        0.0,
+        320.5,
+        0.0,
+        520.1,
+        240.5,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
   "dynamics_correction_map": {
     "knee_joint_right": {
-      // This joint is stiff. Multiply ideal friction by 1.2
       "friction_scale_factor_float": 1.2,
       "damping_scale_factor_float": 1.1
     },
-
     "global_body": {
-      // We added a sticker or a battery cover, mass is slightly higher
       "total_mass_delta_kg_float": 0.05,
-
-      // Center of mass shifted slightly forward due to heavy battery
-      "center_of_mass_shift_xyz_m_vec3_float": [0.005, 0.0, 0.0]
+      "center_of_mass_shift_xyz_m_vec3_float": [
+        0.005,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "actuator_calibration_map": {
+    "knee_right_actuator": {
+      "torque_scale_factor_float": 0.92,
+      "current_offset_a_float": 0.3,
+      "zero_torque_deadband_nm_float": 0.8,
+      "temperature_bias_c_float": 2.0,
+      "source_lineage_note_str": "Recovered from the later knee-pitch reference calibration and rebound to the resolved knee_right_actuator instance."
+    }
+  },
+  "llm_guidance": {
+    "when_actuator_model_is_unknown_str": "If an actuator is backed by a VIRTUAL_PLACEHOLDER model, you may still use kinematic_offsets_map, dynamics_correction_map and actuator_calibration_map to reason about its behavior qualitatively. However, you MUST treat its absolute capabilities (max torque, power, lifetime) as unknown unless explicitly specified.",
+    "when_generating_calibration_routines_str": "Prefer adjusting calibration.jsonc rather than editing ideal description or actuator models. For actuators without a trusted model, focus on identifying practical limits (max safe torque, deadband, saturation) and store them here as empirical corrections."
+  },
+  "planned_calibration_notes_map": {
+    "hip_pitch_right_actuator": {
+      "torque_scale_factor_float": 0.97,
+      "zero_torque_deadband_nm_float": 0.5,
+      "maturity_enum": "REFERENCE_DATA_UNBOUND"
     }
   }
 }

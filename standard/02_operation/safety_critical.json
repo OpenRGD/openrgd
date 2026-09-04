@@ -1,17 +1,22 @@
 {
   "meta_group": {
-    "safety_protocol_version_str": "iso_13849_pl_d",
-    "last_validated_iso8601_str": "2025-11-23T12:00:00Z",
-    "governance": {
-      "lead_architect_str": "Pasquale Ranieri",
-      "stewardship_organization_str": "Italia Robotica"
-    }
+    "safety_profile_id_str": "bhl_reference_safety_policy_v0_2",
+    "version_semver_str": "0.2.0",
+    "maturity_enum": "REFERENCE_POLICY_REQUIRES_BODY_VALIDATION",
+    "certification_status_enum": "NOT_CERTIFIED_BY_OPENRGD_SPEC",
+    "standards_targets_list_str": [
+      "ISO_13849_PL_D_OR_EQUIVALENT",
+      "ISO_13482_WHERE_APPLICABLE"
+    ],
+    "control_targets_ref_str": "02_operation/control_targets.jsonc",
+    "lead_architect_str": "Pasquale Ranieri"
   },
   "physical_enforcement": {
     "max_velocity_rad_s_float": 12.5,
     "max_acceleration_rad_s2_float": 400.0,
     "max_emergency_torque_nm_float": 50.0,
-    "max_human_contact_force_n_float": 150.0
+    "max_human_contact_force_n_float": 150.0,
+    "values_status_enum": "REFERENCE_PROFILE_LIMITS_REQUIRING_HARDWARE_VALIDATION"
   },
   "reflex_triggers_list": [
     {
@@ -37,9 +42,10 @@
     }
   ],
   "emergency_stop_protocol": {
-    "protocol_enum": "CATEGORY_3_DUAL_CHANNEL",
     "action_on_activation_enum": "CUT_POWER_TO_ACTUATORS_APPLY_BRAKES",
     "data_recording_duration_s_float": 5.0,
-    "reset_required_type_enum": "MANUAL_KEY_TURN"
+    "reset_required_type_enum": "MANUAL_KEY_TURN",
+    "architecture_target_enum": "CATEGORY_3_DUAL_CHANNEL_TARGET",
+    "certification_status_enum": "NOT_ASSERTED"
   }
 }

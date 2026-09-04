@@ -1,25 +1,22 @@
 # OpenRGD Agent Contracts v0.1.0
 
-Status: **CONVERGENCE CANDIDATE**
+Status: **CANDIDATE**
 
-This package freezes the interfaces between four previously separate OpenRGD
-lineages without pretending they were already one implementation:
+This package explores shared interfaces between cognition, embodiment, time/memory and ethical decision evidence:
 
-1. Cognition Contract — `ActionIntent + optional HyperAionRef`.
+1. Cognition Contract — `ActionIntent` with optional representation references.
 2. Somatic Translation Contract — approved intent → hardware-agnostic `CapabilityPlan`.
 3. Chronon ↔ AION Memory Contract — Chronons are canonical evidence; memories are projections.
-4. Ethos ↔ Chronon / DecisionTrace Contract — Ethos remains a separate forensic object linked by commitments.
+4. Ethos ↔ Chronon / DecisionTrace Contract — structured ethical/decision evidence linked by commitments.
 
-Normative priority:
+The intended priority is:
 
 ```text
 hard constitution / explicit policy block
              >
-soft HyperAion resonance / ranking
+soft semantic representation / ranking
              >
 operational choice among allowed actions
 ```
 
-The package does not claim that a Rate My Ethics engine, Ed25519 Chronograf
-signing, or a full 512-dimension semantic encoder is already implemented.
-Those boundaries are explicit.
+The contracts deliberately separate representation from permission to act. They remain candidate interfaces until implementations and conformance tests make the boundary mature enough to accept.

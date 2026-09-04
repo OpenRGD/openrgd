@@ -1,9 +1,10 @@
 {
   "meta_group": {
-    "firmware_spec_version_str": "0.2.0",
+    "firmware_spec_version_str": "0.2.1",
     "last_updated_iso8601_str": "2025-11-23T17:40:00Z",
     "stewardship_org_str": "OpenRGD Consortium",
-    "compatibility_policy_enum": "STRICT_SEMVER"
+    "compatibility_policy_enum": "STRICT_SEMVER",
+    "claim_semantics_str": "Compatibility entries are reference mappings unless independently verified on the physical device."
   },
   "firmware_catalog_map": {
     "tmotor_ak80_series_firmware_v3": {
@@ -84,22 +85,20 @@
       "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
       "hardware_uid_str": "AK80-RIGHT-KNEE-0017",
       "last_verified_iso8601_str": "2025-11-23T10:02:00Z",
-      "compatibility_status_enum": "COMPATIBLE"
-    },
-    "hip_pitch_right_actuator": {
-      "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
-      "hardware_uid_str": "AK80-RIGHT-HIP-0021",
-      "compatibility_status_enum": "COMPATIBLE"
+      "compatibility_status_enum": "COMPATIBLE",
+      "mapping_status_enum": "REFERENCE_MAPPING"
     },
     "spinal_cord_mcu": {
       "firmware_ref_str": "stm32h7_reflex_firmware_v5",
       "hardware_uid_str": "STM32-REFLEX-0009",
-      "compatibility_status_enum": "CRITICAL_COMPONENT"
+      "compatibility_status_enum": "CRITICAL_COMPONENT",
+      "mapping_status_enum": "REFERENCE_MAPPING"
     },
     "head_camera_main": {
       "firmware_ref_str": "sony_imx219_isp_fw_v2",
       "hardware_uid_str": "IMX219-HEADCAM-0032",
-      "compatibility_status_enum": "COMPATIBLE"
+      "compatibility_status_enum": "COMPATIBLE",
+      "mapping_status_enum": "REFERENCE_MAPPING"
     }
   },
   "compatibility_graph": {
@@ -121,5 +120,13 @@
       "Italia Robotica Root CA",
       "OpenRGD Maintainers CA"
     ]
+  },
+  "planned_device_firmware_map": {
+    "hip_pitch_right_actuator": {
+      "firmware_ref_str": "tmotor_ak80_series_firmware_v3",
+      "hardware_uid_str": "AK80-RIGHT-HIP-0021",
+      "compatibility_status_enum": "COMPATIBLE",
+      "mapping_status_enum": "ENGINEERING_TARGET_UNBOUND"
+    }
   }
 }

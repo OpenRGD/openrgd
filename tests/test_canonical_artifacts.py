@@ -14,6 +14,7 @@ from openrgd.core.canonical import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_SOURCE_FILES = 81
 
 
 def file_map(root: Path) -> dict[str, bytes]:
@@ -34,7 +35,7 @@ def test_repository_source_tree_matches_declared_root() -> None:
     result = compute_integrity(ROOT / "spec")
     assert result.profile == INTEGRITY_PROFILE
     assert result.matches
-    assert result.files_count == 76
+    assert result.files_count == EXPECTED_SOURCE_FILES
 
 
 def test_machine_bundle_is_byte_deterministic(tmp_path: Path) -> None:
@@ -57,10 +58,10 @@ def test_standard_mirror_is_byte_deterministic(tmp_path: Path) -> None:
     first = tmp_path / "standard-a"
     second = tmp_path / "standard-b"
 
-    assert build_standard_mirror(spec, first) == 76
-    assert build_standard_mirror(spec, second) == 76
+    assert build_standard_mirror(spec, first) == EXPECTED_SOURCE_FILES
+    assert build_standard_mirror(spec, second) == EXPECTED_SOURCE_FILES
     assert file_map(first) == file_map(second)
-    assert len(file_map(first)) == 76
+    assert len(file_map(first)) == EXPECTED_SOURCE_FILES
 
 
 def test_generated_aggregate_name_is_not_part_of_source_root(tmp_path: Path) -> None:

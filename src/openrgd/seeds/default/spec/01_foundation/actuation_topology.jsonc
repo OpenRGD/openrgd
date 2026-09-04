@@ -1,249 +1,216 @@
 /**
- * ------------------------------------------------------------------
- * OPEN R.G.D. STANDARD - ACTUATION TOPOLOGY v0.1
- * ------------------------------------------------------------------
- * FILE: actuation_topology.jsonc
- * CONTEXT: 01_FOUNDATION (The Body)
+ * OPEN R.G.D. STANDARD v0.2 — ACTUATION TOPOLOGY
  *
- * PURPOSE:
- * - Maps logical kinematic joints to physical actuator models.
- * - Defines control strategies (PID vs Impedance vs Natural Frequency).
- * - Bridges the gap between ROS2 Control (Real) and Isaac Sim (Simulation).
+ * Separates physically resolved actuator bindings from planned joint-level engineering targets.
  *
- * FEATURES:
- * - Uses "Control Profiles" to avoid repetition (DRY principle).
- * - Defines explicit drive modes (Force vs Acceleration).
+ * This file is human-readable JSONC. Fields marked as TARGET, PROPOSED,
+ * EXPERIMENTAL or UNVERIFIED describe engineering intent, not measured
+ * performance or certification.
  */
 
 {
-  // ==============================================================
-  // 0. METADATA & LINKAGE
-  // ==============================================================
   "meta_group": {
-    "topology_id_str": "bhl_actuation_topology_v1_4",
-    "version_semver_str": "1.4.0",
-    "last_verified_iso8601_str": "2025-11-25T14:30:00Z",
+    "topology_id_str": "bhl_actuation_topology_v1_6",
+    "version_semver_str": "1.6.0",
     "domain_id_str": "01_foundation",
-
+    "file_role_enum": "ACTUATOR_INSTANCE_BINDINGS_AND_DESIGN_TARGETS",
+    "binding_policy_str": "Only joint_actuator_mapping_map is treated as an active resolved binding. engineering_design_targets_map preserves planned/reference requirements without asserting that the body blueprint or hardware satisfies them.",
     "related_files_map": {
       "description_ref_str": "01_foundation/description.jsonc",
       "actuation_library_ref_str": "01_foundation/actuation_library.jsonc",
-      "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc"
+      "actuation_dynamics_ref_str": "01_foundation/actuation_dynamics.jsonc",
+      "actuator_model_schema_ref_str": "01_foundation/actuator_model_schema.jsonc"
     }
   },
-
-  // ==============================================================
-  // A. CONTROL PROFILES (ARCHETYPES)
-  // Define reusable behaviors here to keep the mapping clean.
-  // ==============================================================
   "control_profiles_map": {
-
-    // ------------------------------------------------------------
-    // PROFILE: HEAVY LEG JOINT (Knee, Hip Pitch)
-    // Optimized for high torque, walking gait stability.
-    // ------------------------------------------------------------
-    "profile_heavy_leg": {
-      "transmission_config": {
-        "efficiency_factor_float": 0.95,
-        "backlash_compensation_rad_float": 0.001
-      },
-      "control_defaults": {
-        "primary_control_mode_enum": "POSITION",
-        
-        // ROS2 / Real Hardware Gains
-        "position_mode_gains": { "kp": 150.0, "kd": 8.0, "ki": 0.0 },
-        "velocity_mode_gains": { "kp": 20.0, "ki": 0.1 },
-
-        // Isaac Sim / Physics Gains
-        "advanced_impedance_model": {
-          "stiffness_nm_rad_float": 150.0, // High stiffness for support
-          "damping_nms_rad_float": 8.0     // Critical damping to prevent oscillation
-        },
-        
-        // Tuning Abstract
-        "natural_frequency_config": {
-          "natural_frequency_hz_float": 15.0,
-          "damping_ratio_float": 1.0
-        },
-
-        "simulation_driver": { "drive_mode_enum": "FORCE" } // Realistic physics
-      }
+    "HEAVY_LEG": {
+      "intended_use_str": "High-torque leg joints for locomotion and support.",
+      "hint_for_llms_str": "Assume these joints must handle body weight and impulsive contacts."
     },
-
-    // ------------------------------------------------------------
-    // PROFILE: LIGHT ARM JOINT (Shoulder, Elbow)
-    // Optimized for compliance and safety.
-    // ------------------------------------------------------------
-    "profile_light_arm": {
-      "transmission_config": { "efficiency_factor_float": 0.98 },
-      "control_defaults": {
-        "primary_control_mode_enum": "POSITION",
-        
-        "position_mode_gains": { "kp": 40.0, "kd": 2.0 },
-        "advanced_impedance_model": { "stiffness_nm_rad_float": 40.0, "damping_nms_rad_float": 2.0 },
-        
-        "simulation_driver": { "drive_mode_enum": "ACCELERATION" } // Stable IK solving
-      }
+    "LIGHT_ARM": {
+      "intended_use_str": "Upper-limb joints for manipulation and gestures.",
+      "hint_for_llms_str": "Prioritize compliance and safety near humans."
     },
-
-    // ------------------------------------------------------------
-    // PROFILE: FINE MANIPULATION (Wrist, Gripper)
-    // Optimized for precision.
-    // ------------------------------------------------------------
-    "profile_fine_manipulation": {
-      "transmission_config": { "efficiency_factor_float": 0.90 },
-      "control_defaults": {
-        "primary_control_mode_enum": "POSITION",
-        "position_mode_gains": { "kp": 20.0, "kd": 0.5 },
-        "advanced_impedance_model": { "stiffness_nm_rad_float": 20.0, "damping_nms_rad_float": 0.5 },
-        "simulation_driver": { "drive_mode_enum": "ACCELERATION" }
-      }
+    "FINE_MANIPULATION": {
+      "intended_use_str": "Wrist / gripper joints for precise tasks.",
+      "hint_for_llms_str": "Assume small torques but high position accuracy."
     }
   },
-
-  // ==============================================================
-  // B. JOINT MAPPING (INSTANCES)
-  // Links specific joints to profiles + specific limits.
-  // ==============================================================
   "joint_actuator_mapping_map": {
-
-    // --- RIGHT LEG ---
-    
-    "hip_yaw_right": {
+    "knee_right_actuator": {
+      "target_joint_ref_str": "knee_joint_right",
+      "component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "binding_status_enum": "RESOLVED_REFERENCE_BINDING",
+      "transmission_source_ref_str": "01_foundation/description.jsonc#actuators_topology_map.knee_right_actuator",
+      "application_limits": {
+        "torque_limit_peak_nm_float": 45.0,
+        "velocity_limit_rad_s_float": 12.0
+      },
+      "use_profile_ref_str": "HEAVY_LEG"
+    }
+  },
+  "engineering_design_targets_map": {
+    "hip_yaw_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_right_hip_yaw",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 40.0, "velocity_limit_rad_s_float": 12.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 40.0,
+      "required_joint_velocity_rad_s_float": 12.0,
+      "candidate_model_fit_status_enum": "MEETS_STATED_PEAK_TORQUE_TARGET",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-
-    "hip_roll_right": {
+    "hip_roll_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_right_hip_roll",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 60.0, "velocity_limit_rad_s_float": 10.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 60.0,
+      "required_joint_velocity_rad_s_float": 10.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-
-    "hip_pitch_right": {
+    "hip_pitch_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_right_hip_pitch",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      // OVERRIDE: Pitch needs more torque than Yaw
-      "application_limits": { "torque_limit_peak_nm_float": 80.0, "velocity_limit_rad_s_float": 8.0 },
-      "overrides": {
-        "control_defaults": { "position_mode_gains": { "kp": 200.0 } }
-      }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 80.0,
+      "required_joint_velocity_rad_s_float": 8.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-
-    "knee_pitch_right": {
+    "knee_pitch_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_right_knee_pitch",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 120.0, "velocity_limit_rad_s_float": 12.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 120.0,
+      "required_joint_velocity_rad_s_float": 12.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION",
+      "reference_joint_alias_candidate_str": "knee_joint_right"
     },
-
-    "ankle_pitch_right": {
+    "ankle_pitch_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_right_ankle_pitch",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_heavy_leg", // Use heavy profile for stability despite smaller motor
-      "application_limits": { "torque_limit_peak_nm_float": 30.0, "velocity_limit_rad_s_float": 15.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 30.0,
+      "required_joint_velocity_rad_s_float": 15.0,
+      "candidate_model_fit_status_enum": "MEETS_STATED_PEAK_TORQUE_TARGET",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-
-    // --- LEFT LEG (Mirrored Logic) ---
-
-    "hip_yaw_left": {
+    "hip_yaw_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_left_hip_yaw",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 40.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 40.0,
+      "required_joint_velocity_rad_s_float": 12.0,
+      "candidate_model_fit_status_enum": "MEETS_STATED_PEAK_TORQUE_TARGET",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "hip_roll_left": {
+    "hip_roll_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_left_hip_roll",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 60.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 60.0,
+      "required_joint_velocity_rad_s_float": 10.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "hip_pitch_left": {
+    "hip_pitch_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_left_hip_pitch",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 80.0 },
-      "overrides": { "control_defaults": { "position_mode_gains": { "kp": 200.0 } } }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 80.0,
+      "required_joint_velocity_rad_s_float": 8.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "knee_pitch_left": {
+    "knee_pitch_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_left_knee_pitch",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 120.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 120.0,
+      "required_joint_velocity_rad_s_float": 12.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "ankle_pitch_left": {
+    "ankle_pitch_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "leg_left_ankle_pitch",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_heavy_leg",
-      "application_limits": { "torque_limit_peak_nm_float": 30.0 }
+      "candidate_component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
+      "control_profile_ref_str": "HEAVY_LEG",
+      "required_joint_output_torque_nm_float": 30.0,
+      "required_joint_velocity_rad_s_float": 15.0,
+      "candidate_model_fit_status_enum": "MEETS_STATED_PEAK_TORQUE_TARGET",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-
-    // --- ARMS ---
-
-    "shoulder_pitch_right": {
+    "shoulder_pitch_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "arm_right_shoulder_pitch",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_light_arm",
-      "application_limits": { "torque_limit_peak_nm_float": 18.0, "velocity_limit_rad_s_float": 20.0 }
+      "candidate_component_model_ref_str": "dynamixel_xm430_w350_local",
+      "control_profile_ref_str": "LIGHT_ARM",
+      "required_joint_output_torque_nm_float": 18.0,
+      "required_joint_velocity_rad_s_float": 20.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "shoulder_roll_right": {
+    "shoulder_roll_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "arm_right_shoulder_roll",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_light_arm",
-      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+      "candidate_component_model_ref_str": "dynamixel_xm430_w350_local",
+      "control_profile_ref_str": "LIGHT_ARM",
+      "required_joint_output_torque_nm_float": 18.0,
+      "required_joint_velocity_rad_s_float": 20.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "elbow_pitch_right": {
+    "elbow_pitch_right_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "arm_right_elbow_pitch",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_light_arm",
-      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+      "candidate_component_model_ref_str": "dynamixel_xm430_w350_local",
+      "control_profile_ref_str": "LIGHT_ARM",
+      "required_joint_output_torque_nm_float": 18.0,
+      "required_joint_velocity_rad_s_float": 20.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-
-    "shoulder_pitch_left": {
+    "shoulder_pitch_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "arm_left_shoulder_pitch",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_light_arm",
-      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+      "candidate_component_model_ref_str": "dynamixel_xm430_w350_local",
+      "control_profile_ref_str": "LIGHT_ARM",
+      "required_joint_output_torque_nm_float": 18.0,
+      "required_joint_velocity_rad_s_float": 20.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "shoulder_roll_left": {
+    "shoulder_roll_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "arm_left_shoulder_roll",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_light_arm",
-      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+      "candidate_component_model_ref_str": "dynamixel_xm430_w350_local",
+      "control_profile_ref_str": "LIGHT_ARM",
+      "required_joint_output_torque_nm_float": 18.0,
+      "required_joint_velocity_rad_s_float": 20.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     },
-    "elbow_pitch_left": {
+    "elbow_pitch_left_actuator": {
+      "maturity_enum": "ENGINEERING_TARGET",
       "target_joint_ref_str": "arm_left_elbow_pitch",
-      "component_model_ref_str": "tmotor_ak60_6_v1",
-      "use_profile_ref_str": "profile_light_arm",
-      "application_limits": { "torque_limit_peak_nm_float": 18.0 }
+      "candidate_component_model_ref_str": "dynamixel_xm430_w350_local",
+      "control_profile_ref_str": "LIGHT_ARM",
+      "required_joint_output_torque_nm_float": 18.0,
+      "required_joint_velocity_rad_s_float": 20.0,
+      "candidate_model_fit_status_enum": "TARGET_EXCEEDS_MODEL_PEAK_TORQUE",
+      "binding_status_enum": "UNRESOLVED_REFERENCE_DESCRIPTION"
     }
   }
-
-
-  // ==============================================================
-  // FUTURE EXTENSIONS (NOT YET USED IN v0.2)
-  //
-  // For an extended standard, you could introduce:
-  //
-  // "multi_actuator_joints_map": {
-  //   "spine_flex_joint": {
-  //     "co_actuators_list": ["spine_actuator_a", "spine_actuator_b"],
-  //     "coordination_strategy_enum": "TORQUE_SHARING"
-  //   }
-  // }
-  //
-  // "impedance_profiles_map": {
-  //   "bouncy_walk": {
-  //     "desired_stiffness_nm_rad_float": 50.0,
-  //     "desired_damping_nms_rad_float": 2.0
-  //   }
-  // }
-  //
-  // The key is to keep the existing structure stable and additive,
-  // so older runtimes can ignore new optional sections.
-  // ==============================================================
 }

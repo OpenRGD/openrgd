@@ -5,20 +5,14 @@
   "normative": false,
   "accepted": false,
   "stable_release_allowed": false,
-  "source": {
-    "archive": "openrgd-convergence-alpha-v0.1.zip",
-    "archive_sha256": "a295463bfc9fb9ad26bc2bff90800874d9e4f7c5db8219fc9a0b7123d2ceb987",
-    "original_package": "openrgd-agent-contracts-v0.1.0/"
-  },
+  "source_snapshot_sha256": "a295463bfc9fb9ad26bc2bff90800874d9e4f7c5db8219fc9a0b7123d2ceb987",
   "promotion_requires": [
     "complete normative schemas and text",
     "explicit compatibility and versioning rules",
     "producer and consumer conformance tests",
     "at least one validated reference flow",
-    "no unresolved contradiction with the Canonical Core",
-    "accepted RFC or equivalent governance decision",
+    "no unresolved contradiction with the OpenRGD standard",
+    "accepted RFC or equivalent project decision",
     "machine-readable maturity update"
-  ],
-  "merge_behavior": "PRESERVE_CANDIDATE_STATUS",
-  "non_retroactivity": true
+  ]
 }

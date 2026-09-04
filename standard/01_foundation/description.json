@@ -4,7 +4,7 @@
     "species_name_str": "BHL_Lite",
     "manufacturer_str": "Berkeley_Open_Robotics",
     "license_enum": "MIT_OPEN_HARDWARE",
-    "version_semver_str": "0.2.0",
+    "version_semver_str": "0.2.1",
     "release_date_iso8601_str": "2025-11-23",
     "total_mass_ideal_kg_float": 12.5,
     "dof_active_count_int": 20,
@@ -14,8 +14,14 @@
       "actuation_topology_ref_str": "01_foundation/actuation_topology.jsonc",
       "actuation_dynamics_ref_str": "01_foundation/actuation_dynamics.jsonc",
       "hal_mapping_ref_str": "01_foundation/hal_mapping.jsonc",
-      "firmware_manifest_ref_str": "01_foundation/firmware_manifest.jsonc"
-    }
+      "firmware_mapping_ref_str": "01_foundation/firmware_mapping.jsonc",
+      "actuator_model_schema_ref_str": "01_foundation/actuator_model_schema.jsonc",
+      "rigid_body_dynamics_ref_str": "01_foundation/rigid_body_dynamics.jsonc"
+    },
+    "description_completeness_enum": "PARTIAL_REFERENCE_PROFILE",
+    "described_active_dof_count_int": 1,
+    "target_active_dof_count_int": 20,
+    "dof_active_count_status_enum": "REFERENCE_DESIGN_TARGET"
   },
   "embodiment_config": {
     "up_axis_enum": "Z_UP",
@@ -29,7 +35,8 @@
         1.0,
         1.0,
         1.0
-      ]
+      ],
+      "asset_availability_enum": "EXTERNAL_REFERENCE_NOT_BUNDLED"
     }
   },
   "kinematic_chain_list": [
@@ -182,7 +189,8 @@
         0.0,
         0.0
       ],
-      "update_rate_hz_float": 1000.0
+      "update_rate_hz_float": 1000.0,
+      "binding_status_enum": "RESOLVED_REFERENCE_BINDING"
     },
     "head_camera_main": {
       "device_type_enum": "RGBD_CAMERA",
@@ -201,7 +209,8 @@
         1920,
         1080
       ],
-      "fov_horizontal_rad_float": 1.5707
+      "fov_horizontal_rad_float": 1.5707,
+      "binding_status_enum": "REFERENCE_TARGET_UNRESOLVED"
     },
     "head_mic_array": {
       "device_type_enum": "MICROPHONE_ARRAY",
@@ -216,7 +225,8 @@
         0.0,
         0.0,
         0.0
-      ]
+      ],
+      "binding_status_enum": "REFERENCE_TARGET_UNRESOLVED"
     },
     "chest_lidar": {
       "device_type_enum": "LIDAR_SOLID_STATE",
@@ -231,7 +241,8 @@
         0.0,
         0.0
       ],
-      "range_max_m_float": 12.0
+      "range_max_m_float": 12.0,
+      "binding_status_enum": "RESOLVED_REFERENCE_BINDING"
     },
     "wifi_rf_module": {
       "device_type_enum": "RF_TRANSCEIVER",
@@ -239,13 +250,14 @@
       "capabilities_map": {
         "wifi_csi_sensing_bool": true,
         "ble_sniffing_bool": true
-      }
+      },
+      "binding_status_enum": "RESOLVED_REFERENCE_BINDING"
     }
   },
   "actuators_topology_map": {
     "knee_right_actuator": {
       "drives_joint_ref_str": "knee_joint_right",
-      "component_model_ref_str": "tmotor_ak80_9_v2",
+      "component_model_ref_str": "tmotor_ak80_9_v2_bhl_default",
       "mount_pose_xyz_m_vec3_float": [
         0.0,
         -0.02,
@@ -257,13 +269,15 @@
         0.0
       ],
       "mechanical_reduction_ratio_float": 10.0,
-      "direction_polarity_int": -1
+      "direction_polarity_int": -1,
+      "binding_status_enum": "RESOLVED_REFERENCE_BINDING"
     }
   },
   "capabilities_manifest": {
     "teleoperation_supported_bool": true,
     "object_manipulation_bool": true,
     "terrain_navigation_bool": true,
-    "human_safe_interaction_bool": false
+    "human_safe_interaction_bool": false,
+    "capability_status_enum": "REFERENCE_DESIGN_INTENT_NOT_CERTIFICATION"
   }
 }

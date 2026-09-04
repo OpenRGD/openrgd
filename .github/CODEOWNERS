@@ -1,14 +1,14 @@
 # Current OpenRGD stewardship
 * @phate6872
 
-# Normative and governance surfaces
+# Standard and shared contracts
 /spec/ @phate6872
 /contracts/ @phate6872
-/governance/ @phate6872
-/docs/reconciliation/ @phate6872
-/.github/ @phate6872
+/standard/ @phate6872
 
-# Toolchain and validation
+# Toolchain, examples and validation
 /src/openrgd/ @phate6872
+/example/ @phate6872
 /tools/ @phate6872
 /tests/ @phate6872
+/.github/ @phate6872

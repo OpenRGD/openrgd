@@ -1,136 +1,97 @@
-# OpenRGD canonical repository structure
+# OpenRGD Project Structure
 
-## Status
-
-This document defines the authority model adopted by the historical reconciliation branch. It becomes repository policy only after review and merge.
-
-## Authority order
-
-1. `spec/manifest.jsonc` declares the standard version, integrity profile and domain maturity.
-2. Modular files under `spec/` are the human-readable normative source.
-3. Accepted contracts under `contracts/` define cross-component interfaces within their declared scope.
-4. Candidate contracts are reviewable formalizations, not stable normative law.
-5. `standard/` is a tracked strict-JSON leaf mirror and cannot become an independent source of truth.
-6. `src/openrgd/seeds/default/spec/` is a derived default runtime profile.
-7. Machine bundles, exports and robot workspaces are generated products and remain untracked.
-8. Historical evidence under `docs/history/` is non-normative.
-
-Duplicate copies must not be resolved silently. Source/derived relationships are enforced through `ARTIFACT_POLICY.json`, canonical hashing and CI.
-
-## Canonical domains
-
-### `00_core` — coordination
-
-Bundle metadata, kernel identity, validation references and cross-domain orchestration.
-
-### `01_foundation` — physical reality
-
-Body description, actuators, sensors, calibration, power, compute, firmware/HAL mappings, materials and physical constraints.
-
-### `02_operation` — operation and safety
-
-Operational envelopes, runtime validation, safety-critical behavior, compliance and autonomic protection.
-
-### `03_agency` — capability and interaction
-
-World model, declared skills, capability interfaces and action semantics.
-
-### `04_volition` — values and governance
-
-Alignment, hard invariants, value priorities, decision governance and conflict resolution. Soft scores cannot override hard constitutional blocks.
-
-### `05_evolution` — lifecycle and adaptation
-
-Wear, plasticity, continuity, replication and termination semantics.
-
-### `06_ether` — collective existence
-
-Inter-agent coordination, shared computation, consensus, reputation and civilizational protocols.
-
-The older Foundation/Safety/Capability/Ethics/History/Collective taxonomy is historical only.
-
-## Canonical source integrity
-
-The standard/profile source tree uses:
+OpenRGD is deliberately easy to enter: the standard lives in `spec/`, the Python toolchain lives in `src/openrgd/`, and runnable examples live in `example/`.
 
 ```text
-OPENRGD_SOURCE_TREE_SHA256_V1
+openrgd/
+├── spec/                   # Human-readable OpenRGD standard and reference profile
+├── src/openrgd/            # rgd CLI, importers, validators and static bridges
+├── example/                # Ready-to-run URDF / USDA examples
+├── tests/                  # Automated tests and test fixtures
+├── contracts/              # Candidate cross-component interfaces
+├── standard/               # Generated strict-JSON mirror of spec/
+├── tools/                  # Repository validation helpers
+├── assets/                 # Branding and platform assets
+├── README.md               # Vision + fastest way to try OpenRGD
+├── ONBOARDING.md           # Friendly first steps
+├── CLI_GUIDE.md            # Command reference
+└── CONTRIBUTING.md         # How to help
 ```
 
-The profile commits selected modular source paths and exact source bytes. The manifest's own hash value is normalized to `sha256:SELF` while calculating the root. Details are in `docs/reconciliation/CANONICAL_HASHING.md`.
+## The six OpenRGD domains
 
-## Generated artifact boundary
+### `00_core` — Coordination
+The map that links the profile together: identity, module loading, representation formats, validation and cross-component execution contracts.
+
+### `01_foundation` — The Body
+Physical reality: geometry, mass, inertia, actuators, sensors, calibration, compute, power, firmware and hardware mappings.
+
+A key principle is **epistemic honesty**: a value may be known, approximate, unresolved, or an engineering target. OpenRGD should carry that distinction instead of inventing certainty.
+
+### `02_operation` — The Physiology
+Operational limits, safety policy, runtime validation, compliance and low-level control targets.
+
+Engineering targets such as a **1 kHz safety/reflex loop** are goals to measure against. They are not automatically measured results or certifications.
+
+### `03_agency` — The Mind
+World model, skills, proprioception, perception-oriented structures and capability interfaces.
+
+### `04_volition` — The Conscience
+Alignment, values, arbitration and decision governance. Experimental representations such as HyperAion may project semantic state, but representation never grants actuation authority.
+
+### `05_evolution` — The Lifecycle
+Wear, adaptation, continuity, maintenance, replication and termination semantics.
+
+### `06_ether` — The Society
+Coordination between agents: consensus, reputation, federation and shared reality.
+
+## Source and generated views
 
 ```text
-spec/ modular source
-        │
-        ├── standard/ strict leaf mirror
-        └── deterministic machine bundle generated on demand
+spec/                       human-readable canonical source
+  ↓
+standard/                   strict JSON compatibility mirror
+  ↓
+rgd compile-spec            deterministic machine bundle (generated locally)
 ```
 
-Tracked domain bundles, human unified copies, benchmark snapshots, generated workspaces and export outputs are prohibited. Their historical identities are recorded in `docs/history/generated-artifacts/`.
+The packaged default seed follows the same standard source so `rgd alive` can create a complete profile from imported body evidence.
 
-## Cognitive-to-physical boundary
+## From cognition to hardware
 
-The convergence-candidate interface is:
+The current cross-component target is:
 
 ```text
-LLM / VLM / VLA / planner / world model
-                  ↓
-          CognitionProposal
-                  ↓
-             ActionIntent
-                  ↓
-          Somatic Translator
-                  ↓
-           CapabilityPlan
-                  ↓
-       Operation Safety Gate
-                  ↓
-            DecisionTrace
-                  ↓
-             Body Adapter
-                  ↓
-               Hardware
+Cognition / planner
+      ↓
+ActionIntent
+      ↓
+Somatic Translator
+      ↓
+CapabilityPlan
+      ↓
+Operation Safety Gate
+      ↓
+DecisionTrace
+      ↓
+Body Adapter
+      ↓
+Hardware
 ```
 
-- HyperAion is a representation, not actuation permission.
-- `ActionIntent` is model-agnostic.
-- `CapabilityPlan` remains hardware-agnostic.
-- the Body Adapter owns servo IDs, buses, middleware messages and device commands;
-- DecisionTrace stores structured evidence, not private reasoning.
+OpenRGD defines the shared language and boundaries. The embodied runtime and hardware-specific Body Adapter implement physical execution.
 
-These interfaces remain convergence candidates under `contracts/agent/v0.1.0/`.
+## AION and HyperAion
 
-## Temporal and memory ownership
+AION fixed-size structures and the HyperAion semantic map are **experimental protocol/profile work**. They are designed for efficient interoperable state representation, but they do not bypass alignment, safety, somatic translation or hardware authorization.
 
-- Robot Chronograf owns time measurement, clock domains, uncertainty and anchor resolution.
-- RGD-Physics owns Chronon/Aion and causal-envelope semantics.
-- the embodied runtime owns execution, recall and learning mediation.
-- Chronons are canonical history; memories are projections.
+Robot Chronograf, RGD-Physics and the embodied runtime evolve as related components with their own implementation ownership.
 
-## Implementation boundary in this repository
+## Start here
 
-The Python package contains:
+```bash
+pip install -e .
+rgd alive example/minimal-arm/openrgd_minimal_arm.urdf
+```
 
-- CLI routing;
-- JSONC loading and canonical hashing;
-- deterministic strict-mirror and machine-bundle generation;
-- URDF/USD importer scaffolding;
-- static ROS 2 and Isaac-oriented Synapse generators;
-- plugin discovery and policy scaffolding;
-- a fail-closed `rgd run` compatibility/status namespace.
-
-It does not contain an active physical runtime.
-
-## External implementation candidates
-
-Independent repositories are expected for:
-
-- RGD-Physics;
-- Robot Chronograf;
-- embodied runtime;
-- LeRobot/body adapters;
-- RGD-Ethics.
-
-Repository names and promotion state remain explicit decisions rather than implications from empty placeholders.
+Then open the generated profile and explore. OpenRGD is meant to be read, modified, tested, challenged and improved together.

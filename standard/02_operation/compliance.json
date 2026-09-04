@@ -1,21 +1,11 @@
 {
   "meta_group": {
     "compliance_profile_id_str": "safety_service_robot_v1",
-    "last_reviewed_iso8601_str": "2025-11-23T15:05:00Z"
-  },
-  "regulatory_standards_map": {
-    "iso_certification_list_str": [
-      "ISO_13482_ServiceRobots",
-      "ISO_10218_Safety"
-    ],
-    "regional_marking_list_str": [
-      "CE_MARKING"
-    ],
-    "safety_performance_level_str": "PL_D"
+    "last_reviewed_iso8601_str": "2025-11-23T15:05:00Z",
+    "version_semver_str": "0.2.0"
   },
   "ownership_and_liability_config": {
     "ownership_model_enum": "COMMUNITY_DECENTRALIZED_ASSET",
-    "responsible_entity_uri_str": "did:web:italia-robotica.org:foundation",
     "role_access_matrix_map": {
       "DEVELOPER_ROLE": {
         "rights_list_str": [
@@ -39,7 +29,7 @@
         "override_priority_int": 5
       }
     },
-    "access_control_file_ref_str": "access_control.json"
+    "policy_maturity_enum": "REFERENCE_EXAMPLE"
   },
   "audit_logging_config": {
     "data_retention_days_int": 365,
@@ -64,5 +54,16 @@
     "biometric_data_storage_policy_enum": "LOCAL_TEMPORARY",
     "external_data_sharing_allowed_bool": false,
     "data_anonymization_required_bool": true
+  },
+  "regulatory_targets_map": {
+    "target_standards_list_str": [
+      "ISO_13482_ServiceRobots",
+      "ISO_10218_Safety"
+    ],
+    "target_regional_markings_list_str": [
+      "CE_MARKING"
+    ],
+    "target_safety_performance_level_str": "PL_D",
+    "verification_status_enum": "NOT_ASSESSED_BY_OPENRGD_SPEC"
   }
 }

@@ -1,0 +1,135 @@
+{
+  "meta_group": {
+    "component_model_id_str": "vendor/model_family_variant",
+    "version_semver_str": "1.0.0",
+    "openrgd_standard_version_str": "0.2.0",
+    "actuation_modality_enum": "ROTARY",
+    "energy_domain_enum": "ELECTRIC",
+    "type_enum": "BLDC_ACTUATOR_INTEGRATED",
+    "manufacturer_str": "ExampleCorp",
+    "model_name_str": "XC-1234 Actuator",
+    "description_str": "High-torque density rotary actuator for dynamic legged robots.",
+    "product_page_uri_str": "https://example.com/xc-1234",
+    "datasheet_pdf_uri_str": "https://example.com/xc-1234/datasheet.pdf",
+    "provenance_group": {
+      "source_type_enum": "VENDOR_OFFICIAL",
+      "submitted_by_str": "ExampleCorp Robotics Division",
+      "contact_uri_str": "mailto:support@example.com",
+      "citation_text_str": "ExampleCorp (2025). XC-1234 Actuator Model Datasheet."
+    },
+    "document_kind_enum": "REFERENCE_MODEL_SHAPE",
+    "maturity_enum": "DRAFT",
+    "registry_status_enum": "OPTIONAL_FUTURE_COMPATIBILITY",
+    "registry_note_str": "A model can live in a project-local library. No external registry is required by this specification."
+  },
+  "lineage_group": {
+    "actuator_model_status_enum": "CANONICAL_REGISTRY_MODEL",
+    "parent_component_model_ref_str": null,
+    "parent_component_model_version_str": null,
+    "inheritance_mode_enum": "NONE",
+    "meta_synthetic_group": {
+      "source_system_str": null,
+      "source_file_uri_str": null,
+      "source_joint_name_str": null,
+      "import_mode_enum": null,
+      "match_confidence_score_float": null
+    }
+  },
+  "electrical_specs": {
+    "input_voltage_nominal_v_float": 24.0,
+    "input_voltage_max_v_float": 48.0,
+    "kv_rating_rpm_v_float": 100.0,
+    "phase_resistance_ohm_float": 0.125,
+    "phase_inductance_h_float": 3.6e-05,
+    "back_emf_constant_kev_v_per_rad_s_float": 0.095,
+    "torque_constant_kt_nm_a_float": 0.095,
+    "peak_current_a_float": 24.0,
+    "continuous_current_a_float": 12.0
+  },
+  "performance_limits": {
+    "peak_torque_nm_float": 48.0,
+    "continuous_torque_nm_float": 18.0,
+    "max_speed_rad_s_float": 30.0,
+    "peak_force_n_float": 800.0,
+    "continuous_force_n_float": 300.0,
+    "max_linear_speed_m_s_float": 0.5,
+    "stroke_m_float": 0.04,
+    "rotary_backlash_arcmin_float": 10.0,
+    "linear_backlash_m_float": 0.0001
+  },
+  "thermal_properties": {
+    "thermal_mass_j_k_float": 900.0,
+    "thermal_resistance_housing_c_w_float": 0.8,
+    "max_coil_temp_c_float": 120.0,
+    "warning_temp_c_float": 85.0
+  },
+  "mechanical_properties": {
+    "weight_kg_float": 0.485,
+    "rotor_inertia_kgm2_float": 0.00045,
+    "gear_ratio_internal_float": 9.0,
+    "transmission_efficiency_pct_float": 90.0,
+    "viscous_friction_nm_s_per_rad_float": 0.02,
+    "coulomb_friction_nm_float": 0.05,
+    "moving_mass_kg_float": 0.03,
+    "viscous_friction_n_s_per_m_float": 25.0,
+    "coulomb_friction_n_float": 5.0
+  },
+  "torque_speed_curve_points_list": [
+    {
+      "speed_rad_s_float": 0.0,
+      "available_torque_nm_float": 48.0
+    },
+    {
+      "speed_rad_s_float": 10.0,
+      "available_torque_nm_float": 40.0
+    },
+    {
+      "speed_rad_s_float": 20.0,
+      "available_torque_nm_float": 28.0
+    },
+    {
+      "speed_rad_s_float": 30.0,
+      "available_torque_nm_float": 0.0
+    }
+  ],
+  "force_speed_curve_points_list": [
+    {
+      "speed_m_s_float": 0.0,
+      "available_force_n_float": 800.0
+    },
+    {
+      "speed_m_s_float": 0.25,
+      "available_force_n_float": 400.0
+    },
+    {
+      "speed_m_s_float": 0.5,
+      "available_force_n_float": 0.0
+    }
+  ],
+  "assets_uri_map": {
+    "usd_uri_str": "assets/components/examplecorp/xc1234.usd",
+    "urdf_uri_str": "assets/components/examplecorp/xc1234.urdf",
+    "step_uri_str": "assets/components/examplecorp/xc1234.step",
+    "datasheet_pdf_uri_str": "assets/datasheets/examplecorp/xc1234.pdf"
+  },
+  "overrides_group": {},
+  "local_extensions_group": {},
+  "vendor_extensions_group": {
+    "tmotor": {
+      "official_part_number_str": "AK80-9 V2",
+      "support_uri_str": "https://support.t-motor.com"
+    },
+    "tolomatic": {
+      "series_str": "BCS",
+      "bearing_style_enum": "DELRIN_SOLID",
+      "screw_type_enum": "BN02_2TPI",
+      "configurator_url_str": "https://www.tolomatic.com/configurator/..."
+    }
+  },
+  "llm_guidance": {
+    "when_answering_capabilities_str": "Use peak and continuous ratings from performance_limits. If a value is missing, say it is unknown instead of inventing it. Treat SYNTHETIC_PLACEHOLDER models as unknown/approximate.",
+    "when_generating_controllers_str": "Combine torque/force limits, speed limits and thermal limits. Do not exceed peak values and prefer continuous ratings for sustained behaviors.",
+    "when_mapping_to_robot_joints_str": "Remember: this file describes the actuator *model*, not how it is mounted. Always consult actuation_topology.jsonc and actuation_dynamics.jsonc to reason about a specific joint instance.",
+    "when_resolving_parent_child_models_str": "If inheritance_mode_enum is OVERLAY, start from the parent model and apply overrides_group. Never silently guess a parent: parent_component_model_ref_str must be explicit."
+  }
+}
