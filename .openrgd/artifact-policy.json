@@ -1,0 +1,8 @@
+{
+  "policy_version": "1.0.0",
+  "canonical_source_root": "spec",
+  "standard_mirror_root": "standard",
+  "default_seed_root": "src/openrgd/seeds/default/spec",
+  "static_files": ["MANIFESTO.md"],
+  "excluded_source_files": ["01_spec.jsonc","02_spec.jsonc","03_spec.jsonc","04_spec.jsonc","05_spec.jsonc","06_spec.jsonc","openrgd_unified_spec.jsonc","openrgd_unified_spec_document.jsonc"]
+}
