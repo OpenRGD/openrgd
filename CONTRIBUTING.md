@@ -4,6 +4,7 @@ OpenRGD is an open standard and toolchain for cognitive embodiment. Contribution
 
 Read these files before proposing a change:
 
+- `CODE_OF_CONDUCT.md`
 - `GOVERNANCE.md`
 - `RELEASE_POLICY.md`
 - `STRUCTURE.md`
@@ -115,6 +116,12 @@ Do not connect cognition directly to motors, middleware publishers or device bus
 All changes enter `main` through pull requests. Direct and force pushes to `main` are prohibited by policy.
 
 During the current single-maintainer phase, the public checklist, required CI, resolved conversations and final merge-readiness record substitute for an impossible self-approval. When a second maintainer is appointed, normative changes require one non-author approval.
+
+## Community conduct
+
+Participation in OpenRGD repositories, issues, pull requests and discussions is governed by `CODE_OF_CONDUCT.md`.
+
+Technical disagreement is welcome. Harassment, doxxing, deceptive attribution and knowingly overstating maturity, safety or evidence are not.
 
 ## Security and safety
 
