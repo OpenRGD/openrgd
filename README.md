@@ -236,6 +236,7 @@ See [`docs/reconciliation/EVIDENCE_SCOPE.md`](docs/reconciliation/EVIDENCE_SCOPE
 - [`GOVERNANCE.md`](GOVERNANCE.md) — normative change and contract-promotion process;
 - [`RELEASE_POLICY.md`](RELEASE_POLICY.md) — merge, tag, artifact and signing rules;
 - [`SECURITY.md`](SECURITY.md) — vulnerability and physical-safety reporting;
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — community participation and conduct;
 - [`docs/reconciliation/`](docs/reconciliation/) — current decisions, evidence scope and audits;
 - [`docs/history/`](docs/history/) — preserved non-normative history.
 
