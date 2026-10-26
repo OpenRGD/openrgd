@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:feedback:capabilities:v0.1-candidate",
+  "title": "Feedback Output Capabilities — peripheral reference, not physical binding",
+  "description": "Capability/zone declaration for a single owned peripheral output. No MAC, IP, user token, or host-device control may appear here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "peripheral_id",
+    "owner_module",
+    "modality",
+    "zone_id",
+    "device_class",
+    "effect_ids",
+    "capability_provenance",
+    "limits",
+    "remote_output_authorized",
+    "physical_endpoint_disclosed"
+  ],
+  "properties": {
+    "contract": {
+      "const": "openrgd.feedback.capabilities.v0.1-candidate"
+    },
+    "peripheral_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "owner_module": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$",
+      "maxLength": 128
+    },
+    "modality": {
+      "enum": [
+        "visual",
+        "audio"
+      ]
+    },
+    "zone_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "device_class": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,79}$"
+    },
+    "effect_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(visual|audio)\\.[a-z][a-z0-9._-]{0,79}$"
+      }
+    },
+    "capability_provenance": {
+      "enum": [
+        "declared_only",
+        "operator_observed",
+        "bench_verified"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "brightness_percent_max",
+        "volume_percent_max",
+        "minimum_update_interval_ms",
+        "strobe_enabled"
+      ],
+      "properties": {
+        "brightness_percent_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "volume_percent_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "minimum_update_interval_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        },
+        "strobe_enabled": {
+          "const": false
+        }
+      }
+    },
+    "remote_output_authorized": {
+      "type": "boolean"
+    },
+    "physical_endpoint_disclosed": {
+      "const": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "modality": {
+            "const": "visual"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "effect_ids": {
+            "items": {
+              "pattern": "^visual\\."
+            }
+          },
+          "limits": {
+            "properties": {
+              "volume_percent_max": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "modality": {
+            "const": "audio"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "effect_ids": {
+            "items": {
+              "pattern": "^audio\\."
+            }
+          },
+          "limits": {
+            "properties": {
+              "brightness_percent_max": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
