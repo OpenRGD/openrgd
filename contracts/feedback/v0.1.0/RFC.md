@@ -15,7 +15,7 @@ If every feedback implementation invents its own event and priority semantics, c
 Use a four-part, versioned candidate model:
 
 1. **FeedbackSignal** — typed normalized information from a source adapter, with unique signal ID, robot instance, event source, session/sequence (if available), and explicit provenance/time quality. This stage cannot assert output success.
-2. **FeedbackCue** — policy-engine intent explaining *what should be communicated*: semantic `cue_key` (e.g. `conversation.speaking`, `robot.welcome`), category, best-effort modality set, bounded priority and finite TTL. No output protocol, animation, WAV filename or mic/speaker ID is in this object.
+2. **FeedbackCue** — policy-engine intent explaining *what should be communicated*: semantic `cue_key` (e.g. `conversation.speaking`, `robot.welcome`), category, best-effort modality set, bounded priority, `one_shot|leased_state` presentation and finite TTL. A short chime and a sustained speaking light therefore share intent semantics without assuming identical duration rules. No output protocol, animation, WAV filename or mic/speaker ID is in this object.
 3. **FeedbackOutputCapabilities** — one *owner-declared* logical peripheral/zone, modality, effect IDs and installation-enforced limits. A declaration is not proof of device availability. PERIPH is the intended future source of physical device lifecycle and capability bindings; this candidate does not claim its current API.
 4. **FeedbackDeliveryReport** — output progress (`requested/queued/sent/driver_ack/failed/expired/dropped/unavailable`) per zone and modality, explicitly separating transport acknowledgement from physical verification. In v0.1, `physical_output_observed` is always false.
 
