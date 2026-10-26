@@ -52,7 +52,7 @@ See `examples/feedback-flow.synthetic.json`. All examples are **synthetic**. An 
 - A Cue contains **semantics**, e.g. `conversation.speaking`, not `#00FF46`, `speaker_bose`, `beep.wav` or BLE MAC. Visual and Audio modules own those mappings.
 - `modalities: ["visual", "audio"]` means independently *attempt* permitted outputs; failure of one must not block the other or delay speech.
 - Each output zone must have **one active owner**; source modules and browser UIs do not pair or control peripherals directly. Align with the evolving PERIPH service rather than creating duplicate hardware discovery.
-- `ttl_ms` is a **finite lease**. Long-lived states require renewal or explicit follow-up events after arbitration is implemented; never leave stale speech/error visual states indefinitely.
+- `presentation` distinguishes a one-shot cue (e.g. a brief audio earcon) from a leased state (e.g. the robot listening or speaking). `ttl_ms` is a **finite lease**; long-lived states require renewal or explicit follow-up events after arbitration is implemented. Never leave stale speech/error visual states indefinitely.
 - `priority` resolves output conflicts only under an independently reviewed policy; it is never a safety priority or emergency-stop permission.
 - Hardware capability catalogs do not prove that a device is connected. Status/freshness/verification remain separate.
 - `physical_output_observed=false` means there is no independent light/sound measurement. For example, Visual v0.3 `applied` maps only to driver write/ack and **must not** be promoted to measured emitted light.
