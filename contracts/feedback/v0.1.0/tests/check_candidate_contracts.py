@@ -92,7 +92,7 @@ class FeedbackContractsCandidateTests(unittest.TestCase):
                     self.check("cue", changed)
 
     def test_reject_physical_proof_from_driver_ack(self):
-        result = self.fixtures[0]["delivery"]
+        result = self.fixtures[0]["delivery"][0]
         bad = [
             {"physical_output_observed": True},
             {"physical_observation_ref": "invented"},
