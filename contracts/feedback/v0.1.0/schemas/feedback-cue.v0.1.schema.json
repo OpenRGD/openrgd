@@ -13,6 +13,7 @@
     "cue_key",
     "category",
     "priority",
+    "presentation",
     "ttl_ms",
     "created_at_utc",
     "modalities",
@@ -92,6 +93,13 @@
     },
     "safety_authority": {
       "const": false
+    },
+    "presentation": {
+      "enum": [
+        "one_shot",
+        "leased_state"
+      ],
+      "description": "one_shot renders once if admitted; leased_state requires bounded TTL and explicit refresh/release by the future arbiter."
     }
   }
 }
