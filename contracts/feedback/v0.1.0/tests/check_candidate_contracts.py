@@ -81,6 +81,7 @@ class FeedbackContractsCandidateTests(unittest.TestCase):
             {"priority": 101},
             {"ttl_ms": 0},
             {"modalities": ["visual", "visual"]},
+            {"presentation": "continuous_without_lease"},
             {"delivery_policy": "safety_override"},
             {"safety_authority": True},
             {"arbitrary_command": ["exec", "shell"]},
