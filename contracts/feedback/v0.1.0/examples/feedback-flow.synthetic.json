@@ -1,0 +1,178 @@
+{
+  "notice": "SYNTHETIC CONTRACT FIXTURE ONLY. No physical sound/light/output commands were issued.",
+  "cases": [
+    {
+      "name": "voice_playback_to_visual",
+      "signal": {
+        "contract": "openrgd.feedback.signal.v0.1-candidate",
+        "signal_id": "11111111111111111111111111111111",
+        "robot_instance_id": "paky-01",
+        "source_module": "org.openrgd.voice",
+        "event_kind": "playback.started",
+        "source_session_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_sequence": 5,
+        "occurred_at_utc": "2026-10-26T12:00:00Z",
+        "host_monotonic_ns": 1234500000,
+        "clock_quality": "host_monotonic_unsynchronized",
+        "evidence_class": "producer_report",
+        "correlation_id": null,
+        "non_actuating": true
+      },
+      "cue": {
+        "contract": "openrgd.feedback.cue.v0.1-candidate",
+        "cue_id": "22222222222222222222222222222222",
+        "robot_instance_id": "paky-01",
+        "source_signal_id": "11111111111111111111111111111111",
+        "cue_key": "conversation.speaking",
+        "category": "status",
+        "priority": 50,
+        "ttl_ms": 60000,
+        "created_at_utc": "2026-10-26T12:00:00Z",
+        "modalities": [
+          "visual"
+        ],
+        "delivery_policy": "independent_best_effort",
+        "correlation_id": null,
+        "safety_authority": false,
+        "presentation": "leased_state"
+      },
+      "capabilities": [
+        {
+          "contract": "openrgd.feedback.capabilities.v0.1-candidate",
+          "peripheral_id": "face_ring",
+          "owner_module": "org.openrgd.visual-feedback",
+          "modality": "visual",
+          "zone_id": "face_ring",
+          "device_class": "rgb_ring",
+          "effect_ids": [
+            "visual.solid"
+          ],
+          "capability_provenance": "operator_observed",
+          "limits": {
+            "brightness_percent_max": 35,
+            "volume_percent_max": null,
+            "minimum_update_interval_ms": 100,
+            "strobe_enabled": false
+          },
+          "remote_output_authorized": false,
+          "physical_endpoint_disclosed": false
+        }
+      ],
+      "delivery": [
+        {
+          "contract": "openrgd.feedback.delivery.v0.1-candidate",
+          "cue_id": "22222222222222222222222222222222",
+          "robot_instance_id": "paky-01",
+          "peripheral_id": "face_ring",
+          "modality": "visual",
+          "zone_id": "face_ring",
+          "effect_id": "visual.solid",
+          "stage": "driver_ack",
+          "reported_at_utc": "2026-10-26T12:00:00.100Z",
+          "driver_acknowledged": true,
+          "physical_output_observed": false,
+          "physical_observation_ref": null,
+          "error_code": null,
+          "non_actuating": true
+        }
+      ]
+    },
+    {
+      "name": "operator_demo_multimodal_audio_not_available",
+      "signal": {
+        "contract": "openrgd.feedback.signal.v0.1-candidate",
+        "signal_id": "33333333333333333333333333333333",
+        "robot_instance_id": "paky-01",
+        "source_module": "org.openrgd.console",
+        "event_kind": "operator.demo.start",
+        "source_session_id": null,
+        "source_sequence": null,
+        "occurred_at_utc": "2026-10-26T12:00:00Z",
+        "host_monotonic_ns": null,
+        "clock_quality": "producer_utc_unverified",
+        "evidence_class": "operator_report",
+        "correlation_id": null,
+        "non_actuating": true
+      },
+      "cue": {
+        "contract": "openrgd.feedback.cue.v0.1-candidate",
+        "cue_id": "44444444444444444444444444444444",
+        "robot_instance_id": "paky-01",
+        "source_signal_id": "33333333333333333333333333333333",
+        "cue_key": "robot.welcome",
+        "category": "social",
+        "priority": 15,
+        "ttl_ms": 8000,
+        "created_at_utc": "2026-10-26T12:00:00Z",
+        "modalities": [
+          "visual",
+          "audio"
+        ],
+        "delivery_policy": "independent_best_effort",
+        "correlation_id": null,
+        "safety_authority": false,
+        "presentation": "one_shot"
+      },
+      "capabilities": [
+        {
+          "contract": "openrgd.feedback.capabilities.v0.1-candidate",
+          "peripheral_id": "face_ring",
+          "owner_module": "org.openrgd.visual-feedback",
+          "modality": "visual",
+          "zone_id": "face_ring",
+          "device_class": "rgb_ring",
+          "effect_ids": [
+            "visual.solid"
+          ],
+          "capability_provenance": "operator_observed",
+          "limits": {
+            "brightness_percent_max": 35,
+            "volume_percent_max": null,
+            "minimum_update_interval_ms": 100,
+            "strobe_enabled": false
+          },
+          "remote_output_authorized": false,
+          "physical_endpoint_disclosed": false
+        },
+        {
+          "contract": "openrgd.feedback.capabilities.v0.1-candidate",
+          "peripheral_id": "local_speaker",
+          "owner_module": "org.openrgd.audio-feedback",
+          "modality": "audio",
+          "zone_id": "speaker_output",
+          "device_class": "speaker",
+          "effect_ids": [
+            "audio.earcon"
+          ],
+          "capability_provenance": "declared_only",
+          "limits": {
+            "brightness_percent_max": null,
+            "volume_percent_max": 25,
+            "minimum_update_interval_ms": 500,
+            "strobe_enabled": false
+          },
+          "remote_output_authorized": false,
+          "physical_endpoint_disclosed": false
+        }
+      ],
+      "delivery": [
+        {
+          "contract": "openrgd.feedback.delivery.v0.1-candidate",
+          "cue_id": "44444444444444444444444444444444",
+          "robot_instance_id": "paky-01",
+          "peripheral_id": "local_speaker",
+          "modality": "audio",
+          "zone_id": "speaker_output",
+          "effect_id": "audio.earcon",
+          "stage": "unavailable",
+          "reported_at_utc": "2026-10-26T12:00:01Z",
+          "driver_acknowledged": false,
+          "physical_output_observed": false,
+          "physical_observation_ref": null,
+          "error_code": "adapter_not_implemented",
+          "non_actuating": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:feedback:signal:v0.1-candidate",
+  "title": "OpenRGD Feedback Signal — normalized event candidate",
+  "description": "Untrusted, explicitly sourced event adapter output. Not a motor authorization, Chronon, or proof of physical feedback output.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "signal_id",
+    "robot_instance_id",
+    "source_module",
+    "event_kind",
+    "source_session_id",
+    "source_sequence",
+    "occurred_at_utc",
+    "host_monotonic_ns",
+    "clock_quality",
+    "evidence_class",
+    "correlation_id",
+    "non_actuating"
+  ],
+  "properties": {
+    "contract": {
+      "const": "openrgd.feedback.signal.v0.1-candidate"
+    },
+    "signal_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "robot_instance_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "source_module": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$",
+      "maxLength": 128
+    },
+    "event_kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,99}$"
+    },
+    "source_session_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{32}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_sequence": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "occurred_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "host_monotonic_ns": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "clock_quality": {
+      "enum": [
+        "producer_utc_unverified",
+        "host_monotonic_unsynchronized"
+      ]
+    },
+    "evidence_class": {
+      "enum": [
+        "producer_report",
+        "operator_report",
+        "simulated"
+      ]
+    },
+    "correlation_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{32}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "non_actuating": {
+      "const": true
+    }
+  }
+}

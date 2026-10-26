@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:feedback:cue:v0.1-candidate",
+  "title": "OpenRGD Feedback Cue Intent — modality-neutral best-effort candidate",
+  "description": "A proposed communication intent; never a device command, motor admission, emergency-stop implementation or safety authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "cue_id",
+    "robot_instance_id",
+    "source_signal_id",
+    "cue_key",
+    "category",
+    "priority",
+    "presentation",
+    "ttl_ms",
+    "created_at_utc",
+    "modalities",
+    "delivery_policy",
+    "correlation_id",
+    "safety_authority"
+  ],
+  "properties": {
+    "contract": {
+      "const": "openrgd.feedback.cue.v0.1-candidate"
+    },
+    "cue_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "robot_instance_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "source_signal_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "cue_key": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,99}$"
+    },
+    "category": {
+      "enum": [
+        "status",
+        "attention",
+        "notification",
+        "warning",
+        "fault",
+        "social"
+      ]
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "ttl_ms": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 60000
+    },
+    "created_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "modalities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "visual",
+          "audio"
+        ]
+      }
+    },
+    "delivery_policy": {
+      "const": "independent_best_effort"
+    },
+    "correlation_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{32}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "safety_authority": {
+      "const": false
+    },
+    "presentation": {
+      "enum": [
+        "one_shot",
+        "leased_state"
+      ],
+      "description": "one_shot renders once if admitted; leased_state requires bounded TTL and explicit refresh/release by the future arbiter."
+    }
+  }
+}
