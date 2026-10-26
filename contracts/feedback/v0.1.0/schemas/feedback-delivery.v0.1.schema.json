@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:feedback:delivery:v0.1-candidate",
+  "title": "Feedback Delivery Report — no claim of physical emission",
+  "description": "An output adapter's reported command/driver progress, not measured light or sound. Physical confirmation requires a later independent measurement contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "cue_id",
+    "robot_instance_id",
+    "peripheral_id",
+    "modality",
+    "zone_id",
+    "effect_id",
+    "stage",
+    "reported_at_utc",
+    "driver_acknowledged",
+    "physical_output_observed",
+    "physical_observation_ref",
+    "error_code",
+    "non_actuating"
+  ],
+  "properties": {
+    "contract": {
+      "const": "openrgd.feedback.delivery.v0.1-candidate"
+    },
+    "cue_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "robot_instance_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "peripheral_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "modality": {
+      "enum": [
+        "visual",
+        "audio"
+      ]
+    },
+    "zone_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "effect_id": {
+      "type": "string",
+      "pattern": "^(visual|audio)\\.[a-z][a-z0-9._-]{0,79}$"
+    },
+    "stage": {
+      "enum": [
+        "requested",
+        "queued",
+        "sent",
+        "driver_ack",
+        "failed",
+        "expired",
+        "dropped",
+        "unavailable"
+      ]
+    },
+    "reported_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "driver_acknowledged": {
+      "type": "boolean"
+    },
+    "physical_output_observed": {
+      "const": false
+    },
+    "physical_observation_ref": {
+      "type": "null"
+    },
+    "error_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-z][a-z0-9_-]{0,79}$"
+    },
+    "non_actuating": {
+      "const": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "driver_acknowledged": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stage": {
+            "const": "driver_ack"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "driver_ack"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "driver_acknowledged": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "modality": {
+            "const": "visual"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "effect_id": {
+            "pattern": "^visual\\."
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "modality": {
+            "const": "audio"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "effect_id": {
+            "pattern": "^audio\\."
+          }
+        }
+      }
+    }
+  ]
+}
