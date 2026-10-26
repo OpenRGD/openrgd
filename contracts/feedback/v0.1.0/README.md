@@ -74,7 +74,8 @@ Review with PERIPH-0.2, Voice Studio, Visual Studio and Console owners before fi
 Run optional schema and reference-flow conformance checks (using Python `jsonschema`) via:
 
 ```bash
-python3 -m unittest discover -s contracts/feedback/v0.1.0/tests -v
+python3 -m pip install 'jsonschema==4.23.0'  # optional candidate checker only
+python3 -m unittest discover -s contracts/feedback/v0.1.0/tests -p 'check_*.py' -v
 ```
 
 See `GOVERNANCE.md` for human acceptance; no candidate becomes normative merely by merging.
