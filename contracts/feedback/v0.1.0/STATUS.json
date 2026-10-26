@@ -1,0 +1,34 @@
+{
+  "package": "openrgd-multimodal-feedback-contracts",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "owner": "OpenRGD/openrgd (cross-component contracts only)",
+  "scope": [
+    "feedback_signal",
+    "cue_intent",
+    "output_capabilities",
+    "delivery_report"
+  ],
+  "implementations": [
+    "OpenRGD/rgd-visual-feedback (independent owner)",
+    "future audio-feedback module (independent owner)"
+  ],
+  "non_goals": [
+    "robot actuation",
+    "hardware pairing",
+    "audio capture or TTS",
+    "hardware safety authority",
+    "canonical Chronon evidence"
+  ],
+  "promotion_requires": [
+    "accepted RFC",
+    "producer and consumer tests",
+    "version/compatibility rules",
+    "validated non-actuating physical reference flow",
+    "explicit device authorization and ownership",
+    "approved safety and accessibility limits"
+  ]
+}
