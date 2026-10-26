@@ -33,7 +33,8 @@
         ],
         "delivery_policy": "independent_best_effort",
         "correlation_id": null,
-        "safety_authority": false
+        "safety_authority": false,
+        "presentation": "leased_state"
       },
       "capabilities": [
         {
@@ -109,7 +110,8 @@
         ],
         "delivery_policy": "independent_best_effort",
         "correlation_id": null,
-        "safety_authority": false
+        "safety_authority": false,
+        "presentation": "one_shot"
       },
       "capabilities": [
         {
