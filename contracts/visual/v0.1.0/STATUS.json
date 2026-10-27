@@ -1,0 +1,15 @@
+{
+  "schema_version": "openrgd.contract-status.v0.1",
+  "contract_id": "rgd.visual-assets.v0.1-candidate",
+  "maturity": "candidate",
+  "normative": false,
+  "status": "PROPOSAL_NOT_PRODUCTION",
+  "domain": "01_foundation",
+  "scope": "visual and collision asset associations only; non-actuating; no calibration or hardware identity",
+  "canonical_spec_modified": false,
+  "profile_tree_integrity_unchanged": true,
+  "governance": "Requires explicit review before a future OpenRGD standard release.",
+  "consumer": "OpenRGD Console future opt-in preview importer",
+  "security": "in-package relative paths, SHA-256, per-asset and aggregate bounds; no URL fetch",
+  "provenance_policy": "source geometry vs as-built overlays must be distinguishable; attribution/license required"
+}
