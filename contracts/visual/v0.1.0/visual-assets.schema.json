@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openrgd.org/contracts/visual/v0.1.0/visual-assets.schema.json",
+  "$id": "urn:openrgd:contracts:visual-assets:v0.1-candidate",
   "title": "OpenRGD Visual Asset Manifest v0.1 (candidate only; not normative)",
   "description": "Optional, non-actuating mesh/CAD assets bound to exact link frames of an OpenRGD model. Does not establish physical geometry, collision trust or robot readiness.",
   "type": "object",
