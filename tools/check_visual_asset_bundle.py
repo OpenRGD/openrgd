@@ -178,7 +178,7 @@ def check_glb_json(bundle: zipfile.ZipFile, entry: zipfile.ZipInfo) -> None:
         raw = src.read(json_bytes)
         require(len(raw) == json_bytes, "GLB JSON chunk truncated")
         try:
-            root = json.loads(raw.decode("utf-8").rstrip("\\x00 \\n\\r\\t"),
+            root = json.loads(raw.decode("utf-8").rstrip("\x00 \n\r\t"),
                               object_pairs_hook=no_duplicates)
         except (UnicodeError, json.JSONDecodeError) as exc:
             raise VisualManifestError("GLB JSON invalid: " + str(exc)) from exc
