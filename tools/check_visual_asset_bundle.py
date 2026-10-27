@@ -119,7 +119,8 @@ def parse_manifest(raw: bytes) -> dict:
         require(type(asset.get("license_id")) is str and bool(asset["license_id"]),
                 f"{asset_id}: license required")
         if "attribution_ref" in asset:
-            require(asset["attribution_ref"] in credits, f"{asset_id}: missing attribution reference")
+            require(type(asset["attribution_ref"]) is str and asset["attribution_ref"] in credits,
+                    f"{asset_id}: missing attribution reference")
         sha = asset.get("sha256")
         require(type(sha) is str and SHA256.fullmatch(sha) is not None,
                 f"{asset_id}: sha256 invalid")
@@ -135,7 +136,8 @@ def parse_manifest(raw: bytes) -> dict:
                 require(all(v > 0 for v in vector), f"{asset_id}: mesh scale must be positive")
     for asset in items:
         if "derived_from_asset_id" in asset:
-            require(asset["derived_from_asset_id"] in seen_ids, "dangling derived_from_asset_id")
+            require(type(asset["derived_from_asset_id"]) is str and asset["derived_from_asset_id"] in seen_ids,
+                    "dangling derived_from_asset_id")
             require(asset["derived_from_asset_id"] != asset["asset_id"], "self-referential asset")
     return data
 
