@@ -66,15 +66,18 @@ def parse_manifest(raw: bytes) -> dict:
         raise VisualManifestError("manifest is not strict UTF-8 JSON: " + str(exc)) from exc
     require(type(data) is dict, "manifest must be a JSON object")
     require(data.get("schema_version") == SCHEMA_VERSION, "unsupported visual manifest version")
-    require(data.get("evidence_class") in EVIDENCE, "missing/unverified evidence class")
+    require(type(data.get("evidence_class")) is str and data["evidence_class"] in EVIDENCE,
+            "missing/unverified evidence class")
     require(type(data.get("source_profile_ref")) is str and 0 < len(data["source_profile_ref"]) <= 200,
             "source_profile_ref required")
     frame = data.get("coordinate_frame")
     require(type(frame) is dict, "coordinate_frame object required")
     require(frame.get("linear_unit") == "m" and frame.get("angular_unit") == "rad",
             "all asset transforms must be in SI metres/radians")
-    require(frame.get("up_axis") in {"Z_UP", "Y_UP"}, "invalid model up axis")
-    require(frame.get("forward_axis") in {"X_FORWARD", "Z_FORWARD"}, "invalid model forward axis")
+    require(type(frame.get("up_axis")) is str and frame["up_axis"] in {"Z_UP", "Y_UP"},
+            "invalid model up axis")
+    require(type(frame.get("forward_axis")) is str and frame["forward_axis"] in {"X_FORWARD", "Z_FORWARD"},
+            "invalid model forward axis")
     items = data.get("assets")
     require(type(items) is list and len(items) <= MAX_ASSETS, "asset list too large")
     require(all(type(x) is dict for x in items), "each asset must be an object")
@@ -108,10 +111,11 @@ def parse_manifest(raw: bytes) -> dict:
                 f"{asset_id}: illegal path")
         fmt = asset.get("media_format")
         role = asset.get("role")
-        require(role in ROLE_FORMAT and fmt in ROLE_FORMAT[role],
+        require(type(role) is str and type(fmt) is str and role in ROLE_FORMAT and fmt in ROLE_FORMAT[role],
                 f"{asset_id}: unsupported role/format")
         require(path.endswith("." + fmt), f"{asset_id}: format/path extension mismatch")
-        require(asset.get("provenance") in PROVENANCE, f"{asset_id}: provenance required")
+        require(type(asset.get("provenance")) is str and asset["provenance"] in PROVENANCE,
+                f"{asset_id}: provenance required")
         require(type(asset.get("license_id")) is str and bool(asset["license_id"]),
                 f"{asset_id}: license required")
         if "attribution_ref" in asset:
@@ -144,7 +148,7 @@ def safe_zip_entry(z: zipfile.ZipInfo) -> bool:
         return False
     if not z.is_dir() and z.file_size > MAX_BLOB_BYTES:
         return False
-    if z.external_attr >> 16 & stat.S_IFMT(stat.S_IFLNK):
+    if stat.S_IFMT(z.external_attr >> 16) == stat.S_IFLNK:
         return False
     return True
 
