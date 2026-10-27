@@ -162,6 +162,38 @@ def archive_root(names: list[str]) -> str:
     return prefix
 
 
+def check_glb_json(bundle: zipfile.ZipFile, entry: zipfile.ZipInfo) -> None:
+    """Validate GLB v2 header and JSON chunk; reject external resource URIs."""
+    with bundle.open(entry) as src:
+        header = src.read(20)
+        require(len(header) == 20 and header[:4] == b"glTF" and
+                struct.unpack("<I", header[4:8])[0] == 2 and
+                struct.unpack("<I", header[8:12])[0] == entry.file_size,
+                "GLB header/declared size invalid")
+        json_bytes = struct.unpack("<I", header[12:16])[0]
+        require(header[16:20] == b"JSON" and json_bytes > 0 and
+                json_bytes <= 2 * 1024 * 1024 and
+                20 + json_bytes <= entry.file_size,
+                "GLB JSON chunk invalid or oversized")
+        raw = src.read(json_bytes)
+        require(len(raw) == json_bytes, "GLB JSON chunk truncated")
+        try:
+            root = json.loads(raw.decode("utf-8").rstrip("\\x00 \\n\\r\\t"),
+                              object_pairs_hook=no_duplicates)
+        except (UnicodeError, json.JSONDecodeError) as exc:
+            raise VisualManifestError("GLB JSON invalid: " + str(exc)) from exc
+        require(type(root) is dict and type(root.get("asset")) is dict and
+                root["asset"].get("version") == "2.0", "GLB asset.version != 2.0")
+        # Content-addressed glTF package only. External fetch is not allowed,
+        # even if the browser would ordinarily resolve an image or buffer URI.
+        for field in ("images", "buffers", "shaders"):
+            items = root.get(field, [])
+            require(type(items) is list and len(items) <= 512, "invalid GLB " + field)
+            for item in items:
+                require(type(item) is dict and item.get("uri") is None,
+                        "GLB contains external or data: resource URI in " + field)
+
+
 def inspect(path: Path) -> dict:
     require(path.is_file() and path.stat().st_size <= MAX_ZIP_BYTES, "archive missing or exceeds 64 MiB")
     with zipfile.ZipFile(path, "r") as bundle:
@@ -208,10 +240,7 @@ def inspect(path: Path) -> dict:
                     h.update(chunk)
             require("sha256:" + h.hexdigest() == asset["sha256"], f"{asset['asset_id']}: SHA mismatch")
             if asset["media_format"] == "glb":
-                require(len(leading) >= 12 and leading[:4] == b"glTF" and
-                        struct.unpack("<I", leading[4:8])[0] == 2 and
-                        struct.unpack("<I", leading[8:12])[0] == entry.file_size,
-                        f"{asset['asset_id']}: GLB header/size invalid")
+                check_glb_json(bundle, entry)
             count += 1
             num_bytes += seen
         return {
