@@ -1,0 +1,22 @@
+{
+  "package": "openrgd-kernel-goal-effect-contracts",
+  "version": "0.1.0",
+  "abi": "OPENRGD_KERNEL_GOAL_EFFECT_ABI_V0.1",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "core_baseline": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "review": "CORE-COG-0001_REVIEW-01 / PR #10",
+  "historical_microkernel_compatibility": "NOT_AUDITED_NOT_CLAIMED",
+  "validation_scope": "SHAPE_AND_SYNTHETIC_CONSUMER_CONFORMANCE_ONLY",
+  "merge_behavior": "PRESERVE_CANDIDATE_STATUS",
+  "promotion_requires": [
+    "pinned audit of historical eight source blobs",
+    "review by Core, COG/Work, Identity and Somatic owners",
+    "actual producer/consumer conformance in external repositories",
+    "identity proof and effect gate verification profiles",
+    "explicit governance, versioning and maturity decision"
+  ]
+}
