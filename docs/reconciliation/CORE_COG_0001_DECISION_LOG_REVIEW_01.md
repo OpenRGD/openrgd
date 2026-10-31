@@ -53,7 +53,7 @@ No entry below has `ACCEPTED_STANDARD` or `DEPLOYED` status.
 - No mandate for five OS processes or any new microkernel daemon.
 - No real Life ID, robot ID, issuer receipt, Chronograf anchor or actor role lease issued.
 - No activation of autonomous agenda, model egress, Voice, CAN, device movement or runtime process.
-- No deletion or modification of `spec/03_agency/world_model.jsonc`, ``pec` source hash, mirrors or seeds.
+- No deletion or modification of `spec/03_agency/world_model.jsonc`, `spec/` source hash, mirrors or seeds.
 - No requirement to merge/retarget COG PR #1/#3 or Core PR #6/#7/#8.
 - No claim that archived/recovered microkernel source blobs have been reviewed line-by-line.
 
