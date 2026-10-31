@@ -1,0 +1,29 @@
+{
+  "fixture_only": true,
+  "cases": [
+    {"id":"descriptor_self_grant","base":"descriptor_Work","set":{"grants_authority":true}},
+    {"id":"sixth_kernel","base":"descriptor_Work","set":{"role":"Attention"}},
+    {"id":"reflex_dependency","base":"descriptor_Safety","set":{"reflex_waits_for_cognition":true}},
+    {"id":"work_owns_reflex","base":"descriptor_Work","set":{"safety_plane":"INDEPENDENT_SOMATIC_REFLEX"}},
+    {"id":"unknown_field_tool","base":"goal","set":{"tools":["shell"]}},
+    {"id":"invented_life","base":"goal","set":{"context.life_id":"paky-01"}},
+    {"id":"null_bound_identity","base":"goal","set":{"context.scope":"LIFE_BOUND"}},
+    {"id":"zero_budget","base":"goal","set":{"budget.steps":0}},
+    {"id":"unbounded_depth","base":"goal","set":{"budget.depth":100000}},
+    {"id":"zero_ttl","base":"event","set":{"lifetime.ttl_ms":0}},
+    {"id":"unknown_event","base":"event","set":{"kind":"motion.execute"}},
+    {"id":"foreign_schema","base":"goal","set":{"schema_version":"cog_input_v0.1-candidate"}},
+    {"id":"parent_depth_zero","base":"goal","set":{"parent_goal_id":"fixture:parent"}},
+    {"id":"nan_type","base":"goal","set":{"depth":"NaN"}},
+    {"id":"reject_with_effects","base":"admission","set":{"outcome":"REJECT"}},
+    {"id":"admit_without_budget","base":"admission","set":{"allocated_budget":null}},
+    {"id":"gate_self_grant","base":"gate","set":{"grants_authority":true}},
+    {"id":"gate_allow_no_receipt","base":"gate","set":{"verification_receipt_ref":null}},
+    {"id":"gate_allow_no_grants","base":"gate","set":{"evaluated_grant_refs":[]}},
+    {"id":"unsafe_effect_alias","base":"request","set":{"category":"SAFETY_OVERRIDE"}},
+    {"id":"history_as_read_only","base":"request","set":{"history_commit":true}},
+    {"id":"oversized_ref","base":"request","set":{"target_ref":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}},
+    {"id":"unknown_state","base":"transition","set":{"to_state":"AUTHORIZED_TO_ACTUATE"}},
+    {"id":"missing_fencing_type","base":"goal","set":{"context.role_fencing_generation":-1}}
+  ]
+}
