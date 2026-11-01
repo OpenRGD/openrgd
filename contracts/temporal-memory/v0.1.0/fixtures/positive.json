@@ -1,0 +1,257 @@
+{
+  "status": "SYNTHETIC_ONLY",
+  "records": {
+    "historical_time_assertion": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "HistoricalTimeAssertion",
+      "record_id": "fixture:claim:old",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "source_event_ref": "fixture:event:old",
+      "claimed_time_token": "1660000000.125",
+      "source_clock_domain_ref": "legacy.posix.system",
+      "timestamp_format": "LEGACY_POSIX_SECONDS",
+      "time_quality": "UNATTESTED",
+      "uncertainty_ms": null,
+      "assertion_kind": "HISTORICAL_EVENT_TIME_CLAIM",
+      "measured_by_chronograf": false
+    },
+    "import_anchor": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "ImportAnchorEvidence",
+      "record_id": "fixture:import:anchor",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "historical_assertion_ref": "fixture:claim:old",
+      "anchor_namespace_id": "fixture:chronograf:boot2",
+      "anchor_handle_uint64_dec": "42",
+      "time_atom_sha256_hex": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "measured_clock_domain_ref": "fixture:clock:import",
+      "measured_at_ms": 1000,
+      "anchor_purpose": "IMPORT_OR_RECEIPT_TIME",
+      "anchor_issuer_ref": "fixture:chronograf",
+      "anchor_record_proof_ref": "fixture:anchor:receipt:42",
+      "verification_state": "UNVERIFIED_REFERENCE_ONLY"
+    },
+    "evidence": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "EvidenceAvailability",
+      "record_id": "fixture:evidence:avail",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "evidence_ref": "fixture:evidence:original",
+      "content_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reported_state": "AVAILABLE",
+      "reason_code": "EVIDENCE_PRESENT",
+      "retention_policy_ref": null,
+      "affected_storage_locations": [
+        "L1_VAULT",
+        "L3_INDEX"
+      ],
+      "assessment_clock_domain_ref": "fixture:clock:knowledge",
+      "assessed_at_ms": 1010,
+      "proof_ref": null,
+      "verification_state": "REPORTED_NOT_ATTESTED"
+    },
+    "commitment": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "CognitiveCommitment",
+      "record_id": "fixture:commitment:learn",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "goal_ref": "fixture:goal:one",
+      "admission_ref": "fixture:admission:one",
+      "commitment_kind": "LEARNING_DELTA",
+      "subject_ref": "fixture:observation:firststep",
+      "delta_payload_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "assessment": "UNRESOLVED",
+      "knowledge_clock_domain_ref": "fixture:clock:knowledge",
+      "knowledge_at_ms": 2000,
+      "provenance_class": "DERIVED",
+      "physical_milestone_verified": false
+    },
+    "salience": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "SalienceHint",
+      "record_id": "fixture:salience:one",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "source_event_ref": "fixture:event:step",
+      "previous_hint_ref": null,
+      "salience_band": "HIGH",
+      "confidence_state": "PROVISIONAL",
+      "reason_code": "FIRST_STEP_CANDIDATE",
+      "knowledge_clock_domain_ref": "fixture:clock:knowledge",
+      "knowledge_at_ms": 1900,
+      "physical_verification": "NOT_VERIFIED"
+    },
+    "annotation_initial": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "MemoryAnnotation",
+      "record_id": "fixture:annotation:initial",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "subject_ref": "fixture:hypothesis:firststep",
+      "about_valid_time_assertion_ref": "fixture:claim:old",
+      "assessment": "UNRESOLVED",
+      "supersedes_annotation_ref": null,
+      "knowledge_clock_domain_ref": "fixture:clock:knowledge",
+      "knowledge_at_ms": 2000,
+      "interpretation_payload_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "provenance_class": "DERIVED",
+      "physical_milestone_verified": false,
+      "projection_only": true
+    },
+    "annotation_revision": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "MemoryAnnotation",
+      "record_id": "fixture:annotation:revision",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "subject_ref": "fixture:hypothesis:firststep",
+      "about_valid_time_assertion_ref": "fixture:claim:old",
+      "assessment": "REFUTED",
+      "supersedes_annotation_ref": "fixture:annotation:initial",
+      "knowledge_clock_domain_ref": "fixture:clock:knowledge",
+      "knowledge_at_ms": 3000,
+      "interpretation_payload_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "provenance_class": "SYNTHETIC_REVIEW",
+      "physical_milestone_verified": false,
+      "projection_only": true
+    },
+    "oneiric": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "OneiricReview",
+      "record_id": "fixture:review:one",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "work_goal_ref": "fixture:goal:one",
+      "source_event_ref": "fixture:event:step",
+      "prior_annotation_ref": "fixture:annotation:initial",
+      "simulated_scene_refs": [
+        "fixture:synthetic:scene"
+      ],
+      "assessment": "REFUTED",
+      "review_outcome": "REVIEW_COMPLETED",
+      "provenance_class": "SYNTHETIC_REPLAY",
+      "knowledge_clock_domain_ref": "fixture:clock:knowledge",
+      "knowledge_at_ms": 3000,
+      "physical_milestone_verified": false,
+      "history_committed": false
+    },
+    "checkpoint": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "ContinuityCheckpoint",
+      "record_id": "fixture:checkpoint:one",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "life_id": null,
+      "life_binding_ref": null,
+      "history_watermark_ref": null,
+      "last_commit_receipt_ref": null,
+      "checkpoint_kind": "PROVISIONAL_NONCANONICAL",
+      "source_root": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "policy_revision": "fixture:policy:one",
+      "work_state_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "memory_projection_digest": null,
+      "knowledge_clock_domain_ref": "fixture:clock:knowledge",
+      "knowledge_at_ms": 3000,
+      "recovery_hint_only": true,
+      "restores_grants": false
+    },
+    "request": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "HistoryCommitRequest",
+      "record_id": "fixture:request:one",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "request_id": "fixture:request:one",
+      "idempotency_key": "fixture:idempotency:one",
+      "life_id": "fixture:life:one",
+      "life_binding_ref": "fixture:binding:one",
+      "life_activation_epoch": 7,
+      "runtime_instance_id": "fixture:runtime:one",
+      "writer_role_lease_ref": "fixture:lease:history",
+      "effect_request_ref": "fixture:effect:req",
+      "effect_gate_decision_ref": "fixture:effect:gate",
+      "source_root": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "policy_revision": "fixture:policy:one",
+      "context_revision": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "payload_kind": "MEMORY_ANNOTATION",
+      "payload_ref": "fixture:annotation:initial",
+      "payload_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "historical_time_assertion_ref": null,
+      "import_anchor_evidence_ref": null
+    },
+    "receipt": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "HistoryCommitReceipt",
+      "record_id": "fixture:receipt:one",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "request_id": "fixture:request:one",
+      "idempotency_key": "fixture:idempotency:one",
+      "request_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "receipt_status": "COMMITTED",
+      "reporter_class": "WRITER_CLAIM",
+      "committed_chronon_ref": "fixture:chronon:one",
+      "history_watermark_ref": "fixture:ledger:watermark:one",
+      "recorded_anchor_ref": "fixture:chronograf:current:anchor",
+      "writer_receipt_ref": "fixture:writer:receipt:one",
+      "reason_code": "COMMITTED"
+    },
+    "unconfirmed": {
+      "schema_version": "openrgd_temporal_memory_v0.1-candidate",
+      "record_type": "HistoryCommitReceipt",
+      "record_id": "fixture:receipt:unconfirmed",
+      "producer_ref": "fixture:proposer",
+      "evidence_refs": [
+        "fixture:evidence:original"
+      ],
+      "grants_authority": false,
+      "request_id": "fixture:request:one",
+      "idempotency_key": "fixture:idempotency:one",
+      "request_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "receipt_status": "NOT_CONFIRMED",
+      "reporter_class": "REQUESTER_OBSERVATION",
+      "committed_chronon_ref": null,
+      "history_watermark_ref": null,
+      "recorded_anchor_ref": null,
+      "writer_receipt_ref": null,
+      "reason_code": "WRITER_UNREACHABLE"
+    }
+  }
+}
