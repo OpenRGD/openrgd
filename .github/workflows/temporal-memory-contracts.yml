@@ -1,0 +1,81 @@
+name: CORE-D Temporal Memory Oneiric candidate conformance
+on:
+  pull_request:
+    branches: [main]
+    paths: ['contracts/temporal-memory/**', '.github/workflows/temporal-memory-contracts.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: core-d-temporal-memory-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  conformance:
+    name: core-d-py${{ matrix.python }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: OpenRGD/openrgd
+          ref: 55a034ceb1cdaab8bed6848fcdde85c9436bc9e0
+          path: .upstream/core-b
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: OpenRGD/openrgd
+          ref: fa5e8ff713a28b69b7d39b2c18e8c9e0f6c72ee0
+          path: .upstream/core-c
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: OpenRGD/rgd-cognition
+          ref: 877a450cffb4ce10d2891ceaf4e6701f4a6709c1
+          path: .upstream/cog
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Confirm source pins and protected canonical paths
+        run: |
+          test "$(git -C .upstream/core-b rev-parse HEAD)" = 55a034ceb1cdaab8bed6848fcdde85c9436bc9e0
+          test "$(git -C .upstream/core-c rev-parse HEAD)" = fa5e8ff713a28b69b7d39b2c18e8c9e0f6c72ee0
+          test "$(git -C .upstream/cog rev-parse HEAD)" = 877a450cffb4ce10d2891ceaf4e6701f4a6709c1
+          git diff --exit-code afe1a831b950a4e6560f0285a0103fc4eaa343b7 HEAD -- spec standard src contracts/agent pyproject.toml
+      - name: Install pinned test dependencies and existing cognition consumer
+        run: |
+          python -m pip install -r .upstream/cog/requirements-ci.txt -r .upstream/cog/requirements-rgd-ci.txt
+          python -m pip install --no-build-isolation --no-deps -e . -e .upstream/cog
+          python -m pip check
+      - name: CORE-D candidate semantic conformance
+        run: |
+          python contracts/temporal-memory/v0.1.0/validate.py
+          python contracts/temporal-memory/v0.1.0/conformance.py
+          python -O contracts/temporal-memory/v0.1.0/conformance.py
+      - name: Existing Core-B and Core-C conformance unchanged
+        env:
+          CORE_B_SCHEMA: ${{ github.workspace }}/.upstream/core-b/contracts/kernel/v0.1.0/schemas/kernel-goal-effect.schema.json
+        run: |
+          python .upstream/core-b/contracts/kernel/v0.1.0/validate.py
+          python .upstream/core-b/contracts/kernel/v0.1.0/conformance.py
+          python .upstream/core-c/contracts/identity/v0.1.0/validate.py
+          python .upstream/core-c/contracts/identity/v0.1.0/conformance.py
+          python .upstream/core-c/contracts/identity/v0.1.0/parser_conformance.py
+      - name: Genuine pinned COG6 regressions (not yet CORE-D integration)
+        env:
+          CORE_B_CHECKOUT: ${{ github.workspace }}/.upstream/core-b
+          RGD_CORE_CHECKOUT: ${{ github.workspace }}
+        run: |
+          python -m unittest discover -s .upstream/cog/tests -v
+          python -m unittest discover -s .upstream/cog/tests_integration -v
+          python -m unittest discover -s .upstream/cog/tests_core_b -v
+      - name: Scope and whitespace
+        run: git diff --check afe1a831b950a4e6560f0285a0103fc4eaa343b7 HEAD

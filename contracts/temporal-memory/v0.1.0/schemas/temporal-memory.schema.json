@@ -1,0 +1,1250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:temporal-memory:v0.1-candidate",
+  "title": "CORE-D Temporal / Memory / Oneiric candidate — NOT authority",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/HistoricalTimeAssertion"
+    },
+    {
+      "$ref": "#/$defs/ImportAnchorEvidence"
+    },
+    {
+      "$ref": "#/$defs/EvidenceAvailability"
+    },
+    {
+      "$ref": "#/$defs/CognitiveCommitment"
+    },
+    {
+      "$ref": "#/$defs/SalienceHint"
+    },
+    {
+      "$ref": "#/$defs/MemoryAnnotation"
+    },
+    {
+      "$ref": "#/$defs/OneiricReview"
+    },
+    {
+      "$ref": "#/$defs/ContinuityCheckpoint"
+    },
+    {
+      "$ref": "#/$defs/HistoryCommitRequest"
+    },
+    {
+      "$ref": "#/$defs/HistoryCommitReceipt"
+    }
+  ],
+  "$defs": {
+    "Ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/#@+-]{0,255}$"
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "Reason": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{0,63}$"
+    },
+    "HistoricalTimeAssertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "source_event_ref",
+        "claimed_time_token",
+        "source_clock_domain_ref",
+        "timestamp_format",
+        "time_quality",
+        "uncertainty_ms",
+        "assertion_kind",
+        "measured_by_chronograf"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "HistoricalTimeAssertion"
+        },
+        "source_event_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "claimed_time_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^[A-Za-z0-9:TZ.+-]+$"
+        },
+        "source_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "timestamp_format": {
+          "enum": [
+            "LEGACY_POSIX_SECONDS",
+            "ISO8601_SOURCE",
+            "MONOTONIC_TICKS",
+            "LOGICAL_COUNTER"
+          ]
+        },
+        "time_quality": {
+          "enum": [
+            "UNATTESTED",
+            "SOURCE_REPORTED",
+            "UNKNOWN"
+          ]
+        },
+        "uncertainty_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assertion_kind": {
+          "const": "HISTORICAL_EVENT_TIME_CLAIM"
+        },
+        "measured_by_chronograf": {
+          "const": false
+        }
+      }
+    },
+    "ImportAnchorEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "historical_assertion_ref",
+        "anchor_namespace_id",
+        "anchor_handle_uint64_dec",
+        "time_atom_sha256_hex",
+        "measured_clock_domain_ref",
+        "measured_at_ms",
+        "anchor_purpose",
+        "anchor_issuer_ref",
+        "anchor_record_proof_ref",
+        "verification_state"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "ImportAnchorEvidence"
+        },
+        "historical_assertion_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "anchor_namespace_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "anchor_handle_uint64_dec": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$"
+        },
+        "time_atom_sha256_hex": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "measured_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "measured_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "anchor_purpose": {
+          "const": "IMPORT_OR_RECEIPT_TIME"
+        },
+        "anchor_issuer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "anchor_record_proof_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "verification_state": {
+          "const": "UNVERIFIED_REFERENCE_ONLY"
+        }
+      }
+    },
+    "EvidenceAvailability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "evidence_ref",
+        "content_sha256",
+        "reported_state",
+        "reason_code",
+        "retention_policy_ref",
+        "affected_storage_locations",
+        "assessment_clock_domain_ref",
+        "assessed_at_ms",
+        "proof_ref",
+        "verification_state"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "EvidenceAvailability"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "reported_state": {
+          "enum": [
+            "AVAILABLE",
+            "WITHHELD",
+            "MISSING",
+            "REDACTED",
+            "ERASED"
+          ]
+        },
+        "reason_code": {
+          "$ref": "#/$defs/Reason"
+        },
+        "retention_policy_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "affected_storage_locations": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "L1_VAULT",
+              "L2_LINK",
+              "L3_INDEX",
+              "L4_VIEW",
+              "CACHE",
+              "REPLICA",
+              "BACKUP"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "assessment_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "assessed_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "proof_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verification_state": {
+          "const": "REPORTED_NOT_ATTESTED"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "reported_state": {
+                "enum": [
+                  "REDACTED",
+                  "ERASED"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "retention_policy_ref": {
+                "$ref": "#/$defs/Ref"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CognitiveCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "goal_ref",
+        "admission_ref",
+        "commitment_kind",
+        "subject_ref",
+        "delta_payload_sha256",
+        "assessment",
+        "knowledge_clock_domain_ref",
+        "knowledge_at_ms",
+        "provenance_class",
+        "physical_milestone_verified"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "CognitiveCommitment"
+        },
+        "goal_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "admission_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "commitment_kind": {
+          "enum": [
+            "DECISION",
+            "LEARNING_DELTA",
+            "CORRECTION",
+            "MILESTONE_CANDIDATE"
+          ]
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "delta_payload_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "assessment": {
+          "enum": [
+            "SUPPORTED",
+            "REFUTED",
+            "UNRESOLVED"
+          ]
+        },
+        "knowledge_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "knowledge_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "provenance_class": {
+          "enum": [
+            "DERIVED",
+            "SYNTHETIC_REVIEW"
+          ]
+        },
+        "physical_milestone_verified": {
+          "const": false
+        }
+      }
+    },
+    "SalienceHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "source_event_ref",
+        "previous_hint_ref",
+        "salience_band",
+        "confidence_state",
+        "reason_code",
+        "knowledge_clock_domain_ref",
+        "knowledge_at_ms",
+        "physical_verification"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "SalienceHint"
+        },
+        "source_event_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "previous_hint_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "salience_band": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "confidence_state": {
+          "const": "PROVISIONAL"
+        },
+        "reason_code": {
+          "$ref": "#/$defs/Reason"
+        },
+        "knowledge_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "knowledge_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "physical_verification": {
+          "const": "NOT_VERIFIED"
+        }
+      }
+    },
+    "MemoryAnnotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "subject_ref",
+        "about_valid_time_assertion_ref",
+        "assessment",
+        "supersedes_annotation_ref",
+        "knowledge_clock_domain_ref",
+        "knowledge_at_ms",
+        "interpretation_payload_sha256",
+        "provenance_class",
+        "physical_milestone_verified",
+        "projection_only"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "MemoryAnnotation"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "about_valid_time_assertion_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assessment": {
+          "enum": [
+            "SUPPORTED",
+            "REFUTED",
+            "UNRESOLVED"
+          ]
+        },
+        "supersedes_annotation_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knowledge_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "knowledge_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "interpretation_payload_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "provenance_class": {
+          "enum": [
+            "DERIVED",
+            "SYNTHETIC_REVIEW"
+          ]
+        },
+        "physical_milestone_verified": {
+          "const": false
+        },
+        "projection_only": {
+          "const": true
+        }
+      }
+    },
+    "OneiricReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "work_goal_ref",
+        "source_event_ref",
+        "prior_annotation_ref",
+        "simulated_scene_refs",
+        "assessment",
+        "review_outcome",
+        "provenance_class",
+        "knowledge_clock_domain_ref",
+        "knowledge_at_ms",
+        "physical_milestone_verified",
+        "history_committed"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "OneiricReview"
+        },
+        "work_goal_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "source_event_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "prior_annotation_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "simulated_scene_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "assessment": {
+          "enum": [
+            "SUPPORTED",
+            "REFUTED",
+            "UNRESOLVED"
+          ]
+        },
+        "review_outcome": {
+          "enum": [
+            "REVIEW_COMPLETED",
+            "REVIEW_ABORTED",
+            "REVIEW_INCONCLUSIVE"
+          ]
+        },
+        "provenance_class": {
+          "enum": [
+            "SYNTHETIC_REPLAY",
+            "DERIVED_REAPPRAISAL"
+          ]
+        },
+        "knowledge_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "knowledge_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "physical_milestone_verified": {
+          "const": false
+        },
+        "history_committed": {
+          "const": false
+        }
+      }
+    },
+    "ContinuityCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "life_id",
+        "life_binding_ref",
+        "history_watermark_ref",
+        "last_commit_receipt_ref",
+        "checkpoint_kind",
+        "source_root",
+        "policy_revision",
+        "work_state_digest",
+        "memory_projection_digest",
+        "knowledge_clock_domain_ref",
+        "knowledge_at_ms",
+        "recovery_hint_only",
+        "restores_grants"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "ContinuityCheckpoint"
+        },
+        "life_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "life_binding_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "history_watermark_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_commit_receipt_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "checkpoint_kind": {
+          "enum": [
+            "PROVISIONAL_NONCANONICAL",
+            "LEDGER_BACKED_CLAIM"
+          ]
+        },
+        "source_root": {
+          "$ref": "#/$defs/Digest"
+        },
+        "policy_revision": {
+          "$ref": "#/$defs/Ref"
+        },
+        "work_state_digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "memory_projection_digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knowledge_clock_domain_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "knowledge_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "recovery_hint_only": {
+          "const": true
+        },
+        "restores_grants": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "checkpoint_kind": {
+                "const": "PROVISIONAL_NONCANONICAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "life_id": {
+                "type": "null"
+              },
+              "life_binding_ref": {
+                "type": "null"
+              },
+              "history_watermark_ref": {
+                "type": "null"
+              },
+              "last_commit_receipt_ref": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "checkpoint_kind": {
+                "const": "LEDGER_BACKED_CLAIM"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "life_id": {
+                "$ref": "#/$defs/Ref"
+              },
+              "life_binding_ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "history_watermark_ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "last_commit_receipt_ref": {
+                "$ref": "#/$defs/Ref"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "HistoryCommitRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "request_id",
+        "idempotency_key",
+        "life_id",
+        "life_binding_ref",
+        "life_activation_epoch",
+        "runtime_instance_id",
+        "writer_role_lease_ref",
+        "effect_request_ref",
+        "effect_gate_decision_ref",
+        "source_root",
+        "policy_revision",
+        "context_revision",
+        "payload_kind",
+        "payload_ref",
+        "payload_sha256",
+        "historical_time_assertion_ref",
+        "import_anchor_evidence_ref"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "HistoryCommitRequest"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/Ref"
+        },
+        "life_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "life_binding_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "life_activation_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "runtime_instance_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "writer_role_lease_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "effect_request_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "effect_gate_decision_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "source_root": {
+          "$ref": "#/$defs/Digest"
+        },
+        "policy_revision": {
+          "$ref": "#/$defs/Ref"
+        },
+        "context_revision": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payload_kind": {
+          "enum": [
+            "LEGACY_IMPORT",
+            "MEMORY_ANNOTATION",
+            "COGNITIVE_COMMITMENT",
+            "ONEIRIC_REVIEW",
+            "EVIDENCE_AVAILABILITY"
+          ]
+        },
+        "payload_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "historical_time_assertion_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "import_anchor_evidence_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "payload_kind": {
+                "const": "LEGACY_IMPORT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "historical_time_assertion_ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "import_anchor_evidence_ref": {
+                "$ref": "#/$defs/Ref"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "historical_time_assertion_ref": {
+                "type": "null"
+              },
+              "import_anchor_evidence_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "HistoryCommitReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "producer_ref",
+        "evidence_refs",
+        "grants_authority",
+        "request_id",
+        "idempotency_key",
+        "request_sha256",
+        "receipt_status",
+        "reporter_class",
+        "committed_chronon_ref",
+        "history_watermark_ref",
+        "recorded_anchor_ref",
+        "writer_receipt_ref",
+        "reason_code"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd_temporal_memory_v0.1-candidate"
+        },
+        "record_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "producer_ref": {
+          "$ref": "#/$defs/Ref"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "record_type": {
+          "const": "HistoryCommitReceipt"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Ref"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/Ref"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "receipt_status": {
+          "enum": [
+            "COMMITTED",
+            "REJECTED",
+            "NOT_CONFIRMED"
+          ]
+        },
+        "reporter_class": {
+          "enum": [
+            "WRITER_CLAIM",
+            "REQUESTER_OBSERVATION"
+          ]
+        },
+        "committed_chronon_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "history_watermark_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recorded_anchor_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "writer_receipt_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_code": {
+          "$ref": "#/$defs/Reason"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "receipt_status": {
+                "const": "COMMITTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reporter_class": {
+                "const": "WRITER_CLAIM"
+              },
+              "committed_chronon_ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "history_watermark_ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "recorded_anchor_ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "writer_receipt_ref": {
+                "$ref": "#/$defs/Ref"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "committed_chronon_ref": {
+                "type": "null"
+              },
+              "history_watermark_ref": {
+                "type": "null"
+              },
+              "recorded_anchor_ref": {
+                "type": "null"
+              },
+              "writer_receipt_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

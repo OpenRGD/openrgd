@@ -1,0 +1,23 @@
+{
+  "package": "openrgd-temporal-memory-contracts",
+  "version": "0.1.0",
+  "abi": "OPENRGD_TEMPORAL_MEMORY_ONEIRIC_ABI_V0.1",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "authority_implementation": "NOT_PROVIDED",
+  "source_base": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "related_core_b": "55a034ceb1cdaab8bed6848fcdde85c9436bc9e0",
+  "related_core_c": "fa5e8ff713a28b69b7d39b2c18e8c9e0f6c72ee0",
+  "related_cog_adapter": "877a450cffb4ce10d2891ceaf4e6701f4a6709c1",
+  "promotion_requires": [
+    "Chronograf and Physics/history ownership review",
+    "real qualified-time anchor and history writer receipt implementation",
+    "real Memory/Oneiric producer-consumer evidence",
+    "privacy erasure/retention propagation and access review",
+    "identity and effect gate verification",
+    "explicit governance acceptance"
+  ]
+}
