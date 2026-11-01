@@ -1,0 +1,38 @@
+{
+  "schema_version": "openrgd_p0_source_inventory_v0.1-review",
+  "as_of": "2026-11-01",
+  "normative": false,
+  "authority": "REVIEW_COORDINATION_ONLY",
+  "github_sources": [
+    {"id":"core-main","repository":"OpenRGD/openrgd","ref":"main","commit":"afe1a831b950a4e6560f0285a0103fc4eaa343b7","state":"MAIN_BASELINE","verification":"LIVE_BRANCH_METADATA_AND_SOURCE_REVIEW","consumer":"COG-02/C0/C1 pinned Core"},
+    {"id":"core-b","repository":"OpenRGD/openrgd","pr":11,"commit":"55a034ceb1cdaab8bed6848fcdde85c9436bc9e0","state":"DRAFT_CANDIDATE","normative":false,"runtime_implemented":false,"verification":"SCHEMA_SOURCE_READ","consumer":"new ABI consumer still pending"},
+    {"id":"core-review","repository":"OpenRGD/openrgd","pr":10,"commit":"8f2056300426d253ab78f723b55b2eeca5a04b10","state":"DRAFT_REVIEW"},
+    {"id":"core-handoff","repository":"OpenRGD/openrgd","pr":8,"commit":"36a3d0f6df1884faa4ea1a92568f31c4014f2057","state":"DRAFT_REVIEW"},
+    {"id":"feedback","repository":"OpenRGD/openrgd","pr":6,"commit":"8de03266b61d4acb6a431ccf6e21ce621ece572b","state":"DRAFT_CANDIDATE"},
+    {"id":"visual-assets","repository":"OpenRGD/openrgd","pr":7,"commit":"206ba7280f508108575e4a780b0da3bcd91918a8","state":"DRAFT_CANDIDATE"},
+    {"id":"cog-01","repository":"OpenRGD/rgd-cognition","pr":1,"commit":"aef3cd4be6c9405d3c8069d90b031484e11d6f4b","state":"DRAFT_RUNTIME_LAB","depends_on":[]},
+    {"id":"cog-02","repository":"OpenRGD/rgd-cognition","pr":3,"commit":"940757af306dc538d3f3e0c70fed5f0671024be9","state":"DRAFT_RUNTIME_LAB","depends_on":["cog-01","core-main"]},
+    {"id":"cog-c0","repository":"OpenRGD/rgd-cognition","pr":4,"commit":"a964c2f3bd65969267b9d6ca14b5eb8557f40f35","state":"DRAFT_RUNTIME_LAB","depends_on":["cog-02"]},
+    {"id":"cog-c1","repository":"OpenRGD/rgd-cognition","pr":5,"commit":"a8ae925c9cacbce8bd7a6db01833d4159445d47a","state":"DRAFT_RUNTIME_LAB","depends_on":["cog-c0"],"verification":"LIVE_PR_METADATA_AND_C0_SOURCE_READ","source_evidence":"SYNTHETIC_IMU_NOT_LIVE_DEPLOYMENT"}
+  ],
+  "archives": [
+    {"id":"public-ready","filename":"openrgd-v0.2-public-ready-review.zip","sha256":"1948371c6eca5c4b1667627ab3866f98b251d67f4548c7d6b76e485320dd64ac","source_kind":"UPLOADED_REVIEW_ARCHIVE","in_main":false,"members":"local-eight-v1"},
+    {"id":"extension","filename":"openrgd-v0.2-extension-architecture-review.zip","sha256":"cbd8e7d8a2eaaa05c89683da482771f2cb6e71a4c72cb52aa641c834b6923018","source_kind":"UPLOADED_REVIEW_ARCHIVE","in_main":false,"members":"local-eight-v1"},
+    {"id":"command-plugin","filename":"openrgd-v0.2-command-plugin-abi-v0.1-review.zip","sha256":"d82441d65f6ac0c738c37e2269affddeb9dff13edda8b3b406c871561ac1dd04","source_kind":"UPLOADED_REVIEW_ARCHIVE","in_main":false,"members":"local-eight-v1"},
+    {"id":"somatic","filename":"openrgd-v0.2.1-somatic-runtime-alignment-review.zip","sha256":"0d7c44970c25ae09e281fb485c5f1121e0ec7dc50ea4ab0c89fb628997c90f0f","source_kind":"UPLOADED_REVIEW_ARCHIVE","in_main":false,"members":"local-eight-v1","member_overrides":{"spec/00_core/kernel-modules/safety/safety_kernel.jsonc":{"sha256":"20d2fc4696470172e9083ee7e1b5474d63eab04b5f2bb119163d3525cc94dcd8","bytes":4804},"spec/00_core/kernel_modules_registry.jsonc":{"sha256":"f5d1a6b764e043b04ddb3b57ef36a694524aa1fb978e8779bd8985320d58e089","bytes":8963}}}
+  ],
+  "member_sets": {
+    "local-eight-v1": [
+      {"path":"spec/00_core/kernel-modules/safety/safety_kernel.jsonc","sha256":"d7b8441e609371e01097b53211d8346076e38f3e9c2f713de8f427d94206d8a2","bytes":4327},
+      {"path":"spec/00_core/kernel-modules/life/life_kernel.jsonc","sha256":"09ea745f9d5113dc066221c09285ca52416b19bbd5b9707360c874306703f940","bytes":4138},
+      {"path":"spec/00_core/kernel-modules/work/work_kernel.jsonc","sha256":"3d08affa8d3cdc7b03bf095aec40fa34aff65e1f25325be97bbc49314a58efae","bytes":4849},
+      {"path":"spec/00_core/kernel-modules/relation/relation_kernel.jsonc","sha256":"39ef454a8c2f04b804382f06e0a27d01cd36bf559b87453ce9e76fddcac118f4","bytes":4694},
+      {"path":"spec/00_core/kernel-modules/imagination/imagination_kernel.jsonc","sha256":"b4c1156c727bd39637494d3b75035832198efa63acddd424d3025ffb044ffad1","bytes":4385},
+      {"path":"spec/00_core/kernel_modules_registry.jsonc","sha256":"383d8bef24e4f5f7c77090fa3a6288f231e7621c20134914eed93a9ac3121b11","bytes":8948},
+      {"path":"spec/00_core/aion_struct.jsonc","sha256":"b495fe3cca96999cfd123e2e2169c186719626e65beb253bedddbd20834b57f7","bytes":5093},
+      {"path":"spec/00_core/kernel_v3.jsonc","sha256":"9ba4c52ddea54cf8b7c17b08d5dd59c0bd404209917a1c086c5d8080efd26044","bytes":3926}
+    ]
+  },
+  "historical_provenance": {"local_content_recovered":true,"original_eight_git_blobs_equivalence":"NOT_VERIFIED","accepted_microkernel_abi":false,"note":"Byte fingerprints of uploaded revisions, not original Git blob SHAs. No raw archive or robot-instance evidence republished."},
+  "pending_families": {"identity":"PR-CORE-C independent candidate work","forge":"OWNER_REVIEW_REQUIRED","temporal_memory":"PR-CORE-D requirements only","oneiric":"C0 synthetic prototype; durable writer absent","world":"PR-CORE-E migration required"}
+}
