@@ -1,0 +1,20 @@
+{
+  "package": "openrgd-identity-contracts",
+  "version": "0.1.0",
+  "abi": "OPENRGD_LIFE_AGENT_RUNTIME_BINDING_ABI_V0.1",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "authority_implementation": "NOT_PROVIDED",
+  "source_base": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "compatible_core_b": "55a034ceb1cdaab8bed6848fcdde85c9436bc9e0",
+  "promotion_requires": [
+    "identity authority and custody review",
+    "cross-repository consumer integration",
+    "temporal/history recovery and revocation review",
+    "distributed fencing implementation and falsification tests",
+    "explicit governance"
+  ]
+}
