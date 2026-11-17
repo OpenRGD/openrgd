@@ -1,0 +1,902 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:contracts:evolution:v0.1-candidate",
+  "title": "OpenRGD Morphological Change Candidate — physical mutation claim and as-built snapshot",
+  "description": "Structural shape only; no issuer, history writer, calibration, physical enrollment or Life authority. NOT normative.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/HardwareMutationEvent"
+    },
+    {
+      "$ref": "#/$defs/AsBuiltRevision"
+    }
+  ],
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "Ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+    },
+    "SlotClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "state",
+        "component_model_ref",
+        "hardware_serial_claim",
+        "condition_claim",
+        "mount_xyz_m",
+        "mount_rpy_rad",
+        "link_refs",
+        "joint_refs",
+        "sensor_refs",
+        "evidence_refs"
+      ],
+      "properties": {
+        "slot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "state": {
+          "enum": [
+            "UNKNOWN",
+            "INSTALLED_REPORTED",
+            "REMOVED_REPORTED"
+          ]
+        },
+        "component_model_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hardware_serial_claim": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "condition_claim": {
+          "enum": [
+            "UNKNOWN",
+            "NOMINAL_REPORTED",
+            "DAMAGED_REPORTED",
+            "REPAIRED_REPORTED",
+            "MODIFIED_REPORTED"
+          ]
+        },
+        "mount_xyz_m": {
+          "anyOf": [
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mount_rpy_rad": {
+          "anyOf": [
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "link_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "joint_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "sensor_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "INSTALLED_REPORTED"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "component_model_ref": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "REMOVED_REPORTED"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "component_model_ref": {
+                "type": "null"
+              },
+              "hardware_serial_claim": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SlotChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "before",
+        "after"
+      ],
+      "properties": {
+        "slot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "before": {
+          "$ref": "#/$defs/SlotClaim"
+        },
+        "after": {
+          "$ref": "#/$defs/SlotClaim"
+        }
+      }
+    },
+    "AsBuiltRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "record_digest",
+        "digest_profile",
+        "robot_instance_ref",
+        "physical_enrollment_ref",
+        "actor_claim_ref",
+        "evidence_refs",
+        "claimed_event_time",
+        "history_commit_receipt_ref",
+        "grants_authority",
+        "physical_execution_authorized",
+        "life_identity_issued",
+        "history_committed",
+        "calibration_verified",
+        "revision_number",
+        "previous_revision_ref",
+        "previous_revision_digest",
+        "triggering_mutation_ref",
+        "design_source_root",
+        "visual_manifest_sha256",
+        "component_slots",
+        "calibration_revision_claim",
+        "calibration_status",
+        "safety_review_required",
+        "evidence_class"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.evolution.v0.1-candidate"
+        },
+        "record_type": {
+          "const": "AsBuiltRevision"
+        },
+        "record_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "record_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "digest_profile": {
+          "const": "CANDIDATE_SORTED_JSON_SHA256_V0"
+        },
+        "robot_instance_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "physical_enrollment_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actor_claim_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "claimed_event_time": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "token",
+            "clock_domain"
+          ],
+          "properties": {
+            "token": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "clock_domain": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "history_commit_receipt_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "physical_execution_authorized": {
+          "const": false
+        },
+        "life_identity_issued": {
+          "const": false
+        },
+        "history_committed": {
+          "const": false
+        },
+        "calibration_verified": {
+          "const": false
+        },
+        "revision_number": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "previous_revision_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "previous_revision_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "triggering_mutation_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "design_source_root": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "visual_manifest_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "component_slots": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/SlotClaim"
+          }
+        },
+        "calibration_revision_claim": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "calibration_status": {
+          "enum": [
+            "UNKNOWN",
+            "REVIEW_REQUIRED"
+          ]
+        },
+        "safety_review_required": {
+          "type": "boolean"
+        },
+        "evidence_class": {
+          "enum": [
+            "OPERATOR_REPORTED_UNVERIFIED",
+            "IMPORTED_SNAPSHOT_UNVERIFIED"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "revision_number": {
+                "const": 0
+              }
+            },
+            "required": [
+              "revision_number"
+            ]
+          },
+          "then": {
+            "properties": {
+              "previous_revision_ref": {
+                "type": "null"
+              },
+              "previous_revision_digest": {
+                "type": "null"
+              },
+              "triggering_mutation_ref": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "revision_number": {
+                "minimum": 1
+              }
+            },
+            "required": [
+              "revision_number"
+            ]
+          },
+          "then": {
+            "properties": {
+              "previous_revision_ref": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+              },
+              "previous_revision_digest": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "triggering_mutation_ref": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+              },
+              "calibration_revision_claim": {
+                "type": "null"
+              },
+              "calibration_status": {
+                "const": "REVIEW_REQUIRED"
+              },
+              "safety_review_required": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "HardwareMutationEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "record_id",
+        "record_digest",
+        "digest_profile",
+        "robot_instance_ref",
+        "physical_enrollment_ref",
+        "actor_claim_ref",
+        "evidence_refs",
+        "claimed_event_time",
+        "history_commit_receipt_ref",
+        "grants_authority",
+        "physical_execution_authorized",
+        "life_identity_issued",
+        "history_committed",
+        "calibration_verified",
+        "before_revision_ref",
+        "before_revision_digest",
+        "after_revision_ref",
+        "after_revision_digest",
+        "design_source_root_before",
+        "design_source_root_after",
+        "visual_manifest_before",
+        "visual_manifest_after",
+        "change_kind",
+        "assertion_stage",
+        "slot_changes",
+        "affected_links",
+        "affected_joints",
+        "affected_sensors",
+        "invalidated_calibration_refs",
+        "requires_calibration_review",
+        "requires_safety_review",
+        "plasticity_governance"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.evolution.v0.1-candidate"
+        },
+        "record_type": {
+          "const": "HardwareMutationEvent"
+        },
+        "record_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "record_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "digest_profile": {
+          "const": "CANDIDATE_SORTED_JSON_SHA256_V0"
+        },
+        "robot_instance_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "physical_enrollment_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actor_claim_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "claimed_event_time": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "token",
+            "clock_domain"
+          ],
+          "properties": {
+            "token": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "clock_domain": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "history_commit_receipt_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "physical_execution_authorized": {
+          "const": false
+        },
+        "life_identity_issued": {
+          "const": false
+        },
+        "history_committed": {
+          "const": false
+        },
+        "calibration_verified": {
+          "const": false
+        },
+        "before_revision_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+        },
+        "before_revision_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "after_revision_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "after_revision_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "design_source_root_before": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "design_source_root_after": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "visual_manifest_before": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "visual_manifest_after": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "change_kind": {
+          "enum": [
+            "INSTALL_COMPONENT",
+            "REMOVE_COMPONENT",
+            "REPLACE_COMPONENT",
+            "RELOCATE_SENSOR",
+            "REPAIR_COMPONENT",
+            "PERMANENT_DEFORMATION",
+            "OTHER_PHYSICAL_MODIFICATION"
+          ]
+        },
+        "assertion_stage": {
+          "enum": [
+            "PROPOSED",
+            "INSTALLED_REPORTED_UNVERIFIED"
+          ]
+        },
+        "slot_changes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/SlotChange"
+          }
+        },
+        "affected_links": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "affected_joints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "affected_sensors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "invalidated_calibration_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "requires_calibration_review": {
+          "const": true
+        },
+        "requires_safety_review": {
+          "const": true
+        },
+        "plasticity_governance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plasticity_policy_ref",
+            "hardware_mutation_policy_ref",
+            "policy_source_root_claim",
+            "human_review_required",
+            "external_authorization_verified"
+          ],
+          "properties": {
+            "plasticity_policy_ref": {
+              "const": "05_evolution/plasticity.jsonc"
+            },
+            "hardware_mutation_policy_ref": {
+              "const": "05_evolution/hardware_mutation.jsonc"
+            },
+            "policy_source_root_claim": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "human_review_required": {
+              "const": true
+            },
+            "external_authorization_verified": {
+              "const": false
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "assertion_stage": {
+                "const": "PROPOSED"
+              }
+            },
+            "required": [
+              "assertion_stage"
+            ]
+          },
+          "then": {
+            "properties": {
+              "after_revision_ref": {
+                "type": "null"
+              },
+              "after_revision_digest": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "assertion_stage": {
+                "const": "INSTALLED_REPORTED_UNVERIFIED"
+              }
+            },
+            "required": [
+              "assertion_stage"
+            ]
+          },
+          "then": {
+            "properties": {
+              "after_revision_ref": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+              },
+              "after_revision_digest": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
+                },
+                "minItems": 1,
+                "maxItems": 64,
+                "uniqueItems": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
