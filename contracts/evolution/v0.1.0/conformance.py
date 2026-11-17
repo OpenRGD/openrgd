@@ -306,12 +306,12 @@ class CandidateEvolutionConformance(unittest.TestCase):
                 after=deepcopy(before)
                 after.update(delta)
                 if sensors:
-                    before["sensor_refs"]=sensors
+                    before["sensor_refs"]=list(sensors)
                 event["slot_changes"]=[{
                     "slot_id":"arm_right_shoulder",
                     "before":before,"after":after
                 }]
-                event["affected_sensors"]=sensors
+                event["affected_sensors"]=list(sensors)
                 seal(event)
                 validate(event)
 
