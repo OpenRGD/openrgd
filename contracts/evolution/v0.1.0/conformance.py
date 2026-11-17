@@ -136,7 +136,7 @@ class CandidateEvolutionConformance(unittest.TestCase):
         # Visual-only change is a different visual manifest revision, not a
         # HardwareMutationEvent or a new AsBuiltRevision.
         proposed = deepcopy(self.event)
-        proposed["slot_changes"][0]["after"] = proposed["slot_changes"][0]["before"]
+        proposed["slot_changes"][0]["after"] = deepcopy(proposed["slot_changes"][0]["before"])
         seal(proposed)
         with self.assertRaisesRegex(ContractError,"VISUAL_OR_EVIDENCE_ONLY_MUTATION"):
             validate(proposed)
@@ -175,8 +175,11 @@ class CandidateEvolutionConformance(unittest.TestCase):
         after=deepcopy(self.after)
         after["revision_number"]=2
         seal(after)
+        event=deepcopy(self.event)
+        event["after_revision_digest"]=after["record_digest"]
+        seal(event)
         with self.assertRaisesRegex(ContractError,"NONSEQUENTIAL_REVISION"):
-            validate_transition(self.before,self.event,after)
+            validate_transition(self.before,event,after)
 
     def test_reordering_and_duplicate_history_fails(self):
         with self.assertRaisesRegex(ContractError,"NO_GENESIS_REVISION"):
