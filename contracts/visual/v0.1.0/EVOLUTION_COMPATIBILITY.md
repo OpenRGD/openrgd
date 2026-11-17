@@ -21,6 +21,19 @@ The canonical repository has all six original `spec/05_evolution/*.jsonc` files,
 
 Core-C Life/identity candidate (PR #13) explicitly distinguishes **exact RGD source_root, physical enrollment, LifeIdentity, RobotLifeBinding, runtime/boot/session** and states that model revision **may change without issuing a new Life only after external binding/context revalidation**. Core-D Temporal/Memory candidate (PR #14) places canonical history/Chronons in external authenticated History writer and derived memories/annotations separately; a timestamp in a package does not prove qualified time or successful durable history commit. These PRs are proposals, not active authority services.
 
+## Three different meanings of plasticity (not interchangeable)
+
+The historical `05_evolution/plasticity.jsonc` addresses *neural/behavioral self-modification and changes in configuration policy*. It is NOT a deformable-material physics contract or a declaration of installed hardware.
+
+The separate `01_foundation/soft_body_dynamics.jsonc` and `soft_materials_library.jsonc` describe **reference** deformable components, elastic modulus, self-healing material examples and passive/active soft-body response. `01_foundation/wear_fatigue_model.jsonc` describes wear/fatigue models. These examples are NOT evidence that Paky-01 physically has smart artificial skin or a self-healing subsystem.
+
+Therefore distinguish:
+1. **Transient elastic/deformable state** — changes with load/temperature and returns without replacing hardware; source design and as-built revision remain the same, runtime telemetry may vary. Renderer may use measured deformation signals ONLY if source and frame are validated, never invent them.
+2. **Persistent morphological change** — a permanently deformed component, wear outside a verified envelope, new shell/limb, sensor relocation, repair or replacement. Create an as-built **mutation event/revision**, with inspection/calibration consequences; changes to ideal design only via explicit versioned model revision.
+3. **Behavioral/neuroplastic learning** — a change to skills, weights, policies or agency, under separate `05_evolution/plasticity` and Agency governance; no CAD mesh update, motor action grant or physical identity alteration follows automatically.
+
+A cosmetic **digital** texture/GLB change is a fourth distinct **visual-only** revision: no proof that physical hardware or appearance has changed.
+
 ## Essential distinction: four independently revisioned dimensions
 
 | Dimension | Immutable/revisioned key | What changes | Who may attest |
