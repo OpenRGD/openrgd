@@ -223,12 +223,20 @@
           "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/@#+-]{0,191}$"
         },
         "before": {
-          "$ref": "#/$defs/SlotClaim"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SlotClaim"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "after": {
           "$ref": "#/$defs/SlotClaim"
         }
-      }
+      },
+      "description": "before:null means a newly recorded component slot absent from the predecessor snapshot; after must be an explicit slot claim. Removed slots remain recorded as REMOVED_REPORTED."
     },
     "AsBuiltRevision": {
       "type": "object",
