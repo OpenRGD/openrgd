@@ -1,0 +1,42 @@
+{
+  "package": "openrgd-evolution-contracts",
+  "version": "0.1.0",
+  "abi": "OPENRGD_EVOLUTION_MORPHOLOGY_ABI_V0.1",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "hardware_access_enabled": false,
+  "mutation_authority_implemented": false,
+  "life_identity_issuer_implemented": false,
+  "history_writer_implemented": false,
+  "physical_calibration_verified": false,
+  "source_base": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "proposal_scope": [
+    "HardwareMutationEvent",
+    "AsBuiltRevision"
+  ],
+  "domain": "05_evolution",
+  "governed_by_legacy_files": [
+    "05_evolution/hardware_mutation.jsonc",
+    "05_evolution/plasticity.jsonc",
+    "05_evolution/genealogy.jsonc"
+  ],
+  "related_candidates": {
+    "visual_assets": "OpenRGD/openrgd PR #7: rgd.visual-assets.v0.1-candidate",
+    "identity": "OpenRGD/openrgd PR #13: CORE-C identity contracts candidate",
+    "temporal_history": "OpenRGD/openrgd PR #14: CORE-D temporal/memory contracts candidate"
+  },
+  "ownership": "external maintenance authority + calibration + Identity/Life + History writer required; not provided",
+  "promotion_requires": [
+    "explicit human governance acceptance and compatibility migration analysis",
+    "source/model and visual revision identity semantics agreed with VIS",
+    "external verified maintenance issuer, physical robot enrollment and idempotent mutation receipts",
+    "calibration invalidation and physically verified as-built reference flow",
+    "independently authenticated Chronograf/History timeline integration",
+    "privacy, signing/canonical JSON and artifact/forge registry agreement",
+    "cross-repository real producer and Console read-only consumer conformance"
+  ],
+  "merge_behavior": "PRESERVE_CANDIDATE_STATUS_NO_SPEC_OR_KERNEL_UPDATE"
+}
