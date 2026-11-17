@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:contracts:visual-assets:v0.1-candidate",
+  "title": "OpenRGD Visual Asset Manifest v0.1 (candidate only; not normative)",
+  "description": "Optional, non-actuating mesh/CAD assets bound to exact link frames of an OpenRGD model. Does not establish physical geometry, collision trust or robot readiness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_class",
+    "source_profile_ref",
+    "coordinate_frame",
+    "assets"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "rgd.visual-assets.v0.1-candidate"
+    },
+    "evidence_class": {
+      "enum": [
+        "UPSTREAM_MODEL_REFERENCE_UNVERIFIED",
+        "AS_BUILT_OVERLAY_OPERATOR_REPORTED_UNVERIFIED"
+      ]
+    },
+    "source_profile_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "RGD package source identity, not an installed physical robot identity."
+    },
+    "coordinate_frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "up_axis",
+        "forward_axis",
+        "linear_unit",
+        "angular_unit"
+      ],
+      "properties": {
+        "up_axis": {
+          "enum": [
+            "Z_UP",
+            "Y_UP"
+          ]
+        },
+        "forward_axis": {
+          "enum": [
+            "X_FORWARD",
+            "Z_FORWARD"
+          ]
+        },
+        "linear_unit": {
+          "const": "m"
+        },
+        "angular_unit": {
+          "const": "rad"
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "attribution": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "$ref": "#/$defs/attribution"
+      }
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 800
+    }
+  },
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "scale": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "flat_path": {
+      "type": "string",
+      "maxLength": 220,
+      "pattern": "^assets/(visual|collision|cad)/[A-Za-z0-9_-]+\\.(glb|stl|usd|usda|step|stp)$",
+      "description": "Local, flat, case-sensitive path inside one ZIP package. No URL, symlink, traversal or external reference."
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "link_id",
+        "role",
+        "path",
+        "media_format",
+        "sha256",
+        "size_bytes",
+        "origin_xyz_m",
+        "origin_rpy_rad",
+        "mesh_scale_xyz",
+        "provenance",
+        "license_id"
+      ],
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,79}$"
+        },
+        "link_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,119}$"
+        },
+        "role": {
+          "enum": [
+            "visual_runtime",
+            "visual_source",
+            "collision_preview"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/flat_path"
+        },
+        "media_format": {
+          "enum": [
+            "glb",
+            "stl",
+            "usd",
+            "usda",
+            "step",
+            "stp"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 33554432
+        },
+        "origin_xyz_m": {
+          "$ref": "#/$defs/vec3"
+        },
+        "origin_rpy_rad": {
+          "$ref": "#/$defs/vec3"
+        },
+        "mesh_scale_xyz": {
+          "$ref": "#/$defs/scale"
+        },
+        "provenance": {
+          "enum": [
+            "UPSTREAM_SOURCE",
+            "CONVERTED_FROM_UPSTREAM",
+            "AS_BUILT_OPERATOR_EDIT_UNVERIFIED"
+          ]
+        },
+        "derived_from_asset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,79}$"
+        },
+        "license_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "attribution_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,79}$"
+        },
+        "optional": {
+          "type": "boolean",
+          "default": false
+        },
+        "evidence_ref": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "attribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "license",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,79}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 300,
+          "format": "uri"
+        },
+        "modifications": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
+    }
+  }
+}
