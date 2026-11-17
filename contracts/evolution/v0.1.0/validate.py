@@ -129,6 +129,50 @@ def physical_slot(slot):
     )
 
 
+
+def check_change_kind(kind, before, after, affected_sensors):
+    """Avoid giving a misleading hardware-change label to a different delta.
+
+    It remains an unauthenticated operator claim, not actual hardware proof.
+    Multi-purpose replacements should use OTHER_PHYSICAL_MODIFICATION and
+    independent reviewed evidence instead of a false precise single kind.
+    """
+    before_state = before["state"] if before is not None else None
+    if kind == "INSTALL_COMPONENT":
+        if before_state == "INSTALLED_REPORTED" or after["state"] != "INSTALLED_REPORTED":
+            raise ContractError("CHANGE_KIND_MISMATCH")
+    elif kind == "REMOVE_COMPONENT":
+        if before_state != "INSTALLED_REPORTED" or after["state"] != "REMOVED_REPORTED":
+            raise ContractError("CHANGE_KIND_MISMATCH")
+    elif kind == "REPLACE_COMPONENT":
+        if before_state != "INSTALLED_REPORTED" or after["state"] != "INSTALLED_REPORTED" or \
+           (before["component_model_ref"], before["hardware_serial_claim"]) == \
+           (after["component_model_ref"], after["hardware_serial_claim"]):
+            raise ContractError("CHANGE_KIND_MISMATCH")
+    elif kind == "RELOCATE_SENSOR":
+        if before_state != "INSTALLED_REPORTED" or after["state"] != "INSTALLED_REPORTED" or \
+           not affected_sensors or \
+           (before["component_model_ref"], before["hardware_serial_claim"]) != \
+           (after["component_model_ref"], after["hardware_serial_claim"]) or \
+           (before["mount_xyz_m"], before["mount_rpy_rad"]) == \
+           (after["mount_xyz_m"], after["mount_rpy_rad"]):
+            raise ContractError("CHANGE_KIND_MISMATCH")
+    elif kind == "REPAIR_COMPONENT":
+        if before_state != "INSTALLED_REPORTED" or after["state"] != "INSTALLED_REPORTED" or \
+           (before["component_model_ref"], before["hardware_serial_claim"]) != \
+           (after["component_model_ref"], after["hardware_serial_claim"]) or \
+           before["condition_claim"] == "REPAIRED_REPORTED" or \
+           after["condition_claim"] != "REPAIRED_REPORTED":
+            raise ContractError("CHANGE_KIND_MISMATCH")
+    elif kind == "PERMANENT_DEFORMATION":
+        if before_state != "INSTALLED_REPORTED" or after["state"] != "INSTALLED_REPORTED" or \
+           (before["component_model_ref"], before["hardware_serial_claim"]) != \
+           (after["component_model_ref"], after["hardware_serial_claim"]) or \
+           before["condition_claim"] == "MODIFIED_REPORTED" or \
+           after["condition_claim"] != "MODIFIED_REPORTED":
+            raise ContractError("CHANGE_KIND_MISMATCH")
+
+
 def slots_by_id(revision):
     items = revision["component_slots"]
     result = {}
@@ -185,6 +229,7 @@ def validate(record):
                 raise ContractError("NEW_SLOT_NOT_INSTALLED")
             if before is not None and physical_slot(before) == physical_slot(after):
                 raise ContractError("VISUAL_OR_EVIDENCE_ONLY_MUTATION")
+            check_change_kind(record["change_kind"], before, after, record["affected_sensors"])
             for label, field in (("links", "link_refs"), ("joints", "joint_refs"),
                                  ("sensors", "sensor_refs")):
                 if before is not None:
