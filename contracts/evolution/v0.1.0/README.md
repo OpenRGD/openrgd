@@ -76,7 +76,7 @@ Do not confuse:
 
 ```text
 RGD source_root (design) ---┐
-visual manifest SHA-256 ----┤ 
+visual manifest SHA-256 ----┤
 physical instance ID -------+--> candidate AsBuiltRevision (reported)
 calibration revision claim -┘          |
                                         +--> external safety/commissioning
