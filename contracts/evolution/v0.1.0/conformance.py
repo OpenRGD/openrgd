@@ -276,6 +276,45 @@ class CandidateEvolutionConformance(unittest.TestCase):
         with self.assertRaisesRegex(ContractError,"DELTA_DOES_NOT_MATCH_SNAPSHOTS"):
             validate_transition(self.before,event,self.after)
 
+    def test_hardware_mutation_kind_must_match_physical_delta(self):
+        for kind in ("REMOVE_COMPONENT","REPLACE_COMPONENT","RELOCATE_SENSOR",
+                     "REPAIR_COMPONENT","PERMANENT_DEFORMATION"):
+            with self.subTest(kind=kind):
+                event=deepcopy(self.event)  # UNKNOWN -> INSTALLED is INSTALL, not these kinds
+                event["change_kind"]=kind
+                seal(event)
+                with self.assertRaisesRegex(ContractError,"CHANGE_KIND_MISMATCH"):
+                    validate(event)
+
+    def test_reported_replacement_removal_repair_deformation_and_sensor_relocation(self):
+        installed=deepcopy(self.after["component_slots"][0])
+        cases = [
+            ("REPLACE_COMPONENT", {"hardware_serial_claim":"REPLACEMENT_SERIAL"}, []),
+            ("REMOVE_COMPONENT", {"state":"REMOVED_REPORTED",
+                                  "component_model_ref":None,"hardware_serial_claim":None,
+                                  "condition_claim":"UNKNOWN"}, []),
+            ("REPAIR_COMPONENT", {"condition_claim":"REPAIRED_REPORTED"}, []),
+            ("PERMANENT_DEFORMATION", {"condition_claim":"MODIFIED_REPORTED"}, []),
+            ("RELOCATE_SENSOR", {"mount_xyz_m":[0,0,0.11],
+                                 "sensor_refs":["torso_imu"]}, ["torso_imu"]),
+        ]
+        for kind, delta, sensors in cases:
+            with self.subTest(kind=kind):
+                event=deepcopy(self.event)
+                event["change_kind"]=kind
+                before=deepcopy(installed)
+                after=deepcopy(before)
+                after.update(delta)
+                if sensors:
+                    before["sensor_refs"]=sensors
+                event["slot_changes"]=[{
+                    "slot_id":"arm_right_shoulder",
+                    "before":before,"after":after
+                }]
+                event["affected_sensors"]=sensors
+                seal(event)
+                validate(event)
+
     def test_nonfinite_bounded_input_and_duplicate_json_keys(self):
         with tempfile.TemporaryDirectory() as tmp:
             target=Path(tmp)/"input.json"
