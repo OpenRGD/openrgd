@@ -1,0 +1,18 @@
+{
+  "package": "openrgd-module-publication",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "publication_implemented": false,
+  "scope": "BOUNDED_OFFLINE_PROPOSAL_ONLY",
+  "promotion_requires": [
+    "review EXT-01A and historical schema crosswalk",
+    "real producer manifest and release artifact verification",
+    "reviewed registry publication protocol and authenticated trust metadata",
+    "second independent compatible producer and consumer",
+    "explicit governance acceptance"
+  ]
+}

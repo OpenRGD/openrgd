@@ -1,0 +1,21 @@
+{
+  "architecture": "OPENRGD_EXTENSION_ARCHITECTURE_V0.1",
+  "kind": "command_plugin",
+  "schema_version": "0.1.0",
+  "extension_id": "org.openrgd.examples.motion",
+  "extension_version": "0.1.13.dev0",
+  "description": "Command facade; registration alone never authorizes physical operations.",
+  "distribution": {
+    "name": "rgd-motion",
+    "version": "0.1.13.dev0"
+  },
+  "cli": {
+    "entry_point_group": "rgd.commands",
+    "entry_point_name": "rgd-motion",
+    "entry_point_target": "rgd_motion.cli:attach",
+    "namespace": "motion",
+    "registration_contract": "OPENRGD_COMMAND_PLUGIN_ABI_V0.1",
+    "registration_only": true
+  },
+  "grants_authority": false
+}

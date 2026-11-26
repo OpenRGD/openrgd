@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:extensions:0.1.0:composition",
+  "title": "OpenRGD candidate design-time composition",
+  "description": "Explicit static bindings and descriptor pins; neither an executable deployment nor a software artifact lockfile.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "architecture": {
+      "const": "OPENRGD_EXTENSION_ARCHITECTURE_V0.1"
+    },
+    "kind": {
+      "const": "composition"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "composition_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "maxLength": 200
+    },
+    "purpose": {
+      "const": "design_review"
+    },
+    "manifests": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:openrgd:extensions:0.1.0:manifest"
+      },
+      "maxItems": 64,
+      "minItems": 1
+    },
+    "instances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+            "maxLength": 160
+          },
+          "extension_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+            "maxLength": 200
+          },
+          "extension_version": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*$",
+            "maxLength": 64
+          },
+          "manifest_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "instance_id",
+          "extension_id",
+          "extension_version",
+          "manifest_digest"
+        ]
+      },
+      "maxItems": 128,
+      "minItems": 1
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "consumer": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "instance": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+                "maxLength": 160
+              },
+              "port": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+                "maxLength": 160
+              }
+            },
+            "required": [
+              "instance",
+              "port"
+            ]
+          },
+          "provider": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "instance": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+                "maxLength": 160
+              },
+              "port": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+                "maxLength": 160
+              }
+            },
+            "required": [
+              "instance",
+              "port"
+            ]
+          }
+        },
+        "required": [
+          "consumer",
+          "provider"
+        ]
+      },
+      "maxItems": 2048,
+      "minItems": 0
+    }
+  },
+  "required": [
+    "architecture",
+    "kind",
+    "schema_version",
+    "composition_id",
+    "purpose",
+    "manifests",
+    "instances",
+    "bindings"
+  ]
+}
