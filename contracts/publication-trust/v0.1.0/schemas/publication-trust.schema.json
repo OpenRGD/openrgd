@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:publication-trust:v0.1-candidate",
+  "title": "Candidate scoped artifact inspection and registry review target",
+  "description": "Evidence shapes only; no signing, publisher identity proof or runtime grant.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/WheelInspection"
+    },
+    {
+      "$ref": "#/$defs/RegistryReviewTarget"
+    }
+  ],
+  "$defs": {
+    "WheelInspection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "module_id",
+        "module_version",
+        "proposal_sha256",
+        "slot_id",
+        "artifact_filename",
+        "artifact_sha256",
+        "artifact_size_bytes",
+        "inspection_profile",
+        "file_count",
+        "record_integrity",
+        "embedded_metadata",
+        "entry_point_metadata",
+        "wheel_format",
+        "code_imported",
+        "source_provenance_verified",
+        "build_provenance_verified",
+        "runtime_compatibility_verified",
+        "extension_semantics_verified",
+        "dependency_resolution_verified",
+        "installable",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.wheel-inspection.v0.1-candidate"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "proposal_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "slot_id": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+        },
+        "artifact_filename": {
+          "type": "string",
+          "maxLength": 240,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*\\.whl(?![\\s\\S])"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "artifact_size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "inspection_profile": {
+          "const": "pure-python-wheel-cli-v0.1-candidate"
+        },
+        "file_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "record_integrity": {
+          "const": "VERIFIED_EXACT_SHA256"
+        },
+        "embedded_metadata": {
+          "const": "MATCHED_EXACT_BYTES"
+        },
+        "entry_point_metadata": {
+          "const": "MATCHED_DECLARATION"
+        },
+        "wheel_format": {
+          "const": "VERIFIED_RESTRICTED_PROFILE"
+        },
+        "code_imported": {
+          "const": false
+        },
+        "source_provenance_verified": {
+          "const": false
+        },
+        "build_provenance_verified": {
+          "const": false
+        },
+        "runtime_compatibility_verified": {
+          "const": false
+        },
+        "extension_semantics_verified": {
+          "const": false
+        },
+        "dependency_resolution_verified": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    },
+    "RegistryReviewTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "module_id",
+        "module_version",
+        "publisher_namespace",
+        "proposal_sha256",
+        "inspection_sha256",
+        "disposition",
+        "publication_committed",
+        "installable",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.registry-review-target.v0.1-candidate"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "publisher_namespace": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160,
+          "pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*\\.)+[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+        },
+        "proposal_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "inspection_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "disposition": {
+          "enum": [
+            "REVIEWED_CANDIDATE",
+            "WITHDRAWN"
+          ]
+        },
+        "publication_committed": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "package": "openrgd-publication-trust",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "publication_implemented": false,
+  "scope": "RESTRICTED_WHEEL_INSPECTION_AND_REVIEW_TARGET_ONLY",
+  "promotion_requires": [
+    "independent review of trust profile and key custody",
+    "authenticated source and builder provenance",
+    "actual immutable release transaction and catalog",
+    "complete host/dependency/extension semantics review",
+    "real second producer and consumer conformance",
+    "explicit maintainer acceptance"
+  ]
+}
