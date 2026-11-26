@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:command-plugin:0.1.0",
+  "title": "OpenRGD command facade descriptor V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "architecture": {
+      "const": "OPENRGD_EXTENSION_ARCHITECTURE_V0.1"
+    },
+    "kind": {
+      "const": "command_plugin"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "extension_id": {
+      "allOf": [
+        {
+          "type": "string",
+          "maxLength": 160,
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+        },
+        {
+          "pattern": "\\."
+        }
+      ]
+    },
+    "extension_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 160,
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "entry_point_group": {
+          "const": "rgd.commands"
+        },
+        "entry_point_name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+          "maxLength": 160
+        },
+        "entry_point_target": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*:[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$",
+          "maxLength": 256
+        },
+        "namespace": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+          "maxLength": 160
+        },
+        "registration_contract": {
+          "const": "OPENRGD_COMMAND_PLUGIN_ABI_V0.1"
+        },
+        "registration_only": {
+          "const": true
+        }
+      },
+      "required": [
+        "entry_point_group",
+        "entry_point_name",
+        "entry_point_target",
+        "namespace",
+        "registration_contract",
+        "registration_only"
+      ]
+    },
+    "grants_authority": {
+      "const": false
+    }
+  },
+  "required": [
+    "architecture",
+    "kind",
+    "schema_version",
+    "extension_id",
+    "extension_version",
+    "description",
+    "distribution",
+    "cli",
+    "grants_authority"
+  ]
+}

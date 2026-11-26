@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:extensions:0.1.0:manifest",
+  "title": "OpenRGD candidate extension manifest",
+  "description": "Declarative metadata, not a permission grant, code loader, deployment specification or conformance certificate.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "architecture": {
+      "const": "OPENRGD_EXTENSION_ARCHITECTURE_V0.1"
+    },
+    "kind": {
+      "const": "extension_manifest"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "extension_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "maxLength": 200
+    },
+    "extension_version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*$",
+      "maxLength": 64
+    },
+    "extension_kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "python_package",
+            "native_library",
+            "native_binary",
+            "service",
+            "model",
+            "data",
+            "device_firmware"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*$",
+          "maxLength": 64
+        },
+        "evidence_status": {
+          "enum": [
+            "illustrative",
+            "declared",
+            "conformance_tested"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "name",
+        "version",
+        "evidence_status"
+      ]
+    },
+    "provides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "port": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+            "maxLength": 160
+          },
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+            "maxLength": 200
+          },
+          "contract": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_.:/-]*$",
+                "maxLength": 200
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*$",
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "id",
+              "version"
+            ]
+          },
+          "semantic_profile": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "port",
+          "capability",
+          "contract",
+          "semantic_profile"
+        ]
+      },
+      "maxItems": 128,
+      "minItems": 0
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "port": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+            "maxLength": 160
+          },
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+            "maxLength": 200
+          },
+          "contract": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_.:/-]*$",
+                "maxLength": 200
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*$",
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "id",
+              "version"
+            ]
+          },
+          "semantic_profile": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+            "maxLength": 200
+          },
+          "optional": {
+            "type": "boolean"
+          },
+          "phase": {
+            "enum": [
+              "startup",
+              "runtime"
+            ]
+          }
+        },
+        "required": [
+          "port",
+          "capability",
+          "contract",
+          "semantic_profile",
+          "optional",
+          "phase"
+        ]
+      },
+      "maxItems": 128,
+      "minItems": 0
+    },
+    "permissions_requested": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+        "maxLength": 200
+      },
+      "maxItems": 64,
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requested_effects": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "observe",
+              "propose",
+              "submit_action",
+              "actuate",
+              "veto",
+              "safe_stop"
+            ]
+          },
+          "maxItems": 6,
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "required": [
+        "requested_effects",
+        "grants_authority"
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "host": {
+          "enum": [
+            "none",
+            "core_cli",
+            "external_runtime"
+          ]
+        },
+        "isolation": {
+          "enum": [
+            "none",
+            "in_process",
+            "separate_process",
+            "container",
+            "remote_service",
+            "device"
+          ]
+        },
+        "realtime": {
+          "enum": [
+            "not_realtime",
+            "soft_realtime_target",
+            "hard_realtime_target"
+          ]
+        }
+      },
+      "required": [
+        "host",
+        "isolation",
+        "realtime"
+      ]
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "replacement": {
+          "enum": [
+            "restart_required",
+            "quiesce_required",
+            "safe_state_required",
+            "offline_only"
+          ]
+        },
+        "on_failure": {
+          "enum": [
+            "refuse_activation",
+            "isolate_component",
+            "request_safe_state"
+          ]
+        }
+      },
+      "required": [
+        "replacement",
+        "on_failure"
+      ]
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "entry_point_group": {
+          "const": "rgd.commands"
+        },
+        "entry_point_name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+          "maxLength": 160
+        },
+        "entry_point_target": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*:[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$",
+          "maxLength": 256
+        },
+        "namespace": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+          "maxLength": 160
+        },
+        "registration_contract": {
+          "const": "OPENRGD_COMMAND_PLUGIN_ABI_V0.1"
+        },
+        "registration_only": {
+          "const": true
+        }
+      },
+      "required": [
+        "entry_point_group",
+        "entry_point_name",
+        "entry_point_target",
+        "namespace",
+        "registration_contract",
+        "registration_only"
+      ]
+    },
+    "annotations": {
+      "type": "object",
+      "maxProperties": 32,
+      "patternProperties": {
+        "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*\\.[a-z0-9]+(?:[._-][a-z0-9]+)*$": {
+          "type": "string",
+          "maxLength": 1024
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "architecture",
+    "kind",
+    "schema_version",
+    "extension_id",
+    "extension_version",
+    "extension_kind",
+    "description",
+    "implementation",
+    "provides",
+    "requires",
+    "permissions_requested",
+    "authority",
+    "execution",
+    "lifecycle"
+  ]
+}

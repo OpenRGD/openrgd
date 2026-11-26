@@ -1,0 +1,72 @@
+{
+  "architecture": "OPENRGD_EXTENSION_ARCHITECTURE_V0.1",
+  "kind": "extension_manifest",
+  "schema_version": "0.1.0",
+  "extension_id": "org.openrgd.examples.somatic-runtime",
+  "extension_version": "0.1.0.dev0",
+  "extension_kind": "runtime.somatic",
+  "description": "Illustrative native Somatic Runtime execution host; no Rust implementation or Motion-to-Somatic wire contract is asserted.",
+  "implementation": {
+    "kind": "native_binary",
+    "name": "openrgd-somatic-runtime",
+    "version": "0.1.0.dev0",
+    "evidence_status": "illustrative"
+  },
+  "provides": [
+    {
+      "port": "execution_status",
+      "capability": "org.openrgd.examples.somatic.execution_status",
+      "contract": {
+        "id": "openrgd.examples.somatic.execution_status",
+        "version": "0.1.0-candidate"
+      },
+      "semantic_profile": "org.openrgd.examples.somatic.execution.v1"
+    }
+  ],
+  "requires": [
+    {
+      "port": "body_projection",
+      "capability": "org.openrgd.examples.body.somatic_projection",
+      "contract": {
+        "id": "openrgd.examples.body.somatic_projection",
+        "version": "0.1.0-candidate"
+      },
+      "semantic_profile": "org.openrgd.examples.somatic.projection.v1",
+      "optional": false,
+      "phase": "startup"
+    },
+    {
+      "port": "authorized_motion",
+      "capability": "org.openrgd.examples.motion.authorized_execution",
+      "contract": {
+        "id": "openrgd.examples.motion.authorized_execution",
+        "version": "0.1.0-candidate"
+      },
+      "semantic_profile": "org.openrgd.examples.somatic.motion_handoff.v1",
+      "optional": false,
+      "phase": "runtime"
+    }
+  ],
+  "permissions_requested": [],
+  "authority": {
+    "requested_effects": [
+      "submit_action",
+      "veto",
+      "safe_stop"
+    ],
+    "grants_authority": false
+  },
+  "execution": {
+    "host": "external_runtime",
+    "isolation": "separate_process",
+    "realtime": "hard_realtime_target"
+  },
+  "lifecycle": {
+    "replacement": "safe_state_required",
+    "on_failure": "request_safe_state"
+  },
+  "annotations": {
+    "openrgd.note": "The body projection and motion handoff IDs are illustrative placeholders; they are not frozen contracts.",
+    "openrgd.critical_path": "No cognition, persistent Chronon/database write or command-plugin execution belongs in the real-time loop."
+  }
+}

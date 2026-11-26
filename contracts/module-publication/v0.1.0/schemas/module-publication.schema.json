@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:module-publication:v0.1-candidate",
+  "title": "OpenRGD module manifest and release proposal (candidate)",
+  "description": "A publication envelope referencing existing extension and CLI descriptors; not a catalog entry or deployment contract.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ModuleManifest"
+    },
+    {
+      "$ref": "#/$defs/ReleaseProposal"
+    }
+  ],
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "LocalKey": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+    },
+    "DescriptorRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 240,
+          "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*/)*[A-Za-z0-9][A-Za-z0-9_.-]*\\.json(?![\\s\\S])"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Digest"
+        }
+      }
+    },
+    "ArtifactSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "artifact_kind",
+        "media_type",
+        "platform_profile",
+        "package_name",
+        "package_version",
+        "extension_descriptor_paths"
+      ],
+      "properties": {
+        "slot_id": {
+          "$ref": "#/$defs/LocalKey"
+        },
+        "artifact_kind": {
+          "enum": [
+            "python_wheel",
+            "native_binary",
+            "native_library",
+            "data_bundle",
+            "model"
+          ]
+        },
+        "media_type": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-z0-9][a-z0-9.+-]*/[a-z0-9][a-z0-9.+-]*(?![\\s\\S])"
+        },
+        "platform_profile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "package_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "package_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "extension_descriptor_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        }
+      }
+    },
+    "FacadeBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descriptor",
+        "extension_descriptor_path",
+        "artifact_slot_id"
+      ],
+      "properties": {
+        "descriptor": {
+          "$ref": "#/$defs/DescriptorRef"
+        },
+        "extension_descriptor_path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "artifact_slot_id": {
+          "$ref": "#/$defs/LocalKey"
+        }
+      }
+    },
+    "SourceClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_uri",
+        "git_commit"
+      ],
+      "properties": {
+        "repository_uri": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^https://[A-Za-z0-9][A-Za-z0-9.-]*(?::[0-9]+)?/[A-Za-z0-9._/-]+(?![\\s\\S])"
+        },
+        "git_commit": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})(?![\\s\\S])"
+        }
+      }
+    },
+    "ArtifactCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "slot_id": {
+          "$ref": "#/$defs/LocalKey"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
+    "ModuleManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "module_id",
+        "module_version",
+        "display_name",
+        "functional_roles",
+        "extension_descriptors",
+        "command_facades",
+        "artifact_slots",
+        "dependencies",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.module-manifest.v0.1-candidate"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "functional_roles": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/FunctionalRoles"
+        },
+        "extension_descriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DescriptorRef"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "command_facades": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FacadeBinding"
+          },
+          "minItems": 0,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "artifact_slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactSlot"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleReleaseKey"
+          },
+          "minItems": 0,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    },
+    "ReleaseProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "module_id",
+        "module_version",
+        "manifest_sha256",
+        "source_claim",
+        "artifact_commitments",
+        "publication_status",
+        "publisher_verified",
+        "source_commit_verified",
+        "artifact_format_verified",
+        "installable",
+        "grants_authority",
+        "extension_semantics_verified",
+        "dependency_resolution_verified"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.module-release-proposal.v0.1-candidate"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "source_claim": {
+          "$ref": "#/$defs/SourceClaim"
+        },
+        "artifact_commitments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactCommitment"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "publication_status": {
+          "const": "review_required"
+        },
+        "publisher_verified": {
+          "const": false
+        },
+        "source_commit_verified": {
+          "const": false
+        },
+        "artifact_format_verified": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        },
+        "extension_semantics_verified": {
+          "const": false
+        },
+        "dependency_resolution_verified": {
+          "const": false
+        }
+      }
+    }
+  }
+}

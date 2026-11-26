@@ -1,0 +1,74 @@
+{
+  "architecture": "OPENRGD_EXTENSION_ARCHITECTURE_V0.1",
+  "kind": "extension_manifest",
+  "schema_version": "0.1.0",
+  "extension_id": "org.openrgd.examples.motion",
+  "extension_version": "0.1.13.dev0",
+  "extension_kind": "motion.provider",
+  "description": "Illustrative composition descriptor; not a shipped or runtime-validated integration.",
+  "implementation": {
+    "kind": "python_package",
+    "name": "rgd-motion",
+    "version": "0.1.13.dev0",
+    "evidence_status": "illustrative"
+  },
+  "provides": [
+    {
+      "port": "trajectory",
+      "capability": "org.openrgd.examples.motion.trajectory",
+      "contract": {
+        "id": "openrgd.examples.motion.trajectory",
+        "version": "0.1.0-candidate"
+      },
+      "semantic_profile": "org.openrgd.examples.so101.joints.degrees.v1"
+    }
+  ],
+  "requires": [
+    {
+      "port": "body",
+      "capability": "org.openrgd.examples.body.model",
+      "contract": {
+        "id": "openrgd.examples.body.model",
+        "version": "0.1.0-candidate"
+      },
+      "semantic_profile": "org.openrgd.examples.so101.model.v1",
+      "phase": "startup",
+      "optional": false
+    },
+    {
+      "port": "anchor",
+      "capability": "org.openrgd.examples.time.anchor",
+      "contract": {
+        "id": "openrgd.examples.time.anchor",
+        "version": "0.1.0-candidate"
+      },
+      "semantic_profile": "org.openrgd.examples.chronograf.lab.v1",
+      "phase": "runtime",
+      "optional": false
+    }
+  ],
+  "permissions_requested": [],
+  "authority": {
+    "requested_effects": [
+      "propose"
+    ],
+    "grants_authority": false
+  },
+  "execution": {
+    "host": "external_runtime",
+    "isolation": "separate_process",
+    "realtime": "not_realtime"
+  },
+  "lifecycle": {
+    "replacement": "restart_required",
+    "on_failure": "refuse_activation"
+  },
+  "cli": {
+    "entry_point_group": "rgd.commands",
+    "entry_point_name": "rgd-motion",
+    "entry_point_target": "rgd_motion.cli:attach",
+    "namespace": "motion",
+    "registration_contract": "OPENRGD_COMMAND_PLUGIN_ABI_V0.1",
+    "registration_only": true
+  }
+}
