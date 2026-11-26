@@ -1,0 +1,540 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:module-vocabulary:v0.1-candidate",
+  "title": "OpenRGD module vocabulary v0.1 candidate",
+  "description": "Reusable, independently versioned classification/identifier fragments. No runtime or authority records.",
+  "$ref": "#/$defs/ModuleClassification",
+  "$defs": {
+    "ModuleId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 200,
+      "pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*\\.){2,}[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])",
+      "description": "New module IDs: lowercase ASCII dotted publisher namespace and local name. Syntax is not proof of ownership. Legacy IDs remain unchanged."
+    },
+    "ReleaseVersion": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 64,
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?![\\s\\S])",
+      "description": "Published module release version: SemVer 2.0.0 subset without build metadata. Package ecosystem versions remain separately exact; no implicit conversion."
+    },
+    "ModuleReleaseKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_id",
+        "module_version"
+      ],
+      "properties": {
+        "module_id": {
+          "$ref": "#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "#/$defs/ReleaseVersion"
+        }
+      }
+    },
+    "FunctionalRole": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "model_tooling",
+          "description": "Authoring, validation, compilation or static model exchange."
+        },
+        {
+          "const": "distribution",
+          "description": "Catalog, release and installation tooling."
+        },
+        {
+          "const": "host_management",
+          "description": "Host orchestration, process or resource coordination."
+        },
+        {
+          "const": "acquisition",
+          "description": "Source-owner acquisition or source-authored samples."
+        },
+        {
+          "const": "evidence_management",
+          "description": "Observation references, integrity, provenance and controlled evidence resolution."
+        },
+        {
+          "const": "perception",
+          "description": "Evidence-linked interpretation or state estimation."
+        },
+        {
+          "const": "calibration",
+          "description": "Measurement, applicability, uncertainty and calibration revision management."
+        },
+        {
+          "const": "temporal",
+          "description": "Qualified time, uncertainty or temporal-domain services."
+        },
+        {
+          "const": "identity",
+          "description": "Identity and binding-related interfaces; does not prove issuer authority."
+        },
+        {
+          "const": "history",
+          "description": "Historical recording or receipt interfaces; does not authorize writing."
+        },
+        {
+          "const": "memory",
+          "description": "Derived memory, retrieval or consolidation."
+        },
+        {
+          "const": "cognition",
+          "description": "Reasoning, attention, agenda or deliberation."
+        },
+        {
+          "const": "motion_planning",
+          "description": "Trajectory or motion proposal generation."
+        },
+        {
+          "const": "somatic_execution",
+          "description": "Body execution or adaptation interfaces; no safety permit implied."
+        },
+        {
+          "const": "safety_enforcement",
+          "description": "Safety-related implementation role; not safety certification."
+        },
+        {
+          "const": "interaction",
+          "description": "Human/agent input, communication or expressive output."
+        },
+        {
+          "const": "observability",
+          "description": "Diagnostics, telemetry display or operational reporting."
+        },
+        {
+          "const": "operator_interface",
+          "description": "Operator-facing control-plane or inspection interface."
+        },
+        {
+          "const": "simulation",
+          "description": "Synthetic world, dynamics or experiment support."
+        }
+      ]
+    },
+    "ArtifactKind": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "source_tree",
+          "description": "Source material, not a ready executable."
+        },
+        {
+          "const": "native_binary",
+          "description": "Standalone native executable bytes; no service or real-time claim."
+        },
+        {
+          "const": "native_library",
+          "description": "Loadable native library artifact, not merely source code described as a library."
+        },
+        {
+          "const": "python_wheel",
+          "description": "Python distribution artifact; importing may execute code."
+        },
+        {
+          "const": "oci_image",
+          "description": "OCI image identified by its applicable OCI descriptor; not an activation policy."
+        },
+        {
+          "const": "model",
+          "description": "Model artifact; loader and format require a separately negotiated profile."
+        },
+        {
+          "const": "data_bundle",
+          "description": "Non-executable by intended profile; parser safety still required."
+        },
+        {
+          "const": "device_firmware",
+          "description": "Device firmware artifact; deployment needs independent reviewed device procedure."
+        }
+      ]
+    },
+    "ExecutionForm": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "native_binary",
+          "description": "Standalone native process executable."
+        },
+        {
+          "const": "native_library",
+          "description": "Native host-loaded code."
+        },
+        {
+          "const": "interpreted_module",
+          "description": "Code requiring an interpreter; process or host-loaded placement specified separately."
+        },
+        {
+          "const": "device_firmware",
+          "description": "Code executed on a device under an independent device authority."
+        },
+        {
+          "const": "none",
+          "description": "No executable entry point in this profile."
+        }
+      ]
+    },
+    "ActivationMode": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "on_demand",
+          "description": "Explicit invocation; discovery or install does not invoke."
+        },
+        {
+          "const": "supervised_service",
+          "description": "Explicitly configured and independently enabled service under a supervisor."
+        },
+        {
+          "const": "host_loaded",
+          "description": "Code loaded by a reviewed host; no implicit import or attach."
+        },
+        {
+          "const": "device_managed",
+          "description": "Independent device commissioning and lifecycle."
+        },
+        {
+          "const": "data_only",
+          "description": "No execution or activation of code."
+        }
+      ]
+    },
+    "ContractMaturity": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "candidate",
+          "description": "Non-normative and reviewable."
+        },
+        {
+          "const": "accepted",
+          "description": "Normative in the approved contract version/profile."
+        },
+        {
+          "const": "deprecated",
+          "description": "Retained for compatibility and provenance; not recommended."
+        },
+        {
+          "const": "historical",
+          "description": "Evidence only; never current contract authority."
+        }
+      ]
+    },
+    "PublicationState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "published",
+          "description": "Release admitted to the named catalog, not a runtime authorization."
+        },
+        {
+          "const": "withdrawn",
+          "description": "No new default selection; explicit retention/migration policy is external."
+        },
+        {
+          "const": "revoked",
+          "description": "Security/trust invalidation in current authenticated catalog metadata; future actions must respect policy."
+        }
+      ]
+    },
+    "ReleaseChannel": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "preview",
+          "description": "Explicit opt-in selection for the catalog policy."
+        },
+        {
+          "const": "stable",
+          "description": "Selection channel under registry policy; no physical safety or contract acceptance inferred."
+        }
+      ]
+    },
+    "CompatibilityState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "unknown",
+          "description": "Not evaluated in the exact host/context."
+        },
+        {
+          "const": "compatible",
+          "description": "Compatible with the evaluated profile only."
+        },
+        {
+          "const": "incompatible",
+          "description": "Profile mismatch."
+        }
+      ]
+    },
+    "InstallationState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "absent",
+          "description": "No local selected installation."
+        },
+        {
+          "const": "staged",
+          "description": "Staged material; no completed installation claim."
+        },
+        {
+          "const": "source_only",
+          "description": "Source material present; not ready executable."
+        },
+        {
+          "const": "present",
+          "description": "Local installation reported present; integrity separate."
+        },
+        {
+          "const": "unknown",
+          "description": "Installation state unavailable."
+        }
+      ]
+    },
+    "IntegrityState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "unknown",
+          "description": "Not checked or unavailable."
+        },
+        {
+          "const": "verified_local",
+          "description": "Local bytes checked within declared scope; not publisher trust."
+        },
+        {
+          "const": "mismatch",
+          "description": "Content mismatch or invalid local integrity."
+        }
+      ]
+    },
+    "ActivationState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "disabled",
+          "description": "Not enabled under host configuration."
+        },
+        {
+          "const": "enabled",
+          "description": "Enabled under local policy; not running or an effect grant."
+        },
+        {
+          "const": "unknown",
+          "description": "Local activation policy unavailable."
+        }
+      ]
+    },
+    "ExecutionState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "not_applicable",
+          "description": "No executing instance for the relevant entry point."
+        },
+        {
+          "const": "stopped",
+          "description": "Not executing."
+        },
+        {
+          "const": "starting",
+          "description": "Start reported in progress."
+        },
+        {
+          "const": "running",
+          "description": "Execution reported; health separate."
+        },
+        {
+          "const": "stopping",
+          "description": "Stop reported in progress."
+        },
+        {
+          "const": "failed",
+          "description": "Execution failed."
+        },
+        {
+          "const": "unknown",
+          "description": "No reliable process/device state."
+        }
+      ]
+    },
+    "HealthState": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "not_applicable",
+          "description": "No health protocol applicable."
+        },
+        {
+          "const": "unknown",
+          "description": "No current qualified health evidence."
+        },
+        {
+          "const": "healthy",
+          "description": "Current scoped health checks pass; no calibration/authority claim."
+        },
+        {
+          "const": "degraded",
+          "description": "Partial operation."
+        },
+        {
+          "const": "unhealthy",
+          "description": "Health checks failed."
+        }
+      ]
+    },
+    "ExecutionClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_form",
+        "activation_mode"
+      ],
+      "properties": {
+        "execution_form": {
+          "$ref": "#/$defs/ExecutionForm"
+        },
+        "activation_mode": {
+          "$ref": "#/$defs/ActivationMode"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "execution_form": {
+                "const": "native_binary"
+              }
+            },
+            "required": [
+              "execution_form"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_mode": {
+                "enum": [
+                  "on_demand",
+                  "supervised_service"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution_form": {
+                "const": "native_library"
+              }
+            },
+            "required": [
+              "execution_form"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_mode": {
+                "enum": [
+                  "host_loaded"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution_form": {
+                "const": "interpreted_module"
+              }
+            },
+            "required": [
+              "execution_form"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_mode": {
+                "enum": [
+                  "on_demand",
+                  "supervised_service",
+                  "host_loaded"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution_form": {
+                "const": "device_firmware"
+              }
+            },
+            "required": [
+              "execution_form"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_mode": {
+                "enum": [
+                  "device_managed"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution_form": {
+                "const": "none"
+              }
+            },
+            "required": [
+              "execution_form"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_mode": {
+                "enum": [
+                  "data_only"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "FunctionalRoles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 19,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/FunctionalRole"
+      }
+    },
+    "ModuleClassification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "functional_roles"
+      ],
+      "properties": {
+        "functional_roles": {
+          "$ref": "#/$defs/FunctionalRoles"
+        }
+      },
+      "description": "Informational discoverability fragment, not a producer manifest, a release, a capability contract or a gate. Extension kind remains extensible."
+    }
+  }
+}

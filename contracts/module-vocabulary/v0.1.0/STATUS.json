@@ -1,0 +1,16 @@
+{
+  "package": "openrgd-module-vocabulary",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "scope": "IDENTITY_AND_CLASSIFICATION_FRAGMENTS_ONLY",
+  "promotion_requires": [
+    "reviewed recovery and versioned crosswalk of historical extension and command plugin candidates",
+    "registry, Console, module producer and runtime owner review",
+    "actual second module producer/consumer reference flow",
+    "explicit governance acceptance"
+  ]
+}
