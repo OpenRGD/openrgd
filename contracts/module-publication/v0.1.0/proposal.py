@@ -142,6 +142,17 @@ def inspect_manifest(manifest_raw: bytes, descriptor_bytes: dict[str, bytes]):
         for path in slot["extension_descriptor_paths"]:
             if path not in exts:
                 raise ProposalError("UNKNOWN_EXTENSION_BINDING")
+            # The initial profile only binds direct legacy implementation forms.
+            # "service" does not identify an artifact; other package compositions
+            # require a reviewed mapping rather than an implicit interpretation.
+            impl = exts[path]["implementation"]
+            expected_kind = {"python_package":"python_wheel","native_binary":"native_binary",
+                             "native_library":"native_library","model":"model",
+                             "data":"data_bundle"}.get(impl["kind"])
+            if expected_kind != slot["artifact_kind"]:
+                raise ProposalError("ARTIFACT_KIND_MAPPING_UNSUPPORTED")
+            if (impl["name"], impl["version"]) != (slot["package_name"], slot["package_version"]):
+                raise ProposalError("ARTIFACT_PACKAGE_DECLARATION_MISMATCH")
             covered.add(path)
     if covered != set(exts):
         raise ProposalError("UNBOUND_EXTENSION")
@@ -176,6 +187,27 @@ def inspect_manifest(manifest_raw: bytes, descriptor_bytes: dict[str, bytes]):
     # performed here. No import/attach, package parser or source fetch.
     return m
 
+def project_command_facade(extension_raw):
+    """Generate new CLI descriptor metadata from the existing extension declaration.
+
+    Existing historical facade bytes need not match this new serialization or
+    description. The linkage checker preserves legacy descriptors unchanged.
+    """
+    ext = parse(extension_raw)
+    validate(EXT, ext, "EXTENSION_SHAPE")
+    impl = ext["implementation"]
+    if "cli" not in ext or impl["kind"] != "python_package":
+        raise ProposalError("CLI_PROJECTION_UNSUPPORTED")
+    facade = {
+        "architecture":ext["architecture"], "kind":"command_plugin", "schema_version":"0.1.0",
+        "extension_id":ext["extension_id"], "extension_version":ext["extension_version"],
+        "description":ext["description"],
+        "distribution":{"name":impl["name"],"version":impl["version"]},
+        "cli":ext["cli"], "grants_authority":False,
+    }
+    validate(CLI, facade, "CLI_DESCRIPTOR_SHAPE")
+    return facade
+
 def propose(manifest_raw, descriptor_bytes, artifact_bytes, source_claim):
     """Commit exact supplied bytes, NOT Git provenance or artifact correctness."""
     m = inspect_manifest(manifest_raw, descriptor_bytes)
@@ -194,6 +226,7 @@ def propose(manifest_raw, descriptor_bytes, artifact_bytes, source_claim):
                                 for s in sorted(supplied)],
         "publication_status":"review_required", "publisher_verified":False,
         "source_commit_verified":False, "artifact_format_verified":False,
+        "extension_semantics_verified":False, "dependency_resolution_verified":False,
         "installable":False, "grants_authority":False,
     }
     validate(PUB+"#/$defs/ReleaseProposal",result,"PROPOSAL_SHAPE")

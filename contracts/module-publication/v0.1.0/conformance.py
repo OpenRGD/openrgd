@@ -9,7 +9,8 @@ from unittest.mock import patch
 import socket
 import subprocess
 from proposal import (ROOT,HIST,DOCS,EXT,CLI,PUB, ProposalError, parse,
-                      digest,validate,propose,inspect_manifest,compare_same_key,encode_proposal)
+                      digest,validate,propose,inspect_manifest,compare_same_key,encode_proposal,
+                      project_command_facade)
 from rgd_registry import core as legacy
 
 MOTION="extensions/motion.json"
@@ -75,7 +76,7 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(p["artifact_commitments"],[{"slot_id":"wheel","sha256":digest(self.a["wheel"]),
                                                      "size_bytes":len(self.a["wheel"])}])
         self.assertEqual(p["publication_status"],"review_required")
-        for k in ("publisher_verified","source_commit_verified","artifact_format_verified","installable","grants_authority"):
+        for k in ("publisher_verified","source_commit_verified","artifact_format_verified","extension_semantics_verified","dependency_resolution_verified","installable","grants_authority"):
             self.assertIs(p[k],False)
         self.assertNotIn("capabilities",p)
         self.assertNotIn("cli",p)
@@ -113,7 +114,7 @@ class PublicationTests(unittest.TestCase):
         with self.assertRaisesRegex(ProposalError,"CLI_EXTENSION_MISMATCH"):self.project()
     def test_package_native_version_not_silently_normalized(self):
         self.m["artifact_slots"][0]["package_version"]="0.1.13-dev.0"
-        with self.assertRaisesRegex(ProposalError,"CLI_ARTIFACT_MISMATCH"):self.project()
+        with self.assertRaisesRegex(ProposalError,"ARTIFACT_PACKAGE_DECLARATION_MISMATCH"):self.project()
     def test_legacy_package_version_not_module_release_key(self):
         self.m["module_version"]="0.1.13.dev0"
         with self.assertRaisesRegex(ProposalError,"MANIFEST_SHAPE"):self.project()
@@ -166,6 +167,28 @@ class PublicationTests(unittest.TestCase):
         p=self.project()
         self.assertFalse(p["installable"])
         self.assertFalse(p["grants_authority"])
+    def test_projection_generates_shared_cli_fields_without_second_authoring(self):
+        facade=project_command_facade(EXT_RAW)
+        self.assertEqual(facade["cli"],parse(CLI_RAW)["cli"])
+        self.assertEqual(facade["distribution"],parse(CLI_RAW)["distribution"])
+        self.assertFalse(facade["grants_authority"])
+        self.change_descriptor(FACADE,facade)
+        self.assertFalse(self.project()["installable"])
+        with self.assertRaisesRegex(ProposalError,"CLI_PROJECTION_UNSUPPORTED"):
+            project_command_facade(SOM_RAW)
+    def test_mixed_legacy_service_kind_is_not_an_artifact_format(self):
+        ext=parse(EXT_RAW);ext["implementation"]["kind"]="service"
+        self.change_descriptor(MOTION,ext)
+        with self.assertRaisesRegex(ProposalError,"ARTIFACT_KIND_MAPPING_UNSUPPORTED"):self.project()
+    def test_native_library_is_not_native_binary(self):
+        self.m["command_facades"]=[]
+        self.m["extension_descriptors"]=[{"path":SOMATIC,"sha256":digest(SOM_RAW)}]
+        self.m["artifact_slots"]=[{"slot_id":"binary","artifact_kind":"native_library",
+            "media_type":"application/octet-stream","platform_profile":"synthetic-only",
+            "package_name":"openrgd-somatic-runtime","package_version":"0.1.0.dev0",
+            "extension_descriptor_paths":[SOMATIC]}]
+        self.d={SOMATIC:SOM_RAW};self.a={"binary":b"fixture"}
+        with self.assertRaisesRegex(ProposalError,"ARTIFACT_KIND_MAPPING_UNSUPPORTED"):self.project()
     def test_no_socket_subprocess_or_runtime_import(self):
         with patch.object(socket,"socket",side_effect=AssertionError("network")),patch.object(subprocess,"Popen",side_effect=AssertionError("process")):
             self.project()

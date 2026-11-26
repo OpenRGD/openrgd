@@ -256,7 +256,9 @@
         "source_commit_verified",
         "artifact_format_verified",
         "installable",
-        "grants_authority"
+        "grants_authority",
+        "extension_semantics_verified",
+        "dependency_resolution_verified"
       ],
       "properties": {
         "schema_version": {
@@ -299,6 +301,12 @@
           "const": false
         },
         "grants_authority": {
+          "const": false
+        },
+        "extension_semantics_verified": {
+          "const": false
+        },
+        "dependency_resolution_verified": {
           "const": false
         }
       }
