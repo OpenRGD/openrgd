@@ -1,0 +1,586 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:release-ledger:v0.1-candidate",
+  "title": "OpenRGD candidate release reservation ledger",
+  "description": "Local candidate review persistence; no production publication or authority.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ReleaseLedgerRequest"
+    },
+    {
+      "$ref": "#/$defs/ReleaseDispositionNotice"
+    },
+    {
+      "$ref": "#/$defs/ReleaseLedgerReceipt"
+    },
+    {
+      "$ref": "#/$defs/ReleaseLedgerCheckpoint"
+    }
+  ],
+  "$defs": {
+    "Uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\\s\\S])"
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+    },
+    "ReleaseLedgerRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "ledger_id",
+        "module_id",
+        "module_version",
+        "request_id",
+        "operation",
+        "expected_revision",
+        "proposal_sha256",
+        "reason_code",
+        "evidence_sha256",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.release-ledger-request.v0.1-candidate"
+        },
+        "catalog_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "ledger_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation": {
+          "enum": [
+            "RESERVE_CANDIDATE",
+            "WITHDRAW",
+            "REVOKE"
+          ]
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "proposal_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "reason_code": {
+          "enum": [
+            "CANDIDATE_REVIEW",
+            "PUBLISHER_REQUEST",
+            "SUPERSEDED",
+            "POLICY",
+            "SECURITY"
+          ]
+        },
+        "evidence_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "RESERVE_CANDIDATE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_revision": {
+                "const": 0
+              },
+              "reason_code": {
+                "const": "CANDIDATE_REVIEW"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "WITHDRAW"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "reason_code": {
+                "enum": [
+                  "PUBLISHER_REQUEST",
+                  "SUPERSEDED",
+                  "POLICY"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "REVOKE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "reason_code": {
+                "enum": [
+                  "SECURITY",
+                  "POLICY"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ReleaseDispositionNotice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "ledger_id",
+        "module_id",
+        "module_version",
+        "request_id",
+        "operation",
+        "expected_revision",
+        "proposal_sha256",
+        "reason_code",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.release-disposition-notice.v0.1-candidate"
+        },
+        "catalog_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "ledger_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation": {
+          "enum": [
+            "WITHDRAW",
+            "REVOKE"
+          ]
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "proposal_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "reason_code": {
+          "enum": [
+            "CANDIDATE_REVIEW",
+            "PUBLISHER_REQUEST",
+            "SUPERSEDED",
+            "POLICY",
+            "SECURITY"
+          ]
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "RESERVE_CANDIDATE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_revision": {
+                "const": 0
+              },
+              "reason_code": {
+                "const": "CANDIDATE_REVIEW"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "WITHDRAW"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "reason_code": {
+                "enum": [
+                  "PUBLISHER_REQUEST",
+                  "SUPERSEDED",
+                  "POLICY"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "REVOKE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "reason_code": {
+                "enum": [
+                  "SECURITY",
+                  "POLICY"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ReleaseLedgerReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "ledger_id",
+        "module_id",
+        "module_version",
+        "request_id",
+        "operation",
+        "reason_code",
+        "proposal_sha256",
+        "request_sha256",
+        "evidence_sha256",
+        "authority_context_sha256",
+        "event_sequence",
+        "previous_event_sha256",
+        "release_revision",
+        "state_after",
+        "committed_to_candidate_ledger",
+        "publication_committed",
+        "installable",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.release-ledger-receipt.v0.1-candidate"
+        },
+        "catalog_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "ledger_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation": {
+          "enum": [
+            "RESERVE_CANDIDATE",
+            "WITHDRAW",
+            "REVOKE"
+          ]
+        },
+        "reason_code": {
+          "enum": [
+            "CANDIDATE_REVIEW",
+            "PUBLISHER_REQUEST",
+            "SUPERSEDED",
+            "POLICY",
+            "SECURITY"
+          ]
+        },
+        "proposal_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "evidence_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authority_context_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "event_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "previous_event_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "release_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "state_after": {
+          "enum": [
+            "RESERVED_CANDIDATE",
+            "WITHDRAWN",
+            "REVOKED"
+          ]
+        },
+        "committed_to_candidate_ledger": {
+          "const": true
+        },
+        "publication_committed": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "RESERVE_CANDIDATE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "release_revision": {
+                "const": 1
+              },
+              "state_after": {
+                "const": "RESERVED_CANDIDATE"
+              },
+              "reason_code": {
+                "const": "CANDIDATE_REVIEW"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "WITHDRAW"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "release_revision": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 9007199254740991
+              },
+              "state_after": {
+                "const": "WITHDRAWN"
+              },
+              "reason_code": {
+                "enum": [
+                  "PUBLISHER_REQUEST",
+                  "SUPERSEDED",
+                  "POLICY"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "REVOKE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "release_revision": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 9007199254740991
+              },
+              "state_after": {
+                "const": "REVOKED"
+              },
+              "reason_code": {
+                "enum": [
+                  "SECURITY",
+                  "POLICY"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_sequence": {
+                "const": 1
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "previous_event_sha256": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "previous_event_sha256": {
+                "$ref": "#/$defs/Digest"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ReleaseLedgerCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "ledger_id",
+        "legacy_catalog_sha256",
+        "event_sequence",
+        "event_sha256",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.release-ledger-checkpoint.v0.1-candidate"
+        },
+        "catalog_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "ledger_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "legacy_catalog_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "event_sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "event_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "event_sequence": {
+                "const": 0
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "event_sha256": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "event_sha256": {
+                "$ref": "#/$defs/Digest"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

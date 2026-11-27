@@ -1,0 +1,18 @@
+{
+  "package": "openrgd-release-ledger",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "publication_implemented": false,
+  "scope": "CANDIDATE_RESERVATION_AND_DISPOSITION_RECEIPTS",
+  "promotion_requires": [
+    "owner review of transaction semantics and authenticated writer policy",
+    "source/build provenance and actual release admission profile",
+    "durable independently anchored catalog state and protected trust storage",
+    "recovery, concurrent publishing and snapshot publication protocol",
+    "explicit governance acceptance"
+  ]
+}
