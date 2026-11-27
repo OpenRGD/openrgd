@@ -1,0 +1,19 @@
+{
+  "package": "openrgd-source-assessment",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "scope": "READ_ONLY_V1_ASSESSMENT_WITH_SEPARATE_REQUIRED_PATHS_AND_SYNTAX",
+  "baseline_core_commit": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "integrity_profile": "OPENRGD_SOURCE_TREE_SHA256_V1",
+  "promotion_requires": [
+    "Core and CAL/Console/Forge owner review",
+    "profile-based completeness and schema/semantic validation in CORE-CAL-01B",
+    "explicit review of V1 parser/normalization migration; no change to existing preimage",
+    "separate Foundation and Runtime Validation policy review",
+    "explicit governance acceptance"
+  ]
+}
