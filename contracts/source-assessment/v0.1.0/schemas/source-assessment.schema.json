@@ -1,0 +1,579 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:source-assessment:v0.1-candidate",
+  "title": "OpenRGD read-only source assessment (candidate)",
+  "description": "Source integrity and scoped syntax/required paths only. No schema, semantic, provenance, physical binding or authority claim.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/SourceAssessment"
+    },
+    {
+      "$ref": "#/$defs/RequiredSourceProfile"
+    }
+  ],
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+    },
+    "SourcePath": {
+      "type": "string",
+      "maxLength": 240,
+      "pattern": "^(?:[A-Za-z0-9_][A-Za-z0-9_.-]*/)*[A-Za-z0-9_][A-Za-z0-9_.-]*\\.(?:jsonc|md)(?![\\s\\S])"
+    },
+    "Version": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?![\\s\\S])"
+    },
+    "RequiredSourceProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "profile_id",
+        "profile_version",
+        "standard_version",
+        "required_paths"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.required-source-profile.v0.1-candidate"
+        },
+        "profile_id": {
+          "type": "string",
+          "maxLength": 160,
+          "pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*\\.)+[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+        },
+        "profile_version": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?![\\s\\S])"
+        },
+        "standard_version": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?![\\s\\S])"
+        },
+        "required_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourcePath"
+          },
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true
+        }
+      }
+    },
+    "SourceIndexEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "size_bytes",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/SourcePath"
+        },
+        "media_type": {
+          "enum": [
+            "application/jsonc",
+            "text/markdown; charset=utf-8"
+          ]
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4194304
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        }
+      }
+    },
+    "SourceIndex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files",
+        "hash_algorithm",
+        "manifest_self_value",
+        "profile",
+        "source_root"
+      ],
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceIndexEntry"
+          },
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "hash_algorithm": {
+          "const": "SHA-256"
+        },
+        "manifest_self_value": {
+          "const": "sha256:SELF"
+        },
+        "profile": {
+          "const": "OPENRGD_SOURCE_TREE_SHA256_V1"
+        },
+        "source_root": {
+          "const": "spec"
+        }
+      }
+    },
+    "RawFileCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "raw_sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/SourcePath"
+        },
+        "raw_sha256": {
+          "$ref": "#/$defs/Digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4194304
+        }
+      }
+    },
+    "SelectedRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "profile_version",
+        "standard_version",
+        "profile_sha256",
+        "required_path_count"
+      ],
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "maxLength": 160,
+          "pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*\\.)+[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+        },
+        "profile_version": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?![\\s\\S])"
+        },
+        "standard_version": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?![\\s\\S])"
+        },
+        "profile_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "required_path_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        }
+      }
+    },
+    "Diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "path"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "SOURCE_TREE_UNAVAILABLE",
+            "UNSAFE_SOURCE_ENTRY",
+            "SOURCE_ENTRY_LIMIT",
+            "SOURCE_BYTE_LIMIT",
+            "SOURCE_READ_FAILED",
+            "CORE_PIN_MISMATCH",
+            "MANIFEST_MISSING",
+            "INVALID_UTF8",
+            "JSONC_UNTERMINATED_COMMENT",
+            "JSONC_DUPLICATE_KEY",
+            "JSONC_NONFINITE_NUMBER",
+            "JSONC_STRUCTURE_LIMIT",
+            "JSONC_INVALID",
+            "JSONC_OBJECT_REQUIRED",
+            "LEGACY_PARSER_DISAGREEMENT",
+            "MANIFEST_META_INVALID",
+            "MANIFEST_SELF_FIELD_AMBIGUOUS",
+            "MANIFEST_DIGEST_INVALID",
+            "MANIFEST_PROFILE_INVALID",
+            "UNSUPPORTED_INTEGRITY_PROFILE",
+            "CORE_VERIFICATION_FAILED",
+            "CORE_RESULT_INCONSISTENT",
+            "SOURCE_ROOT_MISMATCH",
+            "REQUIRED_PROFILE_VERSION_MISMATCH",
+            "REQUIRED_PATHS_MISSING"
+          ]
+        },
+        "path": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourcePath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "SourceAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "assessment_profile",
+        "core_reference_commit",
+        "core_toolchain_version",
+        "core_source_files_pin_checked",
+        "integrity_profile",
+        "input_status",
+        "manifest_status",
+        "integrity_status",
+        "indexed_jsonc_syntax_status",
+        "declared_standard_version",
+        "declared_source_tree_sha256",
+        "computed_source_tree_sha256",
+        "source_index",
+        "raw_file_commitments",
+        "requirements_profile",
+        "required_paths_status",
+        "missing_required_paths",
+        "diagnostics",
+        "canonical_schema_validated",
+        "semantic_consistency_validated",
+        "kernel_selection_assessed",
+        "publisher_verified",
+        "robot_binding_verified",
+        "profile_model_hash_bound",
+        "physical_calibration_certified",
+        "actuation_enabled",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.source-assessment.v0.1-candidate"
+        },
+        "assessment_profile": {
+          "const": "OPENRGD_SOURCE_ASSESSMENT_V0.1_CANDIDATE"
+        },
+        "core_reference_commit": {
+          "const": "afe1a831b950a4e6560f0285a0103fc4eaa343b7"
+        },
+        "core_toolchain_version": {
+          "const": "0.1.1"
+        },
+        "core_source_files_pin_checked": {
+          "type": "boolean"
+        },
+        "integrity_profile": {
+          "const": "OPENRGD_SOURCE_TREE_SHA256_V1"
+        },
+        "input_status": {
+          "enum": [
+            "SNAPSHOT_CREATED",
+            "SOURCE_TREE_UNAVAILABLE",
+            "SNAPSHOT_REJECTED"
+          ]
+        },
+        "manifest_status": {
+          "enum": [
+            "NOT_ASSESSED",
+            "PASS",
+            "REJECTED",
+            "UNSUPPORTED_PROFILE"
+          ]
+        },
+        "integrity_status": {
+          "enum": [
+            "NOT_ASSESSED",
+            "MATCH",
+            "MISMATCH",
+            "VERIFICATION_FAILED"
+          ]
+        },
+        "indexed_jsonc_syntax_status": {
+          "enum": [
+            "NOT_ASSESSED",
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "declared_standard_version": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Version"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declared_source_tree_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "computed_source_tree_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_index": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIndex"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "raw_file_commitments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RawFileCommitment"
+          },
+          "minItems": 0,
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "requirements_profile": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SelectedRequirements"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required_paths_status": {
+          "enum": [
+            "NOT_ASSESSED",
+            "REQUIRED_PATHS_PRESENT",
+            "REQUIRED_PATHS_MISSING",
+            "PROFILE_VERSION_MISMATCH"
+          ]
+        },
+        "missing_required_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourcePath"
+          },
+          "minItems": 0,
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          },
+          "minItems": 0,
+          "maxItems": 260,
+          "uniqueItems": true
+        },
+        "canonical_schema_validated": {
+          "const": false
+        },
+        "semantic_consistency_validated": {
+          "const": false
+        },
+        "kernel_selection_assessed": {
+          "const": false
+        },
+        "publisher_verified": {
+          "const": false
+        },
+        "robot_binding_verified": {
+          "const": false
+        },
+        "profile_model_hash_bound": {
+          "const": false
+        },
+        "physical_calibration_certified": {
+          "const": false
+        },
+        "actuation_enabled": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "integrity_status": {
+                "enum": [
+                  "MATCH",
+                  "MISMATCH"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input_status": {
+                "const": "SNAPSHOT_CREATED"
+              },
+              "manifest_status": {
+                "const": "PASS"
+              },
+              "core_source_files_pin_checked": {
+                "const": true
+              },
+              "computed_source_tree_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+              },
+              "declared_source_tree_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+              },
+              "source_index": {
+                "$ref": "#/$defs/SourceIndex"
+              },
+              "raw_file_commitments": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/RawFileCommitment"
+                },
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "indexed_jsonc_syntax_status": {
+                "enum": [
+                  "PASS",
+                  "FAIL"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "source_index": {
+                "type": "null"
+              },
+              "computed_source_tree_sha256": {
+                "type": "null"
+              },
+              "raw_file_commitments": {
+                "maxItems": 0
+              },
+              "indexed_jsonc_syntax_status": {
+                "const": "NOT_ASSESSED"
+              },
+              "required_paths_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "requirements_profile": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "required_paths_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "required_paths_status": {
+                "const": "REQUIRED_PATHS_MISSING"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "missing_required_paths": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/SourcePath"
+                },
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "requirements_profile": {
+                "$ref": "#/$defs/SelectedRequirements"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "missing_required_paths": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "required_paths_status": {
+                "enum": [
+                  "REQUIRED_PATHS_PRESENT",
+                  "PROFILE_VERSION_MISMATCH"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "requirements_profile": {
+                "$ref": "#/$defs/SelectedRequirements"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
