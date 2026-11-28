@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:release-admission:v0.1-candidate",
+  "title": "Authenticated release review preview (candidate)",
+  "description": "Read-only catalog projection, never a production admission or grant.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/AdmissionRecord"
+    },
+    {
+      "$ref": "#/$defs/CatalogPreview"
+    }
+  ],
+  "$defs": {
+    "AdmissionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "ledger_id",
+        "module_id",
+        "module_version",
+        "admission_profile",
+        "proposal_sha256",
+        "manifest_sha256",
+        "registry_review_sha256",
+        "reservation_receipt_sha256",
+        "authority_context_sha256",
+        "provenance_review_sha256",
+        "builder_policy_sha256",
+        "attestation_sha256",
+        "inspection_sha256",
+        "display_name",
+        "functional_roles",
+        "dependencies",
+        "artifact",
+        "reservation_event_sequence",
+        "dependency_resolution_verified",
+        "host_compatibility_verified",
+        "runtime_evaluated",
+        "publication_committed",
+        "installable",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.release-admission-preview.v0.1-candidate"
+        },
+        "catalog_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "ledger_id": {
+          "$ref": "urn:openrgd:release-ledger:v0.1-candidate#/$defs/Uuid"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "admission_profile": {
+          "const": "VERIFIED_WHEEL_REVIEW_PREVIEW"
+        },
+        "proposal_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "manifest_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "registry_review_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "reservation_receipt_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "authority_context_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "provenance_review_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "builder_policy_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "attestation_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "inspection_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "functional_roles": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/FunctionalRoles"
+        },
+        "dependencies": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleReleaseKey"
+          }
+        },
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "slot_id",
+            "artifact_kind",
+            "platform_profile",
+            "media_type",
+            "filename",
+            "sha256",
+            "size_bytes"
+          ],
+          "properties": {
+            "slot_id": {
+              "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/LocalKey"
+            },
+            "artifact_kind": {
+              "const": "python_wheel"
+            },
+            "platform_profile": {
+              "const": "py3-none-any"
+            },
+            "media_type": {
+              "const": "application/zip"
+            },
+            "filename": {
+              "type": "string",
+              "maxLength": 240,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*\\.whl(?![\\s\\S])"
+            },
+            "sha256": {
+              "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1048576
+            }
+          }
+        },
+        "reservation_event_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "dependency_resolution_verified": {
+          "const": false
+        },
+        "host_compatibility_verified": {
+          "const": false
+        },
+        "runtime_evaluated": {
+          "const": false
+        },
+        "publication_committed": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    },
+    "CatalogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admission",
+        "state",
+        "release_revision",
+        "state_event_sequence",
+        "state_receipt_sha256"
+      ],
+      "properties": {
+        "admission": {
+          "$ref": "#/$defs/AdmissionRecord"
+        },
+        "state": {
+          "enum": [
+            "RESERVED_CANDIDATE",
+            "WITHDRAWN",
+            "REVOKED"
+          ]
+        },
+        "release_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "state_event_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "state_receipt_sha256": {
+          "$ref": "urn:openrgd:module-publication:v0.1-candidate#/$defs/Digest"
+        }
+      }
+    },
+    "CatalogPreview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "ledger_id",
+        "checkpoint",
+        "entries",
+        "publication_committed",
+        "installable",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.catalog-preview.v0.1-candidate"
+        },
+        "catalog_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "ledger_id": {
+          "$ref": "urn:openrgd:release-ledger:v0.1-candidate#/$defs/Uuid"
+        },
+        "checkpoint": {
+          "$ref": "urn:openrgd:release-ledger:v0.1-candidate#/$defs/ReleaseLedgerCheckpoint"
+        },
+        "entries": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/CatalogEntry"
+          }
+        },
+        "publication_committed": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}

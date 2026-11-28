@@ -1,0 +1,18 @@
+{
+  "package": "openrgd-release-admission",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "publication_implemented": false,
+  "scope": "AUTHENTICATED_READ_ONLY_CATALOG_PREVIEW",
+  "promotion_requires": [
+    "production policy and provenance authority",
+    "durable admission and publication transaction / outbox and authenticated revocation",
+    "external retention of evidence and trust checkpoints",
+    "manager contract and second independent module conformance",
+    "explicit governance acceptance"
+  ]
+}
