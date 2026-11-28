@@ -1,0 +1,18 @@
+{
+  "package": "openrgd-build-provenance",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "publication_implemented": false,
+  "scope": "OFFLINE_GIT_MEMBERSHIP_AND_RESTRICTED_DSSE_WHEEL_ATTESTATION",
+  "promotion_requires": [
+    "production builder identity, key custody, freshness/revocation and independent policy authority",
+    "trusted build service and complete dependency/environment evidence",
+    "artifact profiles for other distribution kinds",
+    "atomic actual publication and catalog protocol",
+    "explicit governance acceptance"
+  ]
+}

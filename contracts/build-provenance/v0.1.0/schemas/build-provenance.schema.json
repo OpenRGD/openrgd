@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:build-provenance:v0.1-candidate",
+  "title": "Scoped Git source and signed builder review",
+  "description": "Restricted offline profile; not SLSA certification or release admission.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/BuilderPolicy"
+    },
+    {
+      "$ref": "#/$defs/ProvenanceReview"
+    }
+  ],
+  "$defs": {
+    "BuilderPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "policy_id",
+        "policy_version",
+        "module_id",
+        "module_version",
+        "repository_uri",
+        "git_commit",
+        "source_tree_sha256",
+        "recipe_sha256",
+        "package_root",
+        "build_type",
+        "builder_id",
+        "builder_keyid",
+        "builder_public_key",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.builder-policy.v0.1-candidate"
+        },
+        "policy_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "policy_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "repository_uri": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^https://[A-Za-z0-9][A-Za-z0-9.-]*/[A-Za-z0-9._/-]+(?![\\s\\S])"
+        },
+        "git_commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}(?![\\s\\S])"
+        },
+        "source_tree_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "recipe_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "package_root": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?![\\s\\S])"
+        },
+        "build_type": {
+          "const": "https://openrgd.org/build-types/pure-python-wheel-review/v0.1-candidate"
+        },
+        "builder_id": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^https://[A-Za-z0-9][A-Za-z0-9.-]*/[A-Za-z0-9._/-]+(?![\\s\\S])"
+        },
+        "builder_keyid": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "builder_public_key": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    },
+    "SourceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "size_bytes",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 240,
+          "pattern": "^(?:[A-Za-z0-9_][A-Za-z0-9_.-]*/)*[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65536
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        }
+      }
+    },
+    "ProvenanceReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "module_id",
+        "module_version",
+        "policy_sha256",
+        "proposal_sha256",
+        "attestation_sha256",
+        "statement_sha256",
+        "inspection_sha256",
+        "repository_uri",
+        "git_commit",
+        "source_tree_sha256",
+        "recipe_sha256",
+        "artifact_filename",
+        "artifact_sha256",
+        "builder_id",
+        "builder_public_key_sha256",
+        "source_entries",
+        "source_commit_membership_verified",
+        "builder_signature_verified",
+        "builder_policy_matched",
+        "wheel_package_bytes_matched",
+        "build_execution_independently_verified",
+        "dependency_materials_complete",
+        "reproducible_build_verified",
+        "slsa_level_verified",
+        "publisher_verified",
+        "publication_committed",
+        "installable",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.build-provenance-review.v0.1-candidate"
+        },
+        "module_id": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ModuleId"
+        },
+        "module_version": {
+          "$ref": "urn:openrgd:module-vocabulary:v0.1-candidate#/$defs/ReleaseVersion"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "proposal_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "attestation_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "statement_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "inspection_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "repository_uri": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^https://[A-Za-z0-9][A-Za-z0-9.-]*/[A-Za-z0-9._/-]+(?![\\s\\S])"
+        },
+        "git_commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}(?![\\s\\S])"
+        },
+        "source_tree_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "recipe_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "artifact_filename": {
+          "type": "string",
+          "maxLength": 240,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*\\.whl(?![\\s\\S])"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "builder_id": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^https://[A-Za-z0-9][A-Za-z0-9.-]*/[A-Za-z0-9._/-]+(?![\\s\\S])"
+        },
+        "builder_public_key_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "source_entries": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/SourceEntry"
+          }
+        },
+        "source_commit_membership_verified": {
+          "const": true
+        },
+        "builder_signature_verified": {
+          "const": true
+        },
+        "builder_policy_matched": {
+          "const": true
+        },
+        "wheel_package_bytes_matched": {
+          "const": true
+        },
+        "build_execution_independently_verified": {
+          "const": false
+        },
+        "dependency_materials_complete": {
+          "const": false
+        },
+        "reproducible_build_verified": {
+          "const": false
+        },
+        "slsa_level_verified": {
+          "const": false
+        },
+        "publisher_verified": {
+          "const": false
+        },
+        "publication_committed": {
+          "const": false
+        },
+        "installable": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}
