@@ -1,0 +1,18 @@
+{
+  "package": "openrgd-source-conformance",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "scope": "V0_2_0_EXPLICIT_COMPONENT_POLICY_AND_SCOPED_STATIC_REFERENCE_CHECKS",
+  "baseline_core_commit": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "source_assessment_pin": "ecb970e97ae9f8a86428b26ad67aa00f5dad1c08",
+  "promotion_requires": [
+    "independent profile and schema owner review",
+    "coverage expansion and cross-language conformance",
+    "CORE-CAL-01C semantic and safety-policy remediation",
+    "explicit governance acceptance"
+  ]
+}

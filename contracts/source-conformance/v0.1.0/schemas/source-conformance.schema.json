@@ -1,0 +1,606 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:source-conformance:v0.1-candidate",
+  "title": "OpenRGD scoped source conformance profile and report",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ConformanceProfile"
+    },
+    {
+      "$ref": "#/$defs/ConformanceReport"
+    }
+  ],
+  "$defs": {
+    "ComponentPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "applicability",
+        "rationale"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+        },
+        "applicability": {
+          "enum": [
+            "REQUIRED",
+            "OPTIONAL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    },
+    "ConformanceProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "profile_id",
+        "profile_version",
+        "standard_version",
+        "rule_profile",
+        "inventory_policy",
+        "components"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.source-conformance-profile.v0.1-candidate"
+        },
+        "profile_id": {
+          "type": "string",
+          "maxLength": 160,
+          "pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*\\.)+[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+        },
+        "profile_version": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Version"
+        },
+        "standard_version": {
+          "const": "0.2.0"
+        },
+        "rule_profile": {
+          "const": "OPENRGD_STATIC_REFERENCE_RULES_V0.1_CANDIDATE"
+        },
+        "inventory_policy": {
+          "const": "EXPLICIT_CLASSIFICATION_REQUIRED"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ComponentPolicy"
+          },
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true
+        }
+      }
+    },
+    "ComponentResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "applicability",
+        "present",
+        "inventory_status",
+        "fragment_status"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+        },
+        "applicability": {
+          "enum": [
+            "REQUIRED",
+            "OPTIONAL",
+            "NOT_APPLICABLE",
+            "UNCLASSIFIED"
+          ]
+        },
+        "present": {
+          "type": "boolean"
+        },
+        "inventory_status": {
+          "enum": [
+            "REQUIRED_PRESENT",
+            "REQUIRED_MISSING",
+            "OPTIONAL_PRESENT",
+            "OPTIONAL_ABSENT",
+            "NOT_APPLICABLE_ABSENT",
+            "NOT_APPLICABLE_PRESENT",
+            "UNCLASSIFIED_PRESENT"
+          ]
+        },
+        "fragment_status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_COVERED",
+            "NOT_ASSESSED"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "REQUIRED"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "REQUIRED_MISSING"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "REQUIRED"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "REQUIRED_PRESENT"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "OPTIONAL"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "OPTIONAL_ABSENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "OPTIONAL"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "OPTIONAL_PRESENT"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "NOT_APPLICABLE"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "NOT_APPLICABLE_ABSENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "NOT_APPLICABLE"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "NOT_APPLICABLE_PRESENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "UNCLASSIFIED"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": false
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "UNCLASSIFIED"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "UNCLASSIFIED_PRESENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ReferenceResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "source_path",
+        "source_pointer",
+        "target_path",
+        "target_symbol",
+        "status"
+      ],
+      "properties": {
+        "rule_id": {
+          "enum": [
+            "MANIFEST_KERNEL",
+            "MANIFEST_SCHEMA",
+            "KERNEL_MODULE",
+            "KERNEL_FOUNDATION_FILE",
+            "KERNEL_ENGINE_FILE",
+            "KERNEL_PRECHECK",
+            "DESCRIPTION_ACTUATOR_JOINT",
+            "DESCRIPTION_ACTUATOR_MODEL",
+            "ACTUATION_TARGET_JOINT",
+            "ACTUATION_COMPONENT_MODEL",
+            "ACTUATION_CONTROL_PROFILE",
+            "CALIBRATION_DESCRIPTION",
+            "CALIBRATION_KINEMATIC_JOINT",
+            "CALIBRATION_EXTRINSIC_SENSOR",
+            "CALIBRATION_INTRINSIC_SENSOR",
+            "CALIBRATION_DYNAMICS_JOINT",
+            "FIDELITY_RELATED_FILE",
+            "FIDELITY_SENSOR",
+            "HAL_ACTUATOR",
+            "HAL_SENSOR",
+            "HAL_QOS_PROFILE",
+            "RUNTIME_CHECK_ID",
+            "RUNTIME_PREFLIGHT_SOURCE",
+            "RUNTIME_SEVERITY"
+          ]
+        },
+        "source_path": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+        },
+        "source_pointer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "target_path": {
+          "anyOf": [
+            {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_symbol": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "RESOLVED",
+            "INVALID_REFERENCE",
+            "WRONG_TARGET",
+            "TARGET_MISSING",
+            "TARGET_NOT_APPLICABLE",
+            "TARGET_UNCLASSIFIED",
+            "TARGET_FRAGMENT_INVALID",
+            "SYMBOL_MISSING",
+            "DUPLICATE_REFERENCE"
+          ]
+        }
+      }
+    },
+    "Finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "path",
+        "pointer"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "FRAGMENT_SCHEMA_INVALID",
+            "INDEXED_SYNTAX_INVALID",
+            "REFERENCE_CHECK_LIMIT",
+            "SNAPSHOT_BINDING_FAILED",
+            "LEGACY_DESCRIPTION_DIGEST_PLACEHOLDER",
+            "DECLARED_MOTION_POLICY_CONFLICT",
+            "SEVERITY_REFERENCE_UNRESOLVED"
+          ]
+        },
+        "path": {
+          "anyOf": [
+            {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pointer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ConformanceReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "rule_profile",
+        "profile_id",
+        "profile_version",
+        "profile_sha256",
+        "source_assessment_sha256",
+        "source_assessment",
+        "evaluation_status",
+        "inventory_status",
+        "fragment_schema_status",
+        "reference_status",
+        "review_findings_status",
+        "components",
+        "references",
+        "findings",
+        "canonical_schema_validated",
+        "semantic_consistency_validated",
+        "profile_governance_accepted",
+        "publisher_verified",
+        "robot_binding_verified",
+        "profile_model_hash_bound",
+        "physical_calibration_certified",
+        "actuation_enabled",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.source-conformance-report.v0.1-candidate"
+        },
+        "rule_profile": {
+          "const": "OPENRGD_STATIC_REFERENCE_RULES_V0.1_CANDIDATE"
+        },
+        "profile_id": {
+          "type": "string",
+          "maxLength": 160,
+          "pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*\\.)+[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\\s\\S])"
+        },
+        "profile_version": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Version"
+        },
+        "profile_sha256": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+        },
+        "source_assessment_sha256": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+        },
+        "source_assessment": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourceAssessment"
+        },
+        "evaluation_status": {
+          "enum": [
+            "ASSESSED",
+            "SOURCE_UNAVAILABLE",
+            "PROFILE_VERSION_MISMATCH",
+            "SNAPSHOT_BINDING_FAILED"
+          ]
+        },
+        "inventory_status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_ASSESSED"
+          ]
+        },
+        "fragment_schema_status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_ASSESSED"
+          ]
+        },
+        "reference_status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "BLOCKED",
+            "NOT_ASSESSED"
+          ]
+        },
+        "review_findings_status": {
+          "enum": [
+            "NONE",
+            "FOUND",
+            "NOT_ASSESSED"
+          ]
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ComponentResult"
+          },
+          "minItems": 0,
+          "maxItems": 512,
+          "uniqueItems": true
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferenceResult"
+          },
+          "minItems": 0,
+          "maxItems": 2048,
+          "uniqueItems": true
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Finding"
+          },
+          "minItems": 0,
+          "maxItems": 2048,
+          "uniqueItems": true
+        },
+        "canonical_schema_validated": {
+          "const": false
+        },
+        "semantic_consistency_validated": {
+          "const": false
+        },
+        "profile_governance_accepted": {
+          "const": false
+        },
+        "publisher_verified": {
+          "const": false
+        },
+        "robot_binding_verified": {
+          "const": false
+        },
+        "profile_model_hash_bound": {
+          "const": false
+        },
+        "physical_calibration_certified": {
+          "const": false
+        },
+        "actuation_enabled": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "evaluation_status": {
+                "enum": [
+                  "SOURCE_UNAVAILABLE",
+                  "PROFILE_VERSION_MISMATCH",
+                  "SNAPSHOT_BINDING_FAILED"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "NOT_ASSESSED"
+              },
+              "fragment_schema_status": {
+                "const": "NOT_ASSESSED"
+              },
+              "reference_status": {
+                "const": "NOT_ASSESSED"
+              },
+              "review_findings_status": {
+                "const": "NOT_ASSESSED"
+              },
+              "components": {
+                "maxItems": 0
+              },
+              "references": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,701 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:source-conformance-fragments:v0.1-candidate",
+  "title": "Restricted v0.2.0 field fragments; not whole-document schemas",
+  "$defs": {
+    "Manifest": {
+      "type": "object",
+      "properties": {
+        "meta_group": {
+          "type": "object",
+          "properties": {
+            "rgd_standard_version_semver_str": {
+              "const": "0.2.0"
+            },
+            "kernel_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "rgd_schema_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "rgd_standard_version_semver_str",
+            "kernel_ref_str",
+            "rgd_schema_ref_str"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "meta_group"
+      ],
+      "additionalProperties": true
+    },
+    "Kernel": {
+      "type": "object",
+      "properties": {
+        "meta_group": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": true
+        },
+        "module_loading_order_list": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+          }
+        },
+        "foundation_introspection": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+          }
+        },
+        "execution_pipeline": {
+          "type": "object",
+          "properties": {
+            "pre_checks_list": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              }
+            }
+          },
+          "required": [
+            "pre_checks_list"
+          ],
+          "additionalProperties": true
+        },
+        "hardware_runtime_profile_engine": {
+          "type": "object",
+          "properties": {
+            "compute_topology_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "power_distribution_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "hal_mapping_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "firmware_mapping_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "compute_topology_ref_str",
+            "power_distribution_ref_str",
+            "hal_mapping_ref_str",
+            "firmware_mapping_ref_str"
+          ],
+          "additionalProperties": true
+        },
+        "simulation_profile_engine": {
+          "type": "object",
+          "properties": {
+            "physics_solver_overrides_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "soft_materials_library_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "soft_body_dynamics_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "surface_properties_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "physics_solver_overrides_ref_str",
+            "soft_materials_library_ref_str",
+            "soft_body_dynamics_ref_str",
+            "surface_properties_ref_str"
+          ],
+          "additionalProperties": true
+        },
+        "perception_health_engine": {
+          "type": "object",
+          "properties": {
+            "sensor_fidelity_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "sensor_health_monitor_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "sensor_fidelity_ref_str",
+            "sensor_health_monitor_ref_str"
+          ],
+          "additionalProperties": true
+        },
+        "actuation_envelope_engine": {
+          "type": "object",
+          "properties": {
+            "actuation_library_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "actuation_topology_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "actuation_dynamics_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "actuation_library_ref_str",
+            "actuation_topology_ref_str",
+            "actuation_dynamics_ref_str"
+          ],
+          "additionalProperties": true
+        },
+        "wear_budget_engine": {
+          "type": "object",
+          "properties": {
+            "wear_fatigue_model_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "wear_fatigue_model_ref_str"
+          ],
+          "additionalProperties": true
+        },
+        "volition_orchestra_engine": {
+          "type": "object",
+          "properties": {
+            "alignment_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "orchestra_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "social_synergy_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "ledger_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "alignment_ref_str",
+            "orchestra_ref_str",
+            "social_synergy_ref_str",
+            "ledger_ref_str"
+          ],
+          "additionalProperties": true
+        },
+        "safety_supervisor": {
+          "type": "object",
+          "properties": {
+            "alignment_invariants_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "surface_properties_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "sensor_health_monitor_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "power_distribution_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "wear_fatigue_model_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            }
+          },
+          "required": [
+            "alignment_invariants_ref_str",
+            "surface_properties_ref_str",
+            "sensor_health_monitor_ref_str",
+            "power_distribution_ref_str",
+            "wear_fatigue_model_ref_str"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "meta_group",
+        "module_loading_order_list"
+      ],
+      "additionalProperties": true
+    },
+    "Description": {
+      "type": "object",
+      "properties": {
+        "joint_topology_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "sensors_mounting_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "actuators_topology_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "drives_joint_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "component_model_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              }
+            },
+            "required": [
+              "drives_joint_ref_str",
+              "component_model_ref_str"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "joint_topology_map",
+        "sensors_mounting_map",
+        "actuators_topology_map"
+      ],
+      "additionalProperties": true
+    },
+    "ActuationLibrary": {
+      "type": "object",
+      "properties": {
+        "component_catalog_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "component_catalog_map"
+      ],
+      "additionalProperties": true
+    },
+    "ActuationTopology": {
+      "type": "object",
+      "properties": {
+        "control_profiles_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "joint_actuator_mapping_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "target_joint_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "component_model_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "use_profile_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              }
+            },
+            "required": [
+              "target_joint_ref_str",
+              "component_model_ref_str",
+              "use_profile_ref_str"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "control_profiles_map",
+        "joint_actuator_mapping_map"
+      ],
+      "additionalProperties": true
+    },
+    "Calibration": {
+      "type": "object",
+      "properties": {
+        "meta_group": {
+          "type": "object",
+          "properties": {
+            "target_description_ref_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            "target_description_hash_str": {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+            }
+          },
+          "required": [
+            "target_description_ref_str",
+            "target_description_hash_str"
+          ],
+          "additionalProperties": true
+        },
+        "kinematic_offsets_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "sensor_extrinsics_delta_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "sensor_intrinsics_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "dynamics_correction_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "meta_group",
+        "kinematic_offsets_map",
+        "sensor_extrinsics_delta_map",
+        "sensor_intrinsics_map",
+        "dynamics_correction_map"
+      ],
+      "additionalProperties": true
+    },
+    "SensorFidelity": {
+      "type": "object",
+      "properties": {
+        "meta_group": {
+          "type": "object",
+          "properties": {
+            "related_files_map": {
+              "type": "object",
+              "maxProperties": 256,
+              "propertyNames": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "additionalProperties": {
+                "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+              }
+            }
+          },
+          "required": [
+            "related_files_map"
+          ],
+          "additionalProperties": true
+        },
+        "sensor_error_profiles_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "meta_group",
+        "sensor_error_profiles_map"
+      ],
+      "additionalProperties": true
+    },
+    "HAL": {
+      "type": "object",
+      "properties": {
+        "actuator_drivers_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "logical_actuator_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "qos_profile_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              }
+            },
+            "required": [
+              "logical_actuator_ref_str",
+              "qos_profile_ref_str"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "sensor_drivers_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "logical_sensor_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "qos_profile_ref_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              }
+            },
+            "required": [
+              "logical_sensor_ref_str",
+              "qos_profile_ref_str"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "qos_profiles_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "actuator_drivers_map",
+        "sensor_drivers_map",
+        "qos_profiles_map"
+      ],
+      "additionalProperties": true
+    },
+    "RuntimeValidation": {
+      "type": "object",
+      "properties": {
+        "pre_flight_checks_list": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "properties": {
+              "check_id_str": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "severity_enum": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+              },
+              "sources_ref_map": {
+                "type": "object",
+                "maxProperties": 256,
+                "propertyNames": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+                },
+                "additionalProperties": {
+                  "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+                }
+              },
+              "on_failure_policy": {
+                "type": "object",
+                "properties": {
+                  "block_motion_bool": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "block_motion_bool"
+                ],
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "check_id_str",
+              "severity_enum",
+              "sources_ref_map",
+              "on_failure_policy"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "severity_policies_map": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?![\\s\\S])"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "allow_motion_bool": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "allow_motion_bool"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "pre_flight_checks_list",
+        "severity_policies_map"
+      ],
+      "additionalProperties": true
+    }
+  }
+}
