@@ -1,0 +1,36 @@
+name: EXT-01B.3D source and build provenance
+on:
+  pull_request:
+    paths: ['contracts/build-provenance/**', '.github/workflows/build-provenance.yml']
+permissions:
+  contents: read
+jobs:
+  provenance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Protect previous source and contracts
+        run: |
+          git diff --exit-code fb9ac5e34c0bfe082bb33f4d8346f881b871a620 HEAD -- spec standard src contracts/agent contracts/module-vocabulary contracts/module-publication contracts/publication-trust contracts/release-ledger docs/history pyproject.toml
+          git diff --check fb9ac5e34c0bfe082bb33f4d8346f881b871a620 HEAD
+      - name: Install test-only pinned direct dependencies
+        run: python -m pip install jsonschema==4.23.0 packaging==25.0 build==1.3.0 setuptools==80.9.0 wheel==0.45.1 'securesystemslib[crypto]==1.6.0'
+      - name: Real Git build and DSSE verification, plus prior trust and ledger tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/contracts/module-publication/v0.1.0:${{ github.workspace }}/contracts/publication-trust/v0.1.0:${{ github.workspace }}/contracts/release-ledger/v0.1.0:${{ github.workspace }}/contracts/build-provenance/v0.1.0
+        run: |
+          python contracts/build-provenance/v0.1.0/conformance.py
+          python -O contracts/build-provenance/v0.1.0/conformance.py
+          python contracts/publication-trust/v0.1.0/conformance.py
+          python contracts/release-ledger/v0.1.0/conformance.py
