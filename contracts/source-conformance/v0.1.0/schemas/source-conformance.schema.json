@@ -125,7 +125,170 @@
             "NOT_ASSESSED"
           ]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "REQUIRED"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "REQUIRED_MISSING"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "REQUIRED"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "REQUIRED_PRESENT"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "OPTIONAL"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "OPTIONAL_ABSENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "OPTIONAL"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "OPTIONAL_PRESENT"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "NOT_APPLICABLE"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "NOT_APPLICABLE_ABSENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "NOT_APPLICABLE"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "NOT_APPLICABLE_PRESENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "UNCLASSIFIED"
+              },
+              "present": {
+                "const": false
+              }
+            }
+          },
+          "then": false
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {
+                "const": "UNCLASSIFIED"
+              },
+              "present": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inventory_status": {
+                "const": "UNCLASSIFIED_PRESENT"
+              },
+              "fragment_status": {
+                "const": "NOT_ASSESSED"
+              }
+            }
+          }
+        }
+      ]
     },
     "ReferenceResult": {
       "type": "object",
@@ -140,9 +303,32 @@
       ],
       "properties": {
         "rule_id": {
-          "type": "string",
-          "maxLength": 100,
-          "pattern": "^[A-Z][A-Z0-9_]*(?![\\s\\S])"
+          "enum": [
+            "MANIFEST_KERNEL",
+            "MANIFEST_SCHEMA",
+            "KERNEL_MODULE",
+            "KERNEL_FOUNDATION_FILE",
+            "KERNEL_ENGINE_FILE",
+            "KERNEL_PRECHECK",
+            "DESCRIPTION_ACTUATOR_JOINT",
+            "DESCRIPTION_ACTUATOR_MODEL",
+            "ACTUATION_TARGET_JOINT",
+            "ACTUATION_COMPONENT_MODEL",
+            "ACTUATION_CONTROL_PROFILE",
+            "CALIBRATION_DESCRIPTION",
+            "CALIBRATION_KINEMATIC_JOINT",
+            "CALIBRATION_EXTRINSIC_SENSOR",
+            "CALIBRATION_INTRINSIC_SENSOR",
+            "CALIBRATION_DYNAMICS_JOINT",
+            "FIDELITY_RELATED_FILE",
+            "FIDELITY_SENSOR",
+            "HAL_ACTUATOR",
+            "HAL_SENSOR",
+            "HAL_QOS_PROFILE",
+            "RUNTIME_CHECK_ID",
+            "RUNTIME_PREFLIGHT_SOURCE",
+            "RUNTIME_SEVERITY"
+          ]
         },
         "source_path": {
           "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"

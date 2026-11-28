@@ -1,0 +1,3 @@
+# CORE-CAL-01B — return to CAL / Console / Forge (candidate)
+
+Core owns static source conformance policy and typed reference checks. Consume the versioned report only after exact-pin review; reuse 01A index/raw commitments. A selected external policy has REQUIRED, OPTIONAL and NOT_APPLICABLE; unclassified indexed files are a profile failure. A resolved path or symbol is not a calibrated body, valid schema everywhere, actuator permission or firmware compatibility. Existing CAL `model_sha256` semantics and CAL-021-D Registry version remain unchanged. No aliases, source rehash or policy correction. 01C will review the actual unresolved references and MAJOR/placeholder findings independently; EXT-01B.3D remains pending. No consumer changes requested before owner review.
