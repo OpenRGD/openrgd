@@ -1,0 +1,403 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openrgd:foundation-consistency:v0.1-candidate",
+  "title": "Scoped static Foundation and Runtime Validation consistency review",
+  "description": "No full model conformance, runtime check result, permission or calibration proof.",
+  "$ref": "#/$defs/ConsistencyReport",
+  "$defs": {
+    "RuntimePolicyRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "source_pointer",
+        "severity",
+        "global_allow_motion",
+        "local_block_motion",
+        "review_status",
+        "declared_failure_constraint",
+        "runtime_evaluated",
+        "grants_authority"
+      ],
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "source_pointer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "severity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "global_allow_motion": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "local_block_motion": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_status": {
+          "enum": [
+            "POLICY_CONSISTENT",
+            "LOCAL_STRICTER_THAN_GLOBAL",
+            "GLOBAL_BLOCK_LOCAL_NONBLOCK_CONFLICT",
+            "POLICY_UNRESOLVED"
+          ]
+        },
+        "declared_failure_constraint": {
+          "enum": [
+            "BLOCK_REQUIRED",
+            "NO_BLOCK_FROM_THIS_RULE",
+            "INDETERMINATE"
+          ]
+        },
+        "runtime_evaluated": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    },
+    "DescriptionCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "selected_digest_profile",
+        "status",
+        "description_path",
+        "declared_sha256",
+        "observed_raw_description_sha256",
+        "profile_model_hash_bound",
+        "physical_calibration_certified",
+        "grants_authority"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "REQUIRED_PRESENT",
+            "REQUIRED_MISSING",
+            "OPTIONAL_PRESENT",
+            "OPTIONAL_ABSENT",
+            "NOT_APPLICABLE_ABSENT",
+            "NOT_APPLICABLE_PRESENT",
+            "UNCLASSIFIED_PRESENT",
+            "OUT_OF_SCOPE",
+            "NOT_ASSESSED"
+          ]
+        },
+        "selected_digest_profile": {
+          "enum": [
+            "LEGACY_UNQUALIFIED",
+            "RAW_DESCRIPTION_SHA256_V0.1_CANDIDATE"
+          ]
+        },
+        "status": {
+          "enum": [
+            "NOT_ASSESSED",
+            "NOT_APPLICABLE",
+            "ABSENT_OPTIONAL",
+            "BLOCKED",
+            "PLACEHOLDER",
+            "UNQUALIFIED",
+            "MATCH",
+            "MISMATCH"
+          ]
+        },
+        "description_path": {
+          "anyOf": [
+            {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declared_sha256": {
+          "anyOf": [
+            {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_raw_description_sha256": {
+          "anyOf": [
+            {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "profile_model_hash_bound": {
+          "const": false
+        },
+        "physical_calibration_certified": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "MATCH",
+                  "MISMATCH"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "selected_digest_profile": {
+                "const": "RAW_DESCRIPTION_SHA256_V0.1_CANDIDATE"
+              },
+              "declared_sha256": {
+                "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+              },
+              "observed_raw_description_sha256": {
+                "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+              },
+              "description_path": {
+                "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ReferenceReviewGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "status",
+        "target_path",
+        "target_symbol",
+        "disposition",
+        "occurrences",
+        "source_locations"
+      ],
+      "properties": {
+        "rule_id": {
+          "$ref": "urn:openrgd:source-conformance:v0.1-candidate#/$defs/ReferenceResult/properties/rule_id"
+        },
+        "status": {
+          "$ref": "urn:openrgd:source-conformance:v0.1-candidate#/$defs/ReferenceResult/properties/status"
+        },
+        "target_path": {
+          "anyOf": [
+            {
+              "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_symbol": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "IDENTITY_REVIEW",
+            "CATALOG_EVIDENCE_REQUIRED",
+            "PATH_ROLE_REVIEW",
+            "PROFILE_DEPENDENCY_REVIEW",
+            "FRAGMENT_REVIEW"
+          ]
+        },
+        "occurrences": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2048
+        },
+        "source_locations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "pointer"
+            ],
+            "properties": {
+              "path": {
+                "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/SourcePath"
+              },
+              "pointer": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 600
+              }
+            }
+          },
+          "maxItems": 2048,
+          "uniqueItems": true
+        }
+      }
+    },
+    "ConsistencyReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "policy_profile",
+        "source_conformance_sha256",
+        "source_conformance",
+        "evaluation_status",
+        "review_status",
+        "reference_groups",
+        "runtime_policy_scope",
+        "runtime_policy_status",
+        "runtime_policy_rows",
+        "description_commitment",
+        "snapshot_binding_verified",
+        "canonical_schema_validated",
+        "semantic_consistency_validated",
+        "runtime_evaluated",
+        "physical_binding_verified",
+        "profile_model_hash_bound",
+        "physical_calibration_certified",
+        "publication_committed",
+        "actuation_enabled",
+        "grants_authority"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "openrgd.foundation-consistency-report.v0.1-candidate"
+        },
+        "policy_profile": {
+          "const": "OPENRGD_FOUNDATION_CONSISTENCY_V0.1_CANDIDATE"
+        },
+        "source_conformance_sha256": {
+          "$ref": "urn:openrgd:source-assessment:v0.1-candidate#/$defs/Digest"
+        },
+        "source_conformance": {
+          "$ref": "urn:openrgd:source-conformance:v0.1-candidate#/$defs/ConformanceReport"
+        },
+        "evaluation_status": {
+          "enum": [
+            "ASSESSED",
+            "BLOCKED"
+          ]
+        },
+        "review_status": {
+          "enum": [
+            "SCOPED_CLEAR",
+            "REVIEW_REQUIRED",
+            "BLOCKED"
+          ]
+        },
+        "reference_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferenceReviewGroup"
+          },
+          "maxItems": 2048,
+          "uniqueItems": true
+        },
+        "runtime_policy_scope": {
+          "enum": [
+            "REQUIRED_PRESENT",
+            "REQUIRED_MISSING",
+            "OPTIONAL_PRESENT",
+            "OPTIONAL_ABSENT",
+            "NOT_APPLICABLE_ABSENT",
+            "NOT_APPLICABLE_PRESENT",
+            "UNCLASSIFIED_PRESENT",
+            "OUT_OF_SCOPE",
+            "NOT_ASSESSED"
+          ]
+        },
+        "runtime_policy_status": {
+          "enum": [
+            "ASSESSED",
+            "NOT_APPLICABLE",
+            "ABSENT_OPTIONAL",
+            "BLOCKED"
+          ]
+        },
+        "runtime_policy_rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimePolicyRow"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "description_commitment": {
+          "$ref": "#/$defs/DescriptionCommitment"
+        },
+        "snapshot_binding_verified": {
+          "type": "boolean"
+        },
+        "canonical_schema_validated": {
+          "const": false
+        },
+        "semantic_consistency_validated": {
+          "const": false
+        },
+        "runtime_evaluated": {
+          "const": false
+        },
+        "physical_binding_verified": {
+          "const": false
+        },
+        "profile_model_hash_bound": {
+          "const": false
+        },
+        "physical_calibration_certified": {
+          "const": false
+        },
+        "publication_committed": {
+          "const": false
+        },
+        "actuation_enabled": {
+          "const": false
+        },
+        "grants_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}

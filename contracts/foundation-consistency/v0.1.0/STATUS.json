@@ -1,0 +1,19 @@
+{
+  "package": "openrgd-foundation-consistency",
+  "version": "0.1.0",
+  "maturity": "candidate",
+  "normative": false,
+  "accepted": false,
+  "stable_release_allowed": false,
+  "runtime_implemented": false,
+  "scope": "STATIC_REVIEW_ONLY",
+  "baseline_core_commit": "afe1a831b950a4e6560f0285a0103fc4eaa343b7",
+  "source_conformance_pin": "cb23d15f8f08462aaf020d101732b9915d391115",
+  "promotion_requires": [
+    "independent safety-owner approval of declared failure-policy semantics",
+    "reviewed CAL description digest migration and real measurement applicability",
+    "independent profile governance and actual non-BHL consumers",
+    "authoritative model data for unresolved catalog and identity references",
+    "explicit governance acceptance"
+  ]
+}
