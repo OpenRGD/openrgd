@@ -71,4 +71,3 @@ def project_admission(*,manifest_raw,proposal_raw,review_raw,receipt_raw,authori
     except AdmissionError:raise
     except (ValueError,TypeError,KeyError,IndexError) as e:
         raise AdmissionError("ADMISSION_EVIDENCE_REJECTED") from e
-
