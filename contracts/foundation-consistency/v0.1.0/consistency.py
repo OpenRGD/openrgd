@@ -97,7 +97,9 @@ def runtime_review(report,spec):
     if loaded is None:return s,"BLOCKED",[]
     obj,_=loaded
     rows=[]
-    seen=set()
+    counts={}
+    for item in obj["pre_flight_checks_list"]:
+        cid=item["check_id_str"];counts[cid]=counts.get(cid,0)+1
     for i,check in enumerate(obj["pre_flight_checks_list"]):
         cid=check["check_id_str"]
         severity=check["severity_enum"]
@@ -105,8 +107,7 @@ def runtime_review(report,spec):
         allow=None if global_policy is None else global_policy["allow_motion_bool"]
         block=check["on_failure_policy"]["block_motion_bool"]
         status,constraint=declared_failure_policy(allow,block)
-        if cid in seen:status,constraint="POLICY_UNRESOLVED","INDETERMINATE"
-        seen.add(cid)
+        if counts[cid]>1:status,constraint="POLICY_UNRESOLVED","INDETERMINATE"
         rows.append({"check_id":cid,"source_pointer":sc.pointer("pre_flight_checks_list",i),
                      "severity":severity,"global_allow_motion":allow,"local_block_motion":block,
                      "review_status":status,"declared_failure_constraint":constraint,
@@ -163,13 +164,18 @@ def checked(report):
 
 def review_consistency(bundle,profile_raw,description_digest_profile=LEGACY):
     sc.require(description_digest_profile in (LEGACY,RAW),"UNSUPPORTED_DESCRIPTION_DIGEST_PROFILE")
-    sc.parse_profile(profile_raw) # validate external input before touching source
+    profile,policy=sc.parse_profile(profile_raw) # validate external input before touching source
     with tempfile.TemporaryDirectory(prefix="rgd-foundation-review-") as tmp:
         try:spec=source.snapshot_spec(bundle,tmp)
-        except (source.AssessmentError,OSError):
-            # Let 01B produce its negative report on a known missing private
-            # input, not a second attempt to read the original unstable source.
-            report=sc.assess_conformance(Path(tmp)/"unavailable",profile_raw)
+        except (source.AssessmentError,OSError) as e:
+            # Preserve the original failure diagnostic using the existing
+            # 01A/B constructors. Never reopen the original input on failure.
+            projected=sc.projection(profile,policy)
+            a=source.base_report(source.parse_requirements(projected),projected)
+            code=str(e) if isinstance(e,source.AssessmentError) else "SOURCE_READ_FAILED"
+            a["input_status"]="SOURCE_TREE_UNAVAILABLE" if code=="SOURCE_TREE_UNAVAILABLE" else "SNAPSHOT_REJECTED"
+            source.diag(a,code)
+            report=sc.checked_report(sc.base(profile,profile_raw,a))
             return checked(base(report,description_digest_profile))
         report=sc.assess_conformance(spec,profile_raw)
         r=base(report,description_digest_profile)

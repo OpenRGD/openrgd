@@ -76,7 +76,108 @@
         "grants_authority": {
           "const": false
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "review_status": {
+                "const": "GLOBAL_BLOCK_LOCAL_NONBLOCK_CONFLICT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "global_allow_motion": {
+                "const": false
+              },
+              "local_block_motion": {
+                "const": false
+              },
+              "declared_failure_constraint": {
+                "const": "BLOCK_REQUIRED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "review_status": {
+                "const": "LOCAL_STRICTER_THAN_GLOBAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "global_allow_motion": {
+                "const": true
+              },
+              "local_block_motion": {
+                "const": true
+              },
+              "declared_failure_constraint": {
+                "const": "BLOCK_REQUIRED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "review_status": {
+                "const": "POLICY_UNRESOLVED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "declared_failure_constraint": {
+                "const": "INDETERMINATE"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "review_status": {
+                "const": "POLICY_CONSISTENT"
+              }
+            }
+          },
+          "then": {
+            "oneOf": [
+              {
+                "properties": {
+                  "global_allow_motion": {
+                    "const": false
+                  },
+                  "local_block_motion": {
+                    "const": true
+                  },
+                  "declared_failure_constraint": {
+                    "const": "BLOCK_REQUIRED"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "global_allow_motion": {
+                    "const": true
+                  },
+                  "local_block_motion": {
+                    "const": false
+                  },
+                  "declared_failure_constraint": {
+                    "const": "NO_BLOCK_FROM_THIS_RULE"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
     "DescriptionCommitment": {
       "type": "object",
@@ -397,7 +498,116 @@
         "grants_authority": {
           "const": false
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "evaluation_status": {
+                "const": "BLOCKED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "review_status": {
+                "const": "BLOCKED"
+              },
+              "snapshot_binding_verified": {
+                "const": false
+              },
+              "runtime_policy_status": {
+                "const": "BLOCKED"
+              },
+              "runtime_policy_rows": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "snapshot_binding_verified": {
+                "const": true
+              },
+              "review_status": {
+                "enum": [
+                  "SCOPED_CLEAR",
+                  "REVIEW_REQUIRED"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "runtime_policy_status": {
+                "const": "ASSESSED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "runtime_policy_rows": {
+                "minItems": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "runtime_policy_rows": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "review_status": {
+                "const": "SCOPED_CLEAR"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reference_groups": {
+                "maxItems": 0
+              },
+              "runtime_policy_status": {
+                "enum": [
+                  "ASSESSED",
+                  "NOT_APPLICABLE",
+                  "ABSENT_OPTIONAL"
+                ]
+              },
+              "description_commitment": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "MATCH",
+                      "NOT_APPLICABLE",
+                      "ABSENT_OPTIONAL"
+                    ]
+                  }
+                }
+              },
+              "runtime_policy_rows": {
+                "items": {
+                  "properties": {
+                    "review_status": {
+                      "enum": [
+                        "POLICY_CONSISTENT",
+                        "LOCAL_STRICTER_THAN_GLOBAL"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }
