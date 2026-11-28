@@ -1,0 +1,390 @@
+{
+  "schema_version": "openrgd.source-conformance-profile.v0.1-candidate",
+  "profile_id": "org.openrgd.reference.bhl-static-review",
+  "profile_version": "0.1.0",
+  "standard_version": "0.2.0",
+  "rule_profile": "OPENRGD_STATIC_REFERENCE_RULES_V0.1_CANDIDATE",
+  "inventory_policy": "EXPLICIT_CLASSIFICATION_REQUIRED",
+  "components": [
+    {
+      "path": "00_core/kernel.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "00_core/test_kernel.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "00_core/validation_protocols.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "01_foundation/actuation_dynamics.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/actuation_library.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/actuation_topology.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/calibration.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/compute_topology.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/description.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/firmware_mapping.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/hal_mapping.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/physics_solver_overrides.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/power_distribution.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/sensor_fidelity.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/sensor_health_monitor.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/soft_body_dynamics.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/soft_materials_library.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/surface_properties.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "01_foundation/wear_fatigue_model.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "02_operation/active_defense.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "02_operation/compliance.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "02_operation/immunology.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "02_operation/oversight_interface.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "02_operation/psyche_resilience.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "02_operation/runtime_validation.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "02_operation/safety_critical.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "02_operation/social_identity.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/biorhythm.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/cognitive_dissonance.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/divergent_thinking.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/empathy_model.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "03_agency/extension_permissions_policy.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/installed_skill_packages.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/intuition_engine.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/oneiric_state.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/presence_engine.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/proprioception_model.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/qualia_map.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/sim_to_real_protocol.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/core/generic_container_grasp.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/core/gentle_head_nod.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/core/polite_idle_gaze.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/core/safe_stance.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/core/schemas/skill_package_manifest_schema.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/core/schemas/skill_schema.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills/index.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/skills_library.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "03_agency/swarm_protocol.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "03_agency/world_model.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "04_volition/aesthetic_canon.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/alignment.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "04_volition/aspirations.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/coherence_contracts.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/humor_engine.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/immunology.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "04_volition/ledger.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "04_volition/leisure_policy.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/narrative_engine.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "04_volition/orchestra.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "04_volition/shadow_integration.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/social_mirror.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "04_volition/social_synergy.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "05_evolution/digital_resurrection.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "05_evolution/genealogy.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "05_evolution/hardware_mutation.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "05_evolution/plasticity.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "05_evolution/replication.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "05_evolution/termination.jsonc",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "06_ether/civilization_manifesto.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "06_ether/compute_federation.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "06_ether/consensus_reality.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "06_ether/ephemeral_skills.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "06_ether/reputation_graph.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "MANIFESTO.md",
+      "applicability": "OPTIONAL",
+      "rationale": "Additional indexed BHL reference material; evaluate covered rules if present."
+    },
+    {
+      "path": "manifest.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    },
+    {
+      "path": "rgd_schema.jsonc",
+      "applicability": "REQUIRED",
+      "rationale": "Selected BHL reference baseline for this review; not a universal requirement."
+    }
+  ]
+}
